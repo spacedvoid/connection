@@ -1,11 +1,6 @@
 package io.github.spacedvoid.connection
 
-inline fun <reified T> Collection<T>.toTypedArray(): Array<T> {
-	val array = arrayOfNulls<T>(size())
-	for((index, element) in iterator().withIndex()) array[index] = element
-	@Suppress("UNCHECKED_CAST")
-	return array as Array<T>
-}
+import io.github.spacedvoid.connection.characteristic.Wrapper
 
 fun <T> MutatingCollectionView<T>.snapshot(): Collection<T> = collectionOf(*toGenericArray())
 
@@ -17,20 +12,33 @@ fun <T> MutatingSetView<T>.snapshot(): Set<T> = setOf(*toGenericArray())
 
 fun <T> MutatingSequencedSetView<T>.snapshot(): SequencedSet<T> = sequencedSetOf(*toGenericArray())
 
+@JvmName("snapshotComparable")
+fun <T: Comparable<T>> MutatingSortedSetView<T>.snapshot(): SortedSet<T> = sortedSetOf(*toGenericArray())
+
+fun <T> MutatingSortedSetView<T>.snapshot(): SortedSet<T> = sortedSetOf(this.comparator!!, *toGenericArray())
+
+@JvmName("snapshotComparable")
+fun <T: Comparable<T>> MutatingNavigableSetView<T>.snapshot(): NavigableSet<T> = navigableSetOf(*toGenericArray())
+
+fun <T> MutatingNavigableSetView<T>.snapshot(): NavigableSet<T> = navigableSetOf(this.comparator!!, *toGenericArray())
+
 fun <K, V> MutatingMapView<K, V>.snapshot(): Map<K, V> = mapOf(*toGenericArray())
 
 fun <K, V> MutatingSequencedMapView<K, V>.snapshot(): SequencedMap<K, V> = sequencedMapOf(*toGenericArray())
 
-@Suppress("UNCHECKED_CAST")
-internal fun <T> Collection<T>.toGenericArray(): Array<T> {
-	val iterator = this.iterator()
-	return Array<Any?>(this.size()) { iterator.next() } as Array<T>
-}
+@JvmName("snapshotComparable")
+fun <K: Comparable<K>, V> MutatingSortedMapView<K, V>.snapshot(): SortedMap<K, V> = sortedMapOf(*toGenericArray())
+
+fun <K, V> MutatingSortedMapView<K, V>.snapshot(): SortedMap<K, V> = sortedMapOf(this.comparator!!, *toGenericArray())
+
+@JvmName("snapshotComparable")
+fun <K: Comparable<K>, V> MutatingNavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapOf(*toGenericArray())
+
+fun <K, V> MutatingNavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapOf(this.comparator!!, *toGenericArray())
 
 @Suppress("UNCHECKED_CAST")
-@PublishedApi
 internal fun <T> MutatingCollectionView<T>.toGenericArray(): Array<T> {
-	val iterator = (this as UnsafeIterable<T>).iterator()
+	val iterator = (this as Wrapper<kotlin.collections.Collection<T>>).origin.iterator()
 	return this.size().let { size ->
 		Array<Any?>(size) {
 			try {
@@ -44,10 +52,9 @@ internal fun <T> MutatingCollectionView<T>.toGenericArray(): Array<T> {
 	}
 }
 
-@PublishedApi
+@Suppress("UNCHECKED_CAST")
 internal fun <K, V> MutatingMapView<K, V>.toGenericArray(): Array<Pair<K, V>> {
-	@Suppress("UNCHECKED_CAST")
-	val iterator = (this.entries as UnsafeIterable<kotlin.collections.Map.Entry<K, V>>).iterator()
+	val iterator = (this.entries as Wrapper<kotlin.collections.Collection<kotlin.collections.Map.Entry<K, V>>>).origin.iterator()
 	return this.size().let { size ->
 		Array(size) {
 			try {
@@ -61,4 +68,5 @@ internal fun <K, V> MutatingMapView<K, V>.toGenericArray(): Array<Pair<K, V>> {
 	}
 }
 
-private fun concurrentModification(cause: Throwable? = null): ConcurrentModificationException = ConcurrentModificationException("Failed to snapshot mutating collection", cause)
+private fun concurrentModification(cause: Throwable? = null): ConcurrentModificationException =
+	ConcurrentModificationException("Failed to snapshot mutating collection", cause)

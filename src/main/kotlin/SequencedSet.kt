@@ -1,14 +1,10 @@
-@file:Suppress("DEPRECATION_ERROR")
-
 package io.github.spacedvoid.connection
 
-interface SequencedSetBase<T>: SetBase<T>, SequencedCollectionBase<T>
-
-interface SequencedSet<T>: Set<T>, SequencedCollection<T>, SequencedSetBase<T> {
+interface SequencedSet<T>: Set<T>, SequencedCollection<T> {
 	override fun reverse(): SequencedSet<T>
 }
 
-interface MutatingSequencedSetView<T>: MutatingSequencedCollectionView<T>, MutatingSetView<T>, SequencedSetBase<T> {
+interface MutatingSequencedSetView<T>: MutatingSequencedCollectionView<T>, MutatingSetView<T> {
 	override fun reverse(): MutatingSequencedSetView<T>
 }
 

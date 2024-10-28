@@ -1,32 +1,25 @@
-@file:Suppress("DEPRECATION_ERROR")
-
 package io.github.spacedvoid.connection
 
-@Deprecated("This type is hidden for public use.", ReplaceWith("SequencedCollection", "io.github.spacedvoid.connection.SequencedCollection"), DeprecationLevel.HIDDEN)
-interface SequencedCollectionBase<T>: CollectionBase<T> {
-	fun reverse(): SequencedCollectionBase<T>
+import io.github.spacedvoid.connection.characteristic.MutableSequenced
+import io.github.spacedvoid.connection.characteristic.RemoveOnlySequenced
+import io.github.spacedvoid.connection.characteristic.Sequenced
 
-	fun first(): T
-
-	fun last(): T
-}
-
-interface SequencedCollection<T>: Collection<T>, SequencedCollectionBase<T> {
+interface SequencedCollection<T>: Collection<T>, Sequenced<T> {
 	override fun reverse(): SequencedCollection<T>
 }
 
-interface MutatingSequencedCollectionView<T>: MutatingCollectionView<T>, SequencedCollectionBase<T> {
+interface MutatingSequencedCollectionView<T>: MutatingCollectionView<T>, Sequenced<T> {
 	override fun reverse(): MutatingSequencedCollectionView<T>
 }
 
-interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, MutatingSequencedCollectionView<T> {
+interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, MutatingSequencedCollectionView<T>, RemoveOnlySequenced<T> {
 	override fun reverse(): RemoveOnlySequencedCollection<T>
 
-	fun removeFirst(): T
+	override fun removeFirst(): T
 
-	fun removeLast(): T
+	override fun removeLast(): T
 }
 
-interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T> {
+interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T>, MutableSequenced<T> {
 	override fun reverse(): MutableSequencedCollection<T>
 }

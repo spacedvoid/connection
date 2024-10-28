@@ -1,21 +1,9 @@
-@file:Suppress("DEPRECATION_ERROR")
-
 package io.github.spacedvoid.connection
 
-@Deprecated("This type is hidden for public use.", ReplaceWith("List", "io.github.spacedvoid.connection.List"), DeprecationLevel.HIDDEN)
-interface ListBase<T>: SequencedCollectionBase<T> {
-	override fun reverse(): ListBase<T>
+import io.github.spacedvoid.connection.characteristic.Listed
+import io.github.spacedvoid.connection.characteristic.MutableListed
 
-	fun slice(startInclusive: Int, endExclusive: Int): ListBase<T>
-
-	operator fun get(index: Int): T
-
-	fun indexOf(element: T): Int
-
-	fun lastIndexOf(element: T): Int
-}
-
-interface List<T>: SequencedCollection<T>, ListBase<T> {
+interface List<T>: SequencedCollection<T>, Listed<T> {
 	override fun iterator(): ListIterator<T>
 
 	override fun reverse(): List<T>
@@ -23,20 +11,20 @@ interface List<T>: SequencedCollection<T>, ListBase<T> {
 	override fun slice(startInclusive: Int, endExclusive: Int): List<T>
 }
 
-interface MutatingListView<T>: MutatingSequencedCollectionView<T>, ListBase<T> {
+interface MutatingListView<T>: MutatingSequencedCollectionView<T>, Listed<T> {
 	override fun reverse(): MutatingListView<T>
 
 	override fun slice(startInclusive: Int, endExclusive: Int): MutatingListView<T>
 }
 
-interface MutableList<T>: MutableSequencedCollection<T>, MutatingListView<T> {
+interface MutableList<T>: MutableSequencedCollection<T>, MutatingListView<T>, MutableListed<T> {
 	override fun reverse(): MutableList<T>
 
 	override fun slice(startInclusive: Int, endExclusive: Int): MutableList<T>
 
-	fun add(index: Int, element: T)
+	override fun add(index: Int, element: T)
 
-	operator fun set(index: Int, element: T): T
+	override operator fun set(index: Int, element: T): T
 
-	fun removeAt(index: Int): T
+	override fun removeAt(index: Int): T
 }

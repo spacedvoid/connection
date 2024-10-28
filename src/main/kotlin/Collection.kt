@@ -1,17 +1,10 @@
-@file:Suppress("DEPRECATION_ERROR")
-
 package io.github.spacedvoid.connection
 
-@Deprecated("This type is hidden for public use.", ReplaceWith("Collection", "io.github.spacedvoid.connection.Collection"), DeprecationLevel.HIDDEN)
-interface CollectionBase<T> {
-	fun size(): Int
+import io.github.spacedvoid.connection.characteristic.Collectable
+import io.github.spacedvoid.connection.characteristic.Mutable
+import io.github.spacedvoid.connection.characteristic.RemoveOnly
 
-	operator fun contains(element: T): Boolean
-
-	fun containsAll(from: Collection<T>): Boolean
-}
-
-interface Collection<T>: CollectionBase<T>, Iterable<T> {
+interface Collection<T>: Iterable<T>, Collectable<T> {
 	override fun size(): Int
 
 	override operator fun contains(element: T): Boolean
@@ -19,7 +12,7 @@ interface Collection<T>: CollectionBase<T>, Iterable<T> {
 	override fun containsAll(from: Collection<T>): Boolean
 }
 
-interface MutatingCollectionView<T>: CollectionBase<T> {
+interface MutatingCollectionView<T>: Collectable<T> {
 	override fun size(): Int
 
 	override operator fun contains(element: T): Boolean
@@ -27,16 +20,16 @@ interface MutatingCollectionView<T>: CollectionBase<T> {
 	override fun containsAll(from: Collection<T>): Boolean
 }
 
-interface RemoveOnlyCollection<T>: MutatingCollectionView<T> {
-	fun remove(element: T): Boolean
+interface RemoveOnlyCollection<T>: MutatingCollectionView<T>, RemoveOnly<T> {
+	override fun remove(element: T): Boolean
 
-	fun removeAll(from: Collection<T>): Boolean
+	override fun removeAll(from: Collection<T>): Boolean
 
-	fun clear()
+	override fun clear()
 }
 
-interface MutableCollection<T>: RemoveOnlyCollection<T> {
-	fun add(element: T): Boolean
+interface MutableCollection<T>: RemoveOnlyCollection<T>, Mutable<T> {
+	override fun add(element: T): Boolean
 
-	fun addAll(from: Collection<T>): Boolean
+	override fun addAll(from: Collection<T>): Boolean
 }
