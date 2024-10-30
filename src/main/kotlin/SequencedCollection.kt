@@ -6,10 +6,18 @@ import io.github.spacedvoid.connection.characteristic.Sequenced
 
 interface SequencedCollection<T>: Collection<T>, Sequenced<T> {
 	override fun reverse(): SequencedCollection<T>
+
+	override fun first(): T
+
+	override fun last(): T
 }
 
 interface MutatingSequencedCollectionView<T>: MutatingCollectionView<T>, Sequenced<T> {
 	override fun reverse(): MutatingSequencedCollectionView<T>
+
+	override fun first(): T
+
+	override fun last(): T
 }
 
 interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, MutatingSequencedCollectionView<T>, RemoveOnlySequenced<T> {

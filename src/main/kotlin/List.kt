@@ -4,17 +4,29 @@ import io.github.spacedvoid.connection.characteristic.Listed
 import io.github.spacedvoid.connection.characteristic.MutableListed
 
 interface List<T>: SequencedCollection<T>, Listed<T> {
-	override fun iterator(): ListIterator<T>
+	override operator fun iterator(): ListIterator<T>
 
 	override fun reverse(): List<T>
 
 	override fun slice(startInclusive: Int, endExclusive: Int): List<T>
+
+	override operator fun get(index: Int): T
+
+	override fun indexOf(element: T): Int
+
+	override fun lastIndexOf(element: T): Int
 }
 
 interface MutatingListView<T>: MutatingSequencedCollectionView<T>, Listed<T> {
 	override fun reverse(): MutatingListView<T>
 
 	override fun slice(startInclusive: Int, endExclusive: Int): MutatingListView<T>
+
+	override operator fun get(index: Int): T
+
+	override fun indexOf(element: T): Int
+
+	override fun lastIndexOf(element: T): Int
 }
 
 interface MutableList<T>: MutableSequencedCollection<T>, MutatingListView<T>, MutableListed<T> {

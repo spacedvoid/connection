@@ -4,6 +4,12 @@ import io.github.spacedvoid.connection.characteristic.MutableSequencedMappable
 import io.github.spacedvoid.connection.characteristic.SequencedMappable
 
 interface SequencedMap<K, V>: SequencedMappable<K, V>, Map<K, V> {
+	override fun reversed(): SequencedMap<K, V>
+
+	override fun first(): Pair<K, V>?
+
+	override fun last(): Pair<K, V>?
+
 	override val keys: SequencedSet<out K>
 
 	override val values: SequencedCollection<out V>
@@ -12,6 +18,12 @@ interface SequencedMap<K, V>: SequencedMappable<K, V>, Map<K, V> {
 }
 
 interface MutatingSequencedMapView<K, V>: SequencedMappable<K, V>, MutatingMapView<K, V> {
+	override fun reversed(): MutatingSequencedMapView<K, V>
+
+	override fun first(): Pair<K, V>?
+
+	override fun last(): Pair<K, V>?
+
 	override val keys: MutatingSequencedSetView<out K>
 
 	override val values: MutatingSequencedCollectionView<out V>
@@ -20,6 +32,12 @@ interface MutatingSequencedMapView<K, V>: SequencedMappable<K, V>, MutatingMapVi
 }
 
 interface MutableSequencedMap<K, V>: MutableSequencedMappable<K, V>, MutatingSequencedMapView<K, V>, MutableMap<K, V> {
+	override fun reversed(): MutableSequencedMap<K, V>
+
+	override fun removeFirst(): Pair<K, V>?
+
+	override fun removeLast(): Pair<K, V>?
+
 	override val keys: RemoveOnlySequencedSet<K>
 
 	override val values: RemoveOnlySequencedCollection<V>

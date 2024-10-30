@@ -398,6 +398,8 @@ fun <K, V> KotlinMutableMap<K, V>.asConnection(): MutableMap<K, V> =
 fun <K, V> java.util.SequencedMap<K, V>.asConnection(): SequencedMap<K, V> =
 	object: Mappable<K, V> by MappableImpl(this), SequencedMappable<K, V> by SequencedMappableImpl(this),
 			Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this), SequencedMap<K, V> {
+		override fun reversed(): SequencedMap<K, V> = this@asConnection.reversed().asConnection()
+
 		override val keys: SequencedSet<out K> = this@asConnection.sequencedKeySet().asConnection()
 
 		override val values: SequencedCollection<out V> = this@asConnection.sequencedValues().asConnection()
@@ -408,6 +410,8 @@ fun <K, V> java.util.SequencedMap<K, V>.asConnection(): SequencedMap<K, V> =
 fun <K, V> java.util.SequencedMap<K, V>.asViewConnection(): MutatingSequencedMapView<K, V> =
 	object: Mappable<K, V> by MappableImpl(this), SequencedMappable<K, V> by SequencedMappableImpl(this),
 			Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this), MutatingSequencedMapView<K, V> {
+		override fun reversed(): MutatingSequencedMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
+
 		override val keys: MutatingSequencedSetView<out K> = this@asViewConnection.sequencedKeySet().asViewConnection()
 
 		override val values: MutatingSequencedCollectionView<out V> = this@asViewConnection.sequencedValues().asViewConnection()
@@ -418,6 +422,8 @@ fun <K, V> java.util.SequencedMap<K, V>.asViewConnection(): MutatingSequencedMap
 fun <K, V> java.util.SequencedMap<K, V>.asMutableConnection(): MutableSequencedMap<K, V> =
 	object: MutableMappable<K, V> by MutableMappableImpl(this), MutableSequencedMappable<K, V> by MutableSequencedMappableImpl(this),
 			Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this), MutableSequencedMap<K, V> {
+		override fun reversed(): MutableSequencedMap<K, V> = this@asMutableConnection.reversed().asMutableConnection()
+
 		override val keys: RemoveOnlySequencedSet<K> = this@asMutableConnection.sequencedKeySet().asMutableConnection()
 
 		override val values: RemoveOnlySequencedCollection<V> = this@asMutableConnection.sequencedValues().asMutableConnection()

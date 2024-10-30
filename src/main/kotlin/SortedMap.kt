@@ -5,13 +5,19 @@ import kotlin.collections.Map
 import kotlin.collections.MutableMap
 
 interface SortedMap<K, V>: SortedMappable<K, V>, SequencedMap<K, V> {
+	override val comparator: Comparator<in K>?
+
+	override fun reversed(): SortedMap<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMap<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): SortedMap<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): SortedMap<K, V>
 
-	override fun reversed(): SortedMap<K, V>
+	override fun firstKey(): K
+
+	override fun lastKey(): K
 
 	override val keys: SortedSet<out K>
 
@@ -21,13 +27,19 @@ interface SortedMap<K, V>: SortedMappable<K, V>, SequencedMap<K, V> {
 }
 
 interface MutatingSortedMapView<K, V>: SortedMappable<K, V>, MutatingSequencedMapView<K, V> {
+	override val comparator: Comparator<in K>?
+
+	override fun reversed(): MutatingSortedMapView<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedMapView<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): MutatingSortedMapView<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): MutatingSortedMapView<K, V>
 
-	override fun reversed(): MutatingSortedMapView<K, V>
+	override fun firstKey(): K
+
+	override fun lastKey(): K
 
 	override val keys: MutatingSortedSetView<out K>
 
@@ -37,13 +49,13 @@ interface MutatingSortedMapView<K, V>: SortedMappable<K, V>, MutatingSequencedMa
 }
 
 interface MutableSortedMap<K, V>: MutatingSortedMapView<K, V>, MutableSequencedMap<K, V> {
+	override fun reversed(): MutableSortedMap<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutableSortedMap<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): MutableSortedMap<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): MutableSortedMap<K, V>
-
-	override fun reversed(): MutableSortedMap<K, V>
 
 	override val keys: RemoveOnlySortedSet<K>
 

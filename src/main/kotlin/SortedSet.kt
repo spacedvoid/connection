@@ -3,6 +3,8 @@ package io.github.spacedvoid.connection
 import io.github.spacedvoid.connection.characteristic.Sorted
 
 interface SortedSet<T>: Sorted<T>, SequencedSet<T> {
+	override val comparator: Comparator<in T>?
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedSet<T>
 
 	override fun headSet(before: T, inclusive: Boolean): SortedSet<T>
@@ -11,6 +13,8 @@ interface SortedSet<T>: Sorted<T>, SequencedSet<T> {
 }
 
 interface MutatingSortedSetView<T>: Sorted<T>, MutatingSequencedSetView<T> {
+	override val comparator: Comparator<in T>?
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedSetView<T>
 
 	override fun headSet(before: T, inclusive: Boolean): MutatingSortedSetView<T>

@@ -5,13 +5,21 @@ import kotlin.collections.Map
 import kotlin.collections.MutableMap
 
 interface NavigableMap<K, V>: NavigableMappable<K, V>, SortedMap<K, V> {
+	override fun reversed(): NavigableMap<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMap<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): NavigableMap<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): NavigableMap<K, V>
 
-	override fun reversed(): NavigableMap<K, V>
+	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
+
+	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>?
+
+	override fun higherKey(than: K, inclusive: Boolean): K?
+
+	override fun lowerKey(than: K, inclusive: Boolean): K?
 
 	override val keys: NavigableSet<out K>
 
@@ -21,13 +29,21 @@ interface NavigableMap<K, V>: NavigableMappable<K, V>, SortedMap<K, V> {
 }
 
 interface MutatingNavigableMapView<K, V>: NavigableMappable<K, V>, MutatingSortedMapView<K, V> {
+	override fun reversed(): MutatingNavigableMapView<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingNavigableMapView<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): MutatingNavigableMapView<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): MutatingNavigableMapView<K, V>
 
-	override fun reversed(): MutatingNavigableMapView<K, V>
+	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
+
+	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>?
+
+	override fun higherKey(than: K, inclusive: Boolean): K?
+
+	override fun lowerKey(than: K, inclusive: Boolean): K?
 
 	override val keys: MutatingNavigableSetView<out K>
 
@@ -37,13 +53,13 @@ interface MutatingNavigableMapView<K, V>: NavigableMappable<K, V>, MutatingSorte
 }
 
 interface MutableNavigableMap<K, V>: MutatingNavigableMapView<K, V>, MutableSortedMap<K, V> {
+	override fun reversed(): MutableNavigableMap<K, V>
+
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableMap<K, V>
 
 	override fun headMap(before: K, inclusive: Boolean): MutableNavigableMap<K, V>
 
 	override fun tailMap(after: K, inclusive: Boolean): MutableNavigableMap<K, V>
-
-	override fun reversed(): MutableNavigableMap<K, V>
 
 	override val keys: RemoveOnlyNavigableSet<K>
 

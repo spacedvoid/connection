@@ -5,6 +5,8 @@ import io.github.spacedvoid.connection.characteristic.Mutable
 import io.github.spacedvoid.connection.characteristic.RemoveOnly
 
 interface Collection<T>: Iterable<T>, Collectable<T> {
+	override operator fun iterator(): Iterator<T>
+
 	override fun size(): Int
 
 	override operator fun contains(element: T): Boolean
