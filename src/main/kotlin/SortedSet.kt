@@ -5,21 +5,21 @@ import io.github.spacedvoid.connection.characteristic.Sorted
 interface SortedSet<T>: Sorted<T>, SequencedSet<T> {
 	override val comparator: Comparator<in T>?
 
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedSet<T>
+	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedSet<T>
 
-	override fun headSet(before: T, inclusive: Boolean): SortedSet<T>
+	fun headSet(before: T, inclusive: Boolean): SortedSet<T>
 
-	override fun tailSet(after: T, inclusive: Boolean): SortedSet<T>
+	fun tailSet(after: T, inclusive: Boolean): SortedSet<T>
 }
 
 interface MutatingSortedSetView<T>: Sorted<T>, MutatingSequencedSetView<T> {
 	override val comparator: Comparator<in T>?
 
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedSetView<T>
+	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedSetView<T>
 
-	override fun headSet(before: T, inclusive: Boolean): MutatingSortedSetView<T>
+	fun headSet(before: T, inclusive: Boolean): MutatingSortedSetView<T>
 
-	override fun tailSet(after: T, inclusive: Boolean): MutatingSortedSetView<T>
+	fun tailSet(after: T, inclusive: Boolean): MutatingSortedSetView<T>
 }
 
 interface RemoveOnlySortedSet<T>: MutatingSortedSetView<T>, RemoveOnlySequencedSet<T> {

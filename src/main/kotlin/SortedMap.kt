@@ -9,11 +9,11 @@ interface SortedMap<K, V>: SortedMappable<K, V>, SequencedMap<K, V> {
 
 	override fun reversed(): SortedMap<K, V>
 
-	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMap<K, V>
+	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMap<K, V>
 
-	override fun headMap(before: K, inclusive: Boolean): SortedMap<K, V>
+	fun headMap(before: K, inclusive: Boolean): SortedMap<K, V>
 
-	override fun tailMap(after: K, inclusive: Boolean): SortedMap<K, V>
+	fun tailMap(after: K, inclusive: Boolean): SortedMap<K, V>
 
 	override fun firstKey(): K
 
@@ -31,11 +31,11 @@ interface MutatingSortedMapView<K, V>: SortedMappable<K, V>, MutatingSequencedMa
 
 	override fun reversed(): MutatingSortedMapView<K, V>
 
-	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedMapView<K, V>
+	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedMapView<K, V>
 
-	override fun headMap(before: K, inclusive: Boolean): MutatingSortedMapView<K, V>
+	fun headMap(before: K, inclusive: Boolean): MutatingSortedMapView<K, V>
 
-	override fun tailMap(after: K, inclusive: Boolean): MutatingSortedMapView<K, V>
+	fun tailMap(after: K, inclusive: Boolean): MutatingSortedMapView<K, V>
 
 	override fun firstKey(): K
 

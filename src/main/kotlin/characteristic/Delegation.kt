@@ -1,6 +1,5 @@
 package io.github.spacedvoid.connection.characteristic
 
-import io.github.spacedvoid.connection.asConnection
 import io.github.spacedvoid.connection.asKotlin
 import java.util.NavigableMap
 import java.util.NavigableSet
@@ -33,8 +32,6 @@ class MutableImpl<T>(private val kotlin: MutableCollection<T>): RemoveOnly<T> by
 }
 
 class SequencedImpl<T>(private val kotlin: java.util.SequencedCollection<T>): Sequenced<T> {
-	override fun reverse(): Sequenced<T> = this.kotlin.reversed().asConnection()
-
 	override fun first(): T = this.kotlin.first
 
 	override fun last(): T = this.kotlin.last
@@ -53,8 +50,6 @@ class MutableSequencedImpl<T>(private val kotlin: java.util.SequencedCollection<
 }
 
 class ListedImpl<T>(private val kotlin: List<T>): Listed<T> {
-	override fun slice(startInclusive: Int, endExclusive: Int): Listed<T> = this.kotlin.subList(startInclusive, endExclusive).asConnection()
-
 	override fun get(index: Int): T = this.kotlin[index]
 
 	override fun indexOf(element: T): Int = this.kotlin.indexOf(element)
@@ -72,12 +67,6 @@ class MutableListedImpl<T>(private val kotlin: MutableList<T>): Listed<T> by Lis
 
 class SortedImpl<T>(private val kotlin: SortedSet<T>): Sorted<T> {
 	override val comparator: Comparator<in T>? = this.kotlin.comparator()
-
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Sorted<T> = this.kotlin.subSet(from, to).asConnection()
-
-	override fun headSet(before: T, inclusive: Boolean): Sorted<T> = this.kotlin.headSet(before).asConnection()
-
-	override fun tailSet(after: T, inclusive: Boolean): Sorted<T> = this.kotlin.tailSet(after).asConnection()
 }
 
 class NavigableImpl<T>(private val kotlin: NavigableSet<T>): Navigable<T> {
@@ -94,12 +83,6 @@ class MappableImpl<K, V>(private val kotlin: Map<K, V>): Mappable<K, V> {
 	override fun containsValue(value: V): Boolean = this.kotlin.containsValue(value)
 
 	override fun get(key: K): V? = this.kotlin[key]
-
-	override val keys: Collectable<out K> = this.kotlin.keys.asConnection()
-
-	override val values: Collectable<out V> = this.kotlin.values.asConnection()
-
-	override val entries: Collectable<out Map.Entry<K, V>> = this.kotlin.entries.asConnection()
 }
 
 class MutableMappableImpl<K, V>(private val kotlin: MutableMap<K, V>): Mappable<K, V> by MappableImpl(kotlin), MutableMappable<K, V> {
@@ -113,8 +96,6 @@ class MutableMappableImpl<K, V>(private val kotlin: MutableMap<K, V>): Mappable<
 }
 
 class SequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>): SequencedMappable<K, V> {
-	override fun reversed(): SequencedMappable<K, V> = this.kotlin.reversed().asConnection()
-
 	override fun first(): Pair<K, V>? = this.kotlin.firstEntry()?.let { it.key to it.value }
 
 	override fun last(): Pair<K, V>? = this.kotlin.lastEntry()?.let { it.key to it.value }
@@ -129,17 +110,9 @@ class MutableSequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>)
 class SortedMappableImpl<K, V>(private val kotlin: SortedMap<K, V>): SortedMappable<K, V> {
 	override val comparator: Comparator<in K>? = this.kotlin.comparator()
 
-	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMappable<K, V> = this.kotlin.subMap(from, to).asConnection()
-
-	override fun headMap(before: K, inclusive: Boolean): SortedMappable<K, V> = this.kotlin.headMap(before).asConnection()
-
-	override fun tailMap(after: K, inclusive: Boolean): SortedMappable<K, V> = this.kotlin.tailMap(after).asConnection()
-
 	override fun firstKey(): K = this.kotlin.firstKey()
 
 	override fun lastKey(): K = this.kotlin.lastKey()
-
-	override fun reversed(): SortedMappable<K, V> = this.kotlin.reversed().asConnection()
 }
 
 class NavigableMappableImpl<K, V>(private val kotlin: NavigableMap<K, V>): NavigableMappable<K, V> {

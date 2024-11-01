@@ -30,7 +30,7 @@ interface Mutable<T>: RemoveOnly<T> {
 }
 
 interface Sequenced<T> /* : Collectable<T> */ {
-	fun reverse(): Sequenced<T>
+	//fun reverse(): Sequenced<T>
 
 	fun first(): T
 
@@ -50,7 +50,7 @@ interface MutableSequenced<T>: RemoveOnlySequenced<T> {
 }
 
 interface Listed<T> /* : Sequenced<T> */ {
-	fun slice(startInclusive: Int, endExclusive: Int): Listed<T>
+	//fun slice(startInclusive: Int, endExclusive: Int): Listed<T>
 
 	operator fun get(index: Int): T
 
@@ -70,11 +70,11 @@ interface MutableListed<T>: Listed<T> {
 interface Sorted<T> /* : Sequenced<T> */ {
 	val comparator: Comparator<in T>?
 
-	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Sorted<T>
+	//fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Sorted<T>
 
-	fun headSet(before: T, inclusive: Boolean): Sorted<T>
+	//fun headSet(before: T, inclusive: Boolean): Sorted<T>
 
-	fun tailSet(after: T, inclusive: Boolean): Sorted<T>
+	//fun tailSet(after: T, inclusive: Boolean): Sorted<T>
 }
 
 interface Navigable<T> /* : Sorted<T> */ {
@@ -92,11 +92,11 @@ interface Mappable<K, V> {
 
 	operator fun get(key: K): V?
 
-	val keys: Collectable<out K>
+	//val keys: Collectable<out K>
 
-	val values: Collectable<out V>
+	//val values: Collectable<out V>
 
-	val entries: Collectable<out kotlin.collections.Map.Entry<K, V>>
+	//val entries: Collectable<out kotlin.collections.Map.Entry<K, V>>
 }
 
 interface MutableMappable<K, V>: Mappable<K, V> {
@@ -110,7 +110,7 @@ interface MutableMappable<K, V>: Mappable<K, V> {
 }
 
 interface SequencedMappable<K, V> /* : Mappable<K, V> */ {
-	fun reversed(): SequencedMappable<K, V>
+	//fun reversed(): SequencedMappable<K, V>
 
 	fun first(): Pair<K, V>?
 
@@ -126,17 +126,17 @@ interface MutableSequencedMappable<K, V>: SequencedMappable<K, V> {
 interface SortedMappable<K, V> /* : SequencedMappable<K, V> */ {
 	val comparator: Comparator<in K>?
 
-	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMappable<K, V>
+	//fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMappable<K, V>
 
-	fun headMap(before: K, inclusive: Boolean): SortedMappable<K, V>
+	//fun headMap(before: K, inclusive: Boolean): SortedMappable<K, V>
 
-	fun tailMap(after: K, inclusive: Boolean): SortedMappable<K, V>
+	//fun tailMap(after: K, inclusive: Boolean): SortedMappable<K, V>
 
 	fun firstKey(): K
 
 	fun lastKey(): K
 
-	fun reversed(): SortedMappable<K, V>
+	//fun reversed(): SortedMappable<K, V>
 }
 
 interface NavigableMappable<K, V> /* : SortedMappable<K, V> */ {
