@@ -1,7 +1,6 @@
 package io.github.spacedvoid.connection
 
 import java.util.TreeMap
-import kotlin.collections.sortedMapOf as kotlinSortedMapOf
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
 fun <T> collectionOf(vararg elements: T): Collection<T> =
@@ -28,18 +27,6 @@ fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> = linkedSetOf(*eleme
 
 fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> = linkedSetOf(*elements).asMutableConnection()
 
-fun <T: Comparable<T>> sortedSetOf(vararg elements: T): SortedSet<T> =
-	(kotlinSortedSetOf(*elements) as java.util.SortedSet<T>).asConnection()
-
-fun <T> sortedSetOf(comparator: Comparator<in T>, vararg elements: T): SortedSet<T> =
-	(kotlinSortedSetOf(comparator, *elements) as java.util.SortedSet<T>).asConnection()
-
-fun <T: Comparable<T>> mutableSortedSetOf(vararg elements: T): MutableSortedSet<T> =
-	(kotlinSortedSetOf(*elements) as java.util.SortedSet<T>).asMutableConnection()
-
-fun <T> mutableSortedSetOf(comparator: Comparator<in T>, vararg elements: T): MutableSortedSet<T> =
-	(kotlinSortedSetOf(comparator, *elements) as java.util.SortedSet<T>).asMutableConnection()
-
 fun <T: Comparable<T>> navigableSetOf(vararg elements: T): NavigableSet<T> =
 	kotlinSortedSetOf(*elements).asConnection()
 
@@ -59,14 +46,6 @@ fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> = hashMapO
 fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> = linkedMapOf(*entries).asConnection()
 
 fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> = linkedMapOf(*entries).asMutableConnection()
-
-fun <K: Comparable<K>, V> sortedMapOf(vararg entries: Pair<K, V>): SortedMap<K, V> = kotlinSortedMapOf(*entries).asConnection()
-
-fun <K, V> sortedMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): SortedMap<K, V> = kotlinSortedMapOf(comparator, *entries).asConnection()
-
-fun <K: Comparable<K>, V> mutableSortedMapOf(vararg entries: Pair<K, V>): MutableSortedMap<K, V> = kotlinSortedMapOf(*entries).asMutableConnection()
-
-fun <K, V> mutableSortedMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): MutableSortedMap<K, V> = kotlinSortedMapOf(comparator, *entries).asMutableConnection()
 
 fun <K: Comparable<K>, V> navigableMapOf(vararg entries: Pair<K, V>): NavigableMap<K, V> =
 	TreeMap<K, V>().apply { entries.forEach { put(it.first, it.second) } }.asConnection()

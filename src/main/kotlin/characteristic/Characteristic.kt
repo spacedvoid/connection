@@ -67,17 +67,15 @@ interface MutableListed<T>: Listed<T> {
 	fun removeAt(index: Int): T
 }
 
-interface Sorted<T> /* : Sequenced<T> */ {
+interface Navigable<T> /* : Sequenced<T> */ {
 	val comparator: Comparator<in T>?
 
-	//fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Sorted<T>
+	//fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Navigable<T>
 
-	//fun headSet(before: T, inclusive: Boolean): Sorted<T>
+	//fun headSet(before: T, inclusive: Boolean): Navigable<T>
 
-	//fun tailSet(after: T, inclusive: Boolean): Sorted<T>
-}
+	//fun tailSet(after: T, inclusive: Boolean): Navigable<T>
 
-interface Navigable<T> /* : Sorted<T> */ {
 	fun higher(than: T, inclusive: Boolean): T?
 
 	fun lower(than: T, inclusive: Boolean): T?
@@ -115,6 +113,10 @@ interface SequencedMappable<K, V> /* : Mappable<K, V> */ {
 	fun first(): Pair<K, V>?
 
 	fun last(): Pair<K, V>?
+
+	fun firstKey(): K
+
+	fun lastKey(): K
 }
 
 interface MutableSequencedMappable<K, V>: SequencedMappable<K, V> {
@@ -123,28 +125,20 @@ interface MutableSequencedMappable<K, V>: SequencedMappable<K, V> {
 	fun removeLast(): Pair<K, V>?
 }
 
-interface SortedMappable<K, V> /* : SequencedMappable<K, V> */ {
+interface NavigableMappable<K, V> /* : SequencedMappable<K, V> */ {
 	val comparator: Comparator<in K>?
 
-	//fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedMappable<K, V>
+	//fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMappable<K, V>
 
-	//fun headMap(before: K, inclusive: Boolean): SortedMappable<K, V>
+	//fun headMap(before: K, inclusive: Boolean): NavigableMappable<K, V>
 
-	//fun tailMap(after: K, inclusive: Boolean): SortedMappable<K, V>
-
-	fun firstKey(): K
-
-	fun lastKey(): K
-
-	//fun reversed(): SortedMappable<K, V>
-}
-
-interface NavigableMappable<K, V> /* : SortedMappable<K, V> */ {
-	fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>?
-
-	fun lowerKey(than: K, inclusive: Boolean): K?
+	//fun tailMap(after: K, inclusive: Boolean): NavigableMappable<K, V>
 
 	fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
 
+	fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>?
+
 	fun higherKey(than: K, inclusive: Boolean): K?
+
+	fun lowerKey(than: K, inclusive: Boolean): K?
 }

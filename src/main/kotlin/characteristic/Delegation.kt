@@ -65,14 +65,26 @@ class MutableListedImpl<T>(private val kotlin: MutableList<T>): Listed<T> by Lis
 	override fun removeAt(index: Int): T = this.kotlin.removeAt(index)
 }
 
-class SortedImpl<T>(private val kotlin: SortedSet<T>): Sorted<T> {
+class SortedNavigableImpl<T>(private val kotlin: SortedSet<T>): Navigable<T> {
 	override val comparator: Comparator<in T>? = this.kotlin.comparator()
+
+	override fun lower(than: T, inclusive: Boolean): T? =
+		if(this.kotlin.isEmpty()) null
+		else if(inclusive) this.kotlin.reversed().tailSet(than).first
+		else this.kotlin.headSet(than).last
+
+	override fun higher(than: T, inclusive: Boolean): T? =
+		if(this.kotlin.isEmpty()) null
+		else if(inclusive) this.kotlin.tailSet(than).first
+		else this.kotlin.reversed().headSet(than).last
 }
 
 class NavigableImpl<T>(private val kotlin: NavigableSet<T>): Navigable<T> {
-	override fun higher(than: T, inclusive: Boolean): T? = this.kotlin.higher(than)
+	override val comparator: Comparator<in T>? = this.kotlin.comparator()
 
-	override fun lower(than: T, inclusive: Boolean): T? = this.kotlin.lower(than)
+	override fun higher(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
+
+	override fun lower(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
 }
 
 class MappableImpl<K, V>(private val kotlin: Map<K, V>): Mappable<K, V> {
@@ -99,6 +111,10 @@ class SequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>): Seque
 	override fun first(): Pair<K, V>? = this.kotlin.firstEntry()?.let { it.key to it.value }
 
 	override fun last(): Pair<K, V>? = this.kotlin.lastEntry()?.let { it.key to it.value }
+
+	override fun firstKey(): K = first()?.first ?: throw NoSuchElementException("Map is empty")
+
+	override fun lastKey(): K = last()?.first ?: throw NoSuchElementException("Map is empty")
 }
 
 class MutableSequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>): SequencedMappable<K, V> by SequencedMappableImpl(kotlin), MutableSequencedMappable<K, V> {
@@ -107,22 +123,42 @@ class MutableSequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>)
 	override fun removeLast(): Pair<K, V>? = this.kotlin.pollLastEntry()?.let { it.key to it.value }
 }
 
-class SortedMappableImpl<K, V>(private val kotlin: SortedMap<K, V>): SortedMappable<K, V> {
+class SortedNavigableMappableImpl<K, V>(private val kotlin: SortedMap<K, V>): NavigableMappable<K, V> {
 	override val comparator: Comparator<in K>? = this.kotlin.comparator()
 
-	override fun firstKey(): K = this.kotlin.firstKey()
+	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
+		when {
+			inclusive -> this.kotlin.reversed().tailMap(than).firstEntry()
+			else -> this.kotlin.headMap(than).lastEntry()
+		}?.let { it.key to it.value }
 
-	override fun lastKey(): K = this.kotlin.lastKey()
+	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>? =
+		when {
+			inclusive -> this.kotlin.tailMap(than).firstEntry()
+			else -> this.kotlin.reversed().headMap(than).lastEntry()
+		}?.let { it.key to it.value }
+
+	override fun higherKey(than: K, inclusive: Boolean): K? = higherEntry(than, inclusive)?.first
+
+	override fun lowerKey(than: K, inclusive: Boolean): K? = lowerEntry(than, inclusive)?.first
 }
 
 class NavigableMappableImpl<K, V>(private val kotlin: NavigableMap<K, V>): NavigableMappable<K, V> {
-	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>? =
-		(if(inclusive) this.kotlin.floorEntry(than) else this.kotlin.lowerEntry(than))?.let { it.key to it.value }
-
-	override fun lowerKey(than: K, inclusive: Boolean): K? = if(inclusive) this.kotlin.floorKey(than) else this.kotlin.lowerKey(than)
+	override val comparator: Comparator<in K>? = this.kotlin.comparator()
 
 	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
-		(if(inclusive) this.kotlin.ceilingEntry(than) else this.kotlin.higherEntry(than))?.let { it.key to it.value }
+		when {
+			inclusive -> this.kotlin.ceilingEntry(than)
+			else -> this.kotlin.higherEntry(than)
+		}?.let { it.key to it.value }
+
+	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>? =
+		when {
+			inclusive -> this.kotlin.floorEntry(than)
+			else -> this.kotlin.lowerEntry(than)
+		}?.let { it.key to it.value }
 
 	override fun higherKey(than: K, inclusive: Boolean): K? = if(inclusive) this.kotlin.ceilingKey(than) else this.kotlin.higherKey(than)
+
+	override fun lowerKey(than: K, inclusive: Boolean): K? = if(inclusive) this.kotlin.floorKey(than) else this.kotlin.lowerKey(than)
 }

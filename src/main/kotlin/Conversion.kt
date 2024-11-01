@@ -17,19 +17,11 @@ fun <T> Collection<T>.toSet(): Set<T> = setOf(*toGenericArray())
 
 fun <T> Collection<T>.toSequencedSet(): SequencedSet<T> = sequencedSetOf(*toGenericArray())
 
-fun <T: Comparable<T>> Collection<T>.toSortedSet(): SortedSet<T> = sortedSetOf(*toGenericArray())
-
-fun <T> Collection<T>.toSortedSet(comparator: Comparator<in T>): SortedSet<T> = sortedSetOf(comparator, *toGenericArray())
-
 fun <T: Comparable<T>> Collection<T>.toNavigableSet(): NavigableSet<T> = navigableSetOf(*toGenericArray())
 
 fun <T> Collection<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T> = navigableSetOf(comparator, *toGenericArray())
 
 fun <K, V> Map<K, V>.toSequencedMap(): SequencedMap<K, V> = sequencedMapOf(*toGenericArray())
-
-fun <K: Comparable<K>, V> Map<K, V>.toSortedMap(): SortedMap<K, V> = sortedMapOf(*toGenericArray())
-
-fun <K, V> Map<K, V>.toSortedMap(comparator: Comparator<in K>): SortedMap<K, V> = sortedMapOf(comparator, *toGenericArray())
 
 fun <K: Comparable<K>, V> Map<K, V>.toNavigableMap(): NavigableMap<K, V> = navigableMapOf(*toGenericArray())
 

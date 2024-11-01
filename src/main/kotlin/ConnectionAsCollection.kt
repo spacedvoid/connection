@@ -58,15 +58,15 @@ fun <T> RemoveOnlySequencedSet<T>.asKotlin(): java.util.SequencedSet<T> = this.o
 
 fun <T> MutableSequencedSet<T>.asKotlin(): java.util.SequencedSet<T> = this.origin()
 
-// SortedSet -> java.util.SortedSet
+// SortedNavigableSet -> java.util.SortedSet
 
-fun <T> SortedSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
+fun <T> SortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
-fun <T> MutatingSortedSetView<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
+fun <T> MutatingSortedNavigableSetView<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
-fun <T> RemoveOnlySortedSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
+fun <T> RemoveOnlySortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
-fun <T> MutableSortedSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
+fun <T> MutableSortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
 // NavigableSet -> java.util.NavigableSet
 
@@ -96,11 +96,11 @@ fun <K, V> MutableSequencedMap<K, V>.asKotlin(): java.util.SequencedMap<K, V> = 
 
 // SortedMap -> java.util.SortedMap
 
-fun <K, V> SortedMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
+fun <K, V> SortedNavigableMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
-fun <K, V> MutatingSortedMapView<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
+fun <K, V> MutatingSortedNavigableMapView<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
-fun <K, V> MutableSortedMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
+fun <K, V> MutableSortedNavigableMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
 // NavigableMap -> java.util.NavigableMap
 

@@ -20,8 +20,8 @@ fun <T> RemoveOnlySet<T>.asView(): MutatingSetView<T> =
 fun <T> RemoveOnlySequencedSet<T>.asView(): MutatingSequencedSetView<T> =
 	object: MutatingSequencedSetView<T> by this, Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this.origin()) {}
 
-fun <T> RemoveOnlySortedSet<T>.asView(): MutatingSortedSetView<T> =
-	object: MutatingSortedSetView<T> by this, Wrapper<java.util.SortedSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlySortedNavigableSet<T>.asView(): MutatingSortedNavigableSetView<T> =
+	object: MutatingSortedNavigableSetView<T> by this, Wrapper<java.util.SortedSet<T>> by WrapperImpl(this.origin()) {}
 
 fun <T> RemoveOnlyNavigableSet<T>.asView(): MutatingNavigableSetView<T> =
 	object: MutatingNavigableSetView<T> by this, Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this.origin()) {}
@@ -32,8 +32,8 @@ fun <K, V> MutableMap<K, V>.asView(): MutatingMapView<K, V> =
 fun <K, V> MutableSequencedMap<K, V>.asView(): MutatingSequencedMapView<K, V> =
 	object: MutatingSequencedMapView<K, V> by this, Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this.origin()) {}
 
-fun <K, V> MutableSortedMap<K, V>.asView(): MutatingSortedMapView<K, V> =
-	object: MutatingSortedMapView<K, V> by this, Wrapper<java.util.SortedMap<K, V>> by WrapperImpl(this.origin()) {}
+fun <K, V> MutableSortedNavigableMap<K, V>.asView(): MutatingSortedNavigableMapView<K, V> =
+	object: MutatingSortedNavigableMapView<K, V> by this, Wrapper<java.util.SortedMap<K, V>> by WrapperImpl(this.origin()) {}
 
 fun <K, V> MutableNavigableMap<K, V>.asView(): MutatingNavigableMapView<K, V> =
 	object: MutatingNavigableMapView<K, V> by this, Wrapper<java.util.NavigableMap<K, V>> by WrapperImpl(this.origin()) {}

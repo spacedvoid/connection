@@ -11,9 +11,9 @@ fun <T> MutatingSetView<T>.copy(): MutableSet<T> = mutableSetOf(*toGenericArray(
 fun <T> MutatingSequencedSetView<T>.copy(): MutableSequencedSet<T> = mutableSequencedSetOf(*toGenericArray())
 
 @JvmName("copyComparable")
-fun <T: Comparable<T>> MutatingSortedSetView<T>.copy(): MutableSortedSet<T> = mutableSortedSetOf(*toGenericArray())
+fun <T: Comparable<T>> MutatingSortedNavigableSetView<T>.copy(): MutableSortedNavigableSet<T> = mutableNavigableSetOf(*toGenericArray())
 
-fun <T> MutatingSortedSetView<T>.copy(): MutableSortedSet<T> = mutableSortedSetOf(this.comparator!!, *toGenericArray())
+fun <T> MutatingSortedNavigableSetView<T>.copy(): MutableSortedNavigableSet<T> = mutableNavigableSetOf(this.comparator!!, *toGenericArray())
 
 @JvmName("copyComparable")
 fun <T: Comparable<T>> MutatingNavigableSetView<T>.copy(): MutableNavigableSet<T> = mutableNavigableSetOf(*toGenericArray())
@@ -25,9 +25,9 @@ fun <K, V> MutatingMapView<K, V>.copy(): MutableMap<K, V> = mutableMapOf(*toGene
 fun <K, V> MutatingSequencedMapView<K, V>.copy(): MutableSequencedMap<K, V> = mutableSequencedMapOf(*toGenericArray())
 
 @JvmName("copyComparable")
-fun <K: Comparable<K>, V> MutatingSortedMapView<K, V>.copy(): MutableSortedMap<K, V> = mutableSortedMapOf(*toGenericArray())
+fun <K: Comparable<K>, V> MutatingSortedNavigableMapView<K, V>.copy(): MutableSortedNavigableMap<K, V> = mutableNavigableMapOf(*toGenericArray())
 
-fun <K, V> MutatingSortedMapView<K, V>.copy(): MutableSortedMap<K, V> = mutableSortedMapOf(this.comparator!!, *toGenericArray())
+fun <K, V> MutatingSortedNavigableMapView<K, V>.copy(): MutableSortedNavigableMap<K, V> = mutableNavigableMapOf(this.comparator!!, *toGenericArray())
 
 @JvmName("copyComparable")
 fun <K: Comparable<K>, V> MutatingNavigableMapView<K, V>.copy(): MutableNavigableMap<K, V> = mutableNavigableMapOf(*toGenericArray())

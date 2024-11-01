@@ -15,8 +15,8 @@ fun <T> MutableSet<T>.asRemoveOnly(): RemoveOnlySet<T> =
 fun <T> MutableSequencedSet<T>.asRemoveOnly(): RemoveOnlySequencedSet<T> =
 	object: RemoveOnlySequencedSet<T> by this, Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this.origin()) {}
 
-fun <T> MutableSortedSet<T>.asRemoveOnly(): RemoveOnlySortedSet<T> =
-	object: RemoveOnlySortedSet<T> by this, Wrapper<java.util.SortedSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> MutableSortedNavigableSet<T>.asRemoveOnly(): RemoveOnlySortedNavigableSet<T> =
+	object: RemoveOnlySortedNavigableSet<T> by this, Wrapper<java.util.SortedSet<T>> by WrapperImpl(this.origin()) {}
 
 fun <T> MutableNavigableSet<T>.asRemoveOnly(): RemoveOnlyNavigableSet<T> =
 	object: RemoveOnlyNavigableSet<T> by this, Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this.origin()) {}
