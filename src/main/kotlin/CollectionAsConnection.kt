@@ -199,15 +199,15 @@ fun <T> java.util.SequencedSet<T>.asMutableConnection(): MutableSequencedSet<T> 
 
 /*
  * Manual conversion from java.util.SortedSet to java.util.NavigableSet.
- * For all subSet-creation methods, when using higher/lower(), higher/lower() returns `null` if:
+ * For all subSet-creation methods, higher() returns `null` if:
  * 1. Set is empty.
- * 2. No entries are higher/lower than the given entry.
+ * 2. No entries are higher than the given entry.
  *
  * In both cases, the returned `null` can be safely replaced with the given entry because:
  * 1. -> The subSet will also be empty.
- * 2. -> The entry is higher/lower (or equal) than the highest/lowest entry.
+ * 2. -> The entry is higher (or equal) than the highest entry.
  *
- * If the entry was `null`, higher/lower() will throw (and propagate) a NullPointerException if the set does not permit `null` entries.
+ * If the entry was `null`, higher() will throw (and propagate) a NullPointerException if the set does not permit `null` entries.
  * Otherwise, no visual differences are made(`null` replaced by `null`, or non-`null` not being replaced).
  * In other exceptional cases(where the `from` entry is higher than the `to` entry, or the entry is outside the (sub)set's range),
  * the underlying method will propagate the exceptions, mostly being IllegalArgumentException.
@@ -221,10 +221,10 @@ fun <T> java.util.SortedSet<T>.asConnection(): SortedNavigableSet<T> =
 		override fun reverse(): SequencedSet<T> = this@asConnection.reversed().asConnection()
 
 		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T> =
-			this@asConnection.subSet(higher(from, fromInclusive) ?: from, lower(to, toInclusive) ?: to).asConnection()
+			this@asConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asConnection()
 
 		override fun headSet(before: T, inclusive: Boolean): SortedNavigableSet<T> =
-			this@asConnection.headSet(lower(before, inclusive) ?: before).asConnection()
+			this@asConnection.headSet(higher(before, !inclusive) ?: before).asConnection()
 
 		override fun tailSet(after: T, inclusive: Boolean): SortedNavigableSet<T> =
 			this@asConnection.tailSet(higher(after, inclusive) ?: after).asConnection()
@@ -236,10 +236,10 @@ fun <T> java.util.SortedSet<T>.asViewConnection(): MutatingSortedNavigableSetVie
 		override fun reverse(): MutatingSortedNavigableSetView<T> = this@asViewConnection.reversed().asViewConnection()
 
 		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableSetView<T> =
-			this@asViewConnection.subSet(higher(from, fromInclusive) ?: from, lower(to, toInclusive) ?: to).asViewConnection()
+			this@asViewConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asViewConnection()
 
 		override fun headSet(before: T, inclusive: Boolean): MutatingSortedNavigableSetView<T> =
-			this@asViewConnection.headSet(lower(before, inclusive) ?: before).asViewConnection()
+			this@asViewConnection.headSet(higher(before, !inclusive) ?: before).asViewConnection()
 
 		override fun tailSet(after: T, inclusive: Boolean): MutatingSortedNavigableSetView<T> =
 			this@asViewConnection.tailSet(higher(after, inclusive) ?: after).asViewConnection()
@@ -251,10 +251,10 @@ fun <T> java.util.SortedSet<T>.asRemoveOnlyConnection(): RemoveOnlySortedNavigab
 		override fun reverse(): RemoveOnlySortedNavigableSet<T> = this@asRemoveOnlyConnection.reversed().asRemoveOnlyConnection()
 
 		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): RemoveOnlySortedNavigableSet<T> =
-			this@asRemoveOnlyConnection.subSet(higher(from, fromInclusive) ?: from, lower(to, toInclusive) ?: to).asRemoveOnlyConnection()
+			this@asRemoveOnlyConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asRemoveOnlyConnection()
 
 		override fun headSet(before: T, inclusive: Boolean): RemoveOnlySortedNavigableSet<T> =
-			this@asRemoveOnlyConnection.headSet(lower(before, inclusive) ?: before).asRemoveOnlyConnection()
+			this@asRemoveOnlyConnection.headSet(higher(before, !inclusive) ?: before).asRemoveOnlyConnection()
 
 		override fun tailSet(after: T, inclusive: Boolean): RemoveOnlySortedNavigableSet<T> =
 			this@asRemoveOnlyConnection.tailSet(higher(after, inclusive) ?: after).asRemoveOnlyConnection()
@@ -266,10 +266,10 @@ fun <T> java.util.SortedSet<T>.asMutableConnection(): MutableSortedNavigableSet<
 		override fun reverse(): MutableSortedNavigableSet<T> = this@asMutableConnection.reversed().asMutableConnection()
 
 		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableSortedNavigableSet<T> =
-			this@asMutableConnection.subSet(higher(from, fromInclusive) ?: from, lower(to, toInclusive) ?: to).asMutableConnection()
+			this@asMutableConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asMutableConnection()
 
 		override fun headSet(before: T, inclusive: Boolean): MutableSortedNavigableSet<T> =
-			this@asMutableConnection.headSet(lower(before, inclusive) ?: before).asMutableConnection()
+			this@asMutableConnection.headSet(higher(before, !inclusive) ?: before).asMutableConnection()
 
 		override fun tailSet(after: T, inclusive: Boolean): MutableSortedNavigableSet<T> =
 			this@asMutableConnection.tailSet(higher(after, inclusive) ?: after).asMutableConnection()
@@ -416,19 +416,19 @@ fun <K, V> java.util.SortedMap<K, V>.asConnection(): SortedNavigableMap<K, V> =
 		override fun reversed(): SortedNavigableMap<K, V> = this@asConnection.reversed().asConnection()
 
 		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMap<K, V> =
-			this@asConnection.subMap(higherKey(from, fromInclusive) ?: from, lowerKey(to, toInclusive) ?: to).asConnection()
+			this@asConnection.subMap(higherKey(from, fromInclusive) ?: from, higherKey(to, !toInclusive) ?: to).asConnection()
 
 		override fun headMap(before: K, inclusive: Boolean): SortedNavigableMap<K, V> =
-			this@asConnection.headMap(lowerKey(before, inclusive) ?: before).asConnection()
+			this@asConnection.headMap(higherKey(before, !inclusive) ?: before).asConnection()
 
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V> =
 			this@asConnection.tailMap(higherKey(after, inclusive) ?: after).asConnection()
 
-		override val keys: SortedNavigableSet<K> = TODO()
+		override val keys: SortedNavigableSet<K> = this@asConnection.keySet().asConnection()
 
 		override val values: SequencedCollection<V> = this@asConnection.sequencedValues().asConnection()
 
-		override val entries: SortedNavigableSet<out KotlinMap.Entry<K, V>> = TODO()
+		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
 
 fun <K, V> java.util.SortedMap<K, V>.asViewConnection(): MutatingSortedNavigableMapView<K, V> =
@@ -437,19 +437,19 @@ fun <K, V> java.util.SortedMap<K, V>.asViewConnection(): MutatingSortedNavigable
 		override fun reversed(): MutatingSortedNavigableMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
 
 		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
-			this@asViewConnection.subMap(higherKey(from, fromInclusive) ?: from, lowerKey(to, toInclusive) ?: to).asViewConnection()
+			this@asViewConnection.subMap(higherKey(from, fromInclusive) ?: from, higherKey(to, !toInclusive) ?: to).asViewConnection()
 
 		override fun headMap(before: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
-			this@asViewConnection.headMap(lowerKey(before, inclusive) ?: before).asViewConnection()
+			this@asViewConnection.headMap(higherKey(before, !inclusive) ?: before).asViewConnection()
 
 		override fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(higherKey(after, inclusive) ?: after).asViewConnection()
 
-		override val keys: MutatingSortedNavigableSetView<K> = TODO()
+		override val keys: MutatingSortedNavigableSetView<K> = this@asViewConnection.keySet().asViewConnection()
 
 		override val values: MutatingSequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
 
-		override val entries: MutatingSortedNavigableSetView<out KotlinMap.Entry<K, V>> = TODO()
+		override val entries: MutatingSequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
 
 fun <K, V> java.util.SortedMap<K, V>.asMutableConnection(): MutableSortedNavigableMap<K, V> =
@@ -458,20 +458,66 @@ fun <K, V> java.util.SortedMap<K, V>.asMutableConnection(): MutableSortedNavigab
 		override fun reversed(): MutableSortedNavigableMap<K, V> = this@asMutableConnection.reversed().asMutableConnection()
 
 		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutableSortedNavigableMap<K, V> =
-			this@asMutableConnection.subMap(higherKey(from, fromInclusive) ?: from, lowerKey(to, toInclusive) ?: to).asMutableConnection()
+			this@asMutableConnection.subMap(higherKey(from, fromInclusive) ?: from, higherKey(to, !toInclusive) ?: to).asMutableConnection()
 
 		override fun headMap(before: K, inclusive: Boolean): MutableSortedNavigableMap<K, V> =
-			this@asMutableConnection.headMap(lowerKey(before, inclusive) ?: before).asMutableConnection()
+			this@asMutableConnection.headMap(higherKey(before, !inclusive) ?: before).asMutableConnection()
 
 		override fun tailMap(after: K, inclusive: Boolean): MutableSortedNavigableMap<K, V> =
 			this@asMutableConnection.tailMap(higherKey(after, inclusive) ?: after).asMutableConnection()
 
-		override val keys: RemoveOnlyNavigableSet<K> = TODO()
+		override val keys: RemoveOnlySortedNavigableSet<K> = this@asMutableConnection.keySet().asRemoveOnlyConnection()
 
 		override val values: RemoveOnlySequencedCollection<V> = this@asMutableConnection.sequencedValues().asRemoveOnlyConnection()
 
-		override val entries: RemoveOnlyNavigableSet<KotlinMutableMap.MutableEntry<K, V>> = TODO()
+		override val entries: RemoveOnlySequencedSet<KotlinMutableMap.MutableEntry<K, V>> = this@asMutableConnection.sequencedEntrySet().asRemoveOnlyConnection()
 	}
+
+//<editor-fold defaultState="collapsed" desc="// java.util.SortedMap keySet implementation">
+private fun <K> java.util.SortedMap<K, *>.keySet(): java.util.NavigableSet<K> {
+	val keys = sequencedKeySet()
+	return object: java.util.SequencedSet<K> by keys, java.util.NavigableSet<K> {
+		override fun reversed(): java.util.NavigableSet<K> = super.reversed()
+
+		override fun comparator(): Comparator<in K>? = this@keySet.comparator()
+
+		override fun first(): K = keys.first
+
+		override fun last(): K = keys.last
+
+		override fun pollFirst(): K? = if(isNotEmpty()) keys.removeFirst() else null
+
+		override fun pollLast(): K? = if(isNotEmpty()) keys.removeLast() else null
+
+		override fun descendingSet(): java.util.NavigableSet<K> = this@keySet.reversed().keySet()
+
+		override fun descendingIterator(): MutableIterator<K> = descendingSet().iterator()
+
+		override fun higher(e: K): K? = this@keySet.reversed().headMap(e).lastKey()
+
+		override fun ceiling(e: K): K? = this@keySet.tailMap(e).firstKey()
+
+		override fun floor(e: K): K? = this@keySet.reversed().tailMap(e).firstKey()
+
+		override fun lower(e: K): K? = this@keySet.headMap(e).lastKey()
+
+		override fun tailSet(fromElement: K): java.util.NavigableSet<K> = tailSet(fromElement, true)
+
+		override fun tailSet(fromElement: K, inclusive: Boolean): java.util.NavigableSet<K> =
+			this@keySet.tailMap(if(inclusive) fromElement else higher(fromElement)).keySet()
+
+		override fun headSet(toElement: K): java.util.NavigableSet<K> = headSet(toElement, false)
+
+		override fun headSet(toElement: K, inclusive: Boolean): java.util.NavigableSet<K> =
+			this@keySet.headMap(if(inclusive) higher(toElement) else toElement).keySet()
+
+		override fun subSet(fromElement: K, toElement: K): java.util.NavigableSet<K> = subSet(fromElement, true, toElement, false)
+
+		override fun subSet(fromElement: K, fromInclusive: Boolean, toElement: K, toInclusive: Boolean): java.util.NavigableSet<K> =
+			this@keySet.subMap(if(fromInclusive) fromElement else higher(fromElement), if(toInclusive) higher(toElement) else toElement).keySet()
+	}
+}
+//</editor-fold>
 
 // java.util.NavigableMap -> NavigableMap
 
@@ -489,11 +535,11 @@ fun <K, V> java.util.NavigableMap<K, V>.asConnection(): NavigableMap<K, V> =
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V> =
 			this@asConnection.tailMap(after, inclusive).asConnection()
 
-		override val keys: NavigableSet<K> = TODO()
+		override val keys: NavigableSet<K> = this@asConnection.navigableKeySet().asConnection()
 
 		override val values: SequencedCollection<V> = this@asConnection.sequencedValues().asConnection()
 
-		override val entries: NavigableSet<KotlinMutableMap.MutableEntry<K, V>> = TODO()
+		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
 
 fun <K, V> java.util.NavigableMap<K, V>.asViewConnection(): MutatingNavigableMapView<K, V> =
@@ -510,11 +556,11 @@ fun <K, V> java.util.NavigableMap<K, V>.asViewConnection(): MutatingNavigableMap
 		override fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(after, inclusive).asViewConnection()
 
-		override val keys: MutatingNavigableSetView<K> = TODO()
+		override val keys: MutatingNavigableSetView<K> = this@asViewConnection.navigableKeySet().asViewConnection()
 
 		override val values: MutatingSequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
 
-		override val entries: MutatingNavigableSetView<KotlinMutableMap.MutableEntry<K, V>> = TODO()
+		override val entries: MutatingSequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
 
 fun <K, V> java.util.NavigableMap<K, V>.asMutableConnection(): MutableNavigableMap<K, V> =
@@ -531,9 +577,9 @@ fun <K, V> java.util.NavigableMap<K, V>.asMutableConnection(): MutableNavigableM
 		override fun tailMap(after: K, inclusive: Boolean): MutableSortedNavigableMap<K, V> =
 			this@asMutableConnection.tailMap(after, inclusive).asMutableConnection()
 
-		override val keys: RemoveOnlyNavigableSet<K> = TODO()
+		override val keys: RemoveOnlyNavigableSet<K> = this@asMutableConnection.navigableKeySet().asRemoveOnlyConnection()
 
 		override val values: RemoveOnlySequencedCollection<V> = this@asMutableConnection.sequencedValues().asRemoveOnlyConnection()
 
-		override val entries: RemoveOnlyNavigableSet<KotlinMutableMap.MutableEntry<K, V>> = TODO()
+		override val entries: RemoveOnlySequencedSet<KotlinMutableMap.MutableEntry<K, V>> = this@asMutableConnection.sequencedEntrySet().asRemoveOnlyConnection()
 	}
