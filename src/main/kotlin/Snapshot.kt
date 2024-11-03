@@ -42,7 +42,7 @@ internal fun <T> MutatingCollectionView<T>.toGenericArray(): Array<T> {
 	return this.size().let { size ->
 		Array<Any?>(size) {
 			try {
-				if(it != size) throw concurrentModification()
+				if(size != size()) throw concurrentModification()
 				return@Array iterator.next()
 			}
 			catch(e: NoSuchElementException) {
@@ -58,8 +58,8 @@ internal fun <K, V> MutatingMapView<K, V>.toGenericArray(): Array<Pair<K, V>> {
 	return this.size().let { size ->
 		Array(size) {
 			try {
-				if(it != size) throw concurrentModification()
-				return@Array with(iterator.next()) { this.key to this.value }
+				if(size != size()) throw concurrentModification()
+				return@Array iterator.next().let { it.key to it.value }
 			}
 			catch(e: NoSuchElementException) {
 				throw concurrentModification(e)
