@@ -22,6 +22,8 @@ class RemoveOnlyImpl<T>(private val kotlin: MutableCollection<T>): Collectable<T
 
 	override fun removeAll(from: io.github.spacedvoid.connection.Collection<T>): Boolean = this.kotlin.removeAll(from.asKotlin().toSet())
 
+	override fun retainAll(from: io.github.spacedvoid.connection.Collection<T>): Boolean = this.kotlin.retainAll(from.asKotlin().toSet())
+
 	override fun clear() = this.kotlin.clear()
 }
 
@@ -52,7 +54,7 @@ class MutableSequencedImpl<T>(private val kotlin: java.util.SequencedCollection<
 }
 
 class ListedImpl<T>(private val kotlin: List<T>): Listed<T> {
-	override fun slice(startInclusive: Int, endExclusive: Int): Nothing = implementationRequired("slice")
+	override fun subList(startInclusive: Int, endExclusive: Int): Nothing = implementationRequired("slice")
 
 	override fun get(index: Int): T = this.kotlin[index]
 

@@ -127,7 +127,7 @@ fun <T> KotlinList<T>.asConnection(): List<T> =
 
 		override fun reverse(): List<T> = this@asConnection.asReversed().asConnection()
 
-		override fun slice(startInclusive: Int, endExclusive: Int): List<T> =
+		override fun subList(startInclusive: Int, endExclusive: Int): List<T> =
 			this@asConnection.subList(startInclusive, endExclusive).asConnection()
 	}
 
@@ -137,7 +137,7 @@ fun <T> KotlinList<T>.asViewConnection(): MutatingListView<T> =
 			Listed<T> by ListedImpl(this), Wrapper<KotlinList<T>> by WrapperImpl(this), MutatingListView<T> {
 		override fun reverse(): MutatingListView<T> = this@asViewConnection.asReversed().asViewConnection()
 
-		override fun slice(startInclusive: Int, endExclusive: Int): MutatingListView<T> =
+		override fun subList(startInclusive: Int, endExclusive: Int): MutatingListView<T> =
 			this@asViewConnection.subList(startInclusive, endExclusive).asViewConnection()
 	}
 
@@ -147,7 +147,7 @@ fun <T> KotlinMutableList<T>.asConnection(): MutableList<T> =
 			MutableListed<T> by MutableListedImpl(this), Wrapper<KotlinMutableList<T>> by WrapperImpl(this), MutableList<T> {
 		override fun reverse(): MutableList<T> = this@asConnection.asReversed().asConnection()
 
-		override fun slice(startInclusive: Int, endExclusive: Int): MutableList<T> =
+		override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T> =
 			this@asConnection.subList(startInclusive, endExclusive).asConnection()
 	}
 

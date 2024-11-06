@@ -20,6 +20,8 @@ interface RemoveOnly<T>: Collectable<T> {
 
 	fun removeAll(from: Collection<T>): Boolean
 
+	fun retainAll(from: Collection<T>): Boolean
+
 	fun clear()
 }
 
@@ -50,7 +52,7 @@ interface MutableSequenced<T>: RemoveOnlySequenced<T> {
 }
 
 interface Listed<T> /* : Sequenced<T> */ {
-	fun slice(startInclusive: Int, endExclusive: Int): Listed<T>
+	fun subList(startInclusive: Int, endExclusive: Int): Listed<T>
 
 	operator fun get(index: Int): T
 
