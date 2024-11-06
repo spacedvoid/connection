@@ -32,6 +32,8 @@ class MutableImpl<T>(private val kotlin: MutableCollection<T>): RemoveOnly<T> by
 }
 
 class SequencedImpl<T>(private val kotlin: java.util.SequencedCollection<T>): Sequenced<T> {
+	override fun reverse(): Nothing = implementationRequired("reverse")
+
 	override fun first(): T = this.kotlin.first
 
 	override fun last(): T = this.kotlin.last
@@ -50,6 +52,8 @@ class MutableSequencedImpl<T>(private val kotlin: java.util.SequencedCollection<
 }
 
 class ListedImpl<T>(private val kotlin: List<T>): Listed<T> {
+	override fun slice(startInclusive: Int, endExclusive: Int): Nothing = implementationRequired("slice")
+
 	override fun get(index: Int): T = this.kotlin[index]
 
 	override fun indexOf(element: T): Int = this.kotlin.indexOf(element)
@@ -68,6 +72,12 @@ class MutableListedImpl<T>(private val kotlin: MutableList<T>): Listed<T> by Lis
 class SortedNavigableImpl<T>(private val kotlin: SortedSet<T>): Navigable<T> {
 	override val comparator: Comparator<in T>? = this.kotlin.comparator()
 
+	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Nothing = implementationRequired("subSet")
+
+	override fun headSet(before: T, inclusive: Boolean): Nothing = implementationRequired("headSet")
+
+	override fun tailSet(after: T, inclusive: Boolean): Nothing = implementationRequired("tailSet")
+
 	override fun lower(than: T, inclusive: Boolean): T? =
 		if(this.kotlin.isEmpty()) null
 		else if(inclusive) this.kotlin.reversed().tailSet(than).first
@@ -82,6 +92,12 @@ class SortedNavigableImpl<T>(private val kotlin: SortedSet<T>): Navigable<T> {
 class NavigableImpl<T>(private val kotlin: NavigableSet<T>): Navigable<T> {
 	override val comparator: Comparator<in T>? = this.kotlin.comparator()
 
+	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Nothing = implementationRequired("subSet")
+
+	override fun headSet(before: T, inclusive: Boolean): Nothing = implementationRequired("headSet")
+
+	override fun tailSet(after: T, inclusive: Boolean): Nothing = implementationRequired("tailSet")
+
 	override fun higher(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
 
 	override fun lower(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
@@ -95,6 +111,12 @@ class MappableImpl<K, V>(private val kotlin: Map<K, V>): Mappable<K, V> {
 	override fun containsValue(value: V): Boolean = this.kotlin.containsValue(value)
 
 	override fun get(key: K): V? = this.kotlin[key]
+
+	override val keys: Nothing = implementationRequired("keys")
+
+	override val values: Nothing = implementationRequired("values")
+
+	override val entries: Nothing = implementationRequired("entries")
 }
 
 class MutableMappableImpl<K, V>(private val kotlin: MutableMap<K, V>): Mappable<K, V> by MappableImpl(kotlin), MutableMappable<K, V> {
@@ -108,6 +130,8 @@ class MutableMappableImpl<K, V>(private val kotlin: MutableMap<K, V>): Mappable<
 }
 
 class SequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>): SequencedMappable<K, V> {
+	override fun reversed(): Nothing = implementationRequired("reversed")
+
 	override fun first(): Pair<K, V>? = this.kotlin.firstEntry()?.let { it.key to it.value }
 
 	override fun last(): Pair<K, V>? = this.kotlin.lastEntry()?.let { it.key to it.value }
@@ -125,6 +149,12 @@ class MutableSequencedMappableImpl<K, V>(private val kotlin: SequencedMap<K, V>)
 
 class SortedNavigableMappableImpl<K, V>(private val kotlin: SortedMap<K, V>): NavigableMappable<K, V> {
 	override val comparator: Comparator<in K>? = this.kotlin.comparator()
+
+	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): Nothing = implementationRequired("subMap")
+
+	override fun headMap(before: K, inclusive: Boolean): Nothing = implementationRequired("headMap")
+
+	override fun tailMap(after: K, inclusive: Boolean): Nothing = implementationRequired("tailMap")
 
 	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
 		when {
@@ -146,6 +176,12 @@ class SortedNavigableMappableImpl<K, V>(private val kotlin: SortedMap<K, V>): Na
 class NavigableMappableImpl<K, V>(private val kotlin: NavigableMap<K, V>): NavigableMappable<K, V> {
 	override val comparator: Comparator<in K>? = this.kotlin.comparator()
 
+	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): Nothing = implementationRequired("subMap")
+
+	override fun headMap(before: K, inclusive: Boolean): Nothing = implementationRequired("headMap")
+
+	override fun tailMap(after: K, inclusive: Boolean): Nothing = implementationRequired("tailMap")
+
 	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
 		when {
 			inclusive -> this.kotlin.ceilingEntry(than)
@@ -162,3 +198,5 @@ class NavigableMappableImpl<K, V>(private val kotlin: NavigableMap<K, V>): Navig
 
 	override fun lowerKey(than: K, inclusive: Boolean): K? = if(inclusive) this.kotlin.floorKey(than) else this.kotlin.lowerKey(than)
 }
+
+private fun implementationRequired(name: String): Nothing = throw NotImplementedError("This method or property $name requires manual implementation")

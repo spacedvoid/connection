@@ -30,7 +30,7 @@ interface Mutable<T>: RemoveOnly<T> {
 }
 
 interface Sequenced<T> /* : Collectable<T> */ {
-	//fun reverse(): Sequenced<T>
+	fun reverse(): Sequenced<T>
 
 	fun first(): T
 
@@ -50,7 +50,7 @@ interface MutableSequenced<T>: RemoveOnlySequenced<T> {
 }
 
 interface Listed<T> /* : Sequenced<T> */ {
-	//fun slice(startInclusive: Int, endExclusive: Int): Listed<T>
+	fun slice(startInclusive: Int, endExclusive: Int): Listed<T>
 
 	operator fun get(index: Int): T
 
@@ -70,11 +70,11 @@ interface MutableListed<T>: Listed<T> {
 interface Navigable<T> /* : Sequenced<T> */ {
 	val comparator: Comparator<in T>?
 
-	//fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Navigable<T>
+	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): Navigable<T>
 
-	//fun headSet(before: T, inclusive: Boolean): Navigable<T>
+	fun headSet(before: T, inclusive: Boolean): Navigable<T>
 
-	//fun tailSet(after: T, inclusive: Boolean): Navigable<T>
+	fun tailSet(after: T, inclusive: Boolean): Navigable<T>
 
 	fun higher(than: T, inclusive: Boolean): T?
 
@@ -90,11 +90,11 @@ interface Mappable<K, V> {
 
 	operator fun get(key: K): V?
 
-	//val keys: Collectable<out K>
+	val keys: Collectable<out K>
 
-	//val values: Collectable<out V>
+	val values: Collectable<out V>
 
-	//val entries: Collectable<out kotlin.collections.Map.Entry<K, V>>
+	val entries: Collectable<out kotlin.collections.Map.Entry<K, V>>
 }
 
 interface MutableMappable<K, V>: Mappable<K, V> {
@@ -108,7 +108,7 @@ interface MutableMappable<K, V>: Mappable<K, V> {
 }
 
 interface SequencedMappable<K, V> /* : Mappable<K, V> */ {
-	//fun reversed(): SequencedMappable<K, V>
+	fun reversed(): SequencedMappable<K, V>
 
 	fun first(): Pair<K, V>?
 
@@ -128,11 +128,11 @@ interface MutableSequencedMappable<K, V>: SequencedMappable<K, V> {
 interface NavigableMappable<K, V> /* : SequencedMappable<K, V> */ {
 	val comparator: Comparator<in K>?
 
-	//fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMappable<K, V>
+	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMappable<K, V>
 
-	//fun headMap(before: K, inclusive: Boolean): NavigableMappable<K, V>
+	fun headMap(before: K, inclusive: Boolean): NavigableMappable<K, V>
 
-	//fun tailMap(after: K, inclusive: Boolean): NavigableMappable<K, V>
+	fun tailMap(after: K, inclusive: Boolean): NavigableMappable<K, V>
 
 	fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
 

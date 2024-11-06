@@ -5,7 +5,7 @@ import io.github.spacedvoid.connection.characteristic.RemoveOnlySequenced
 import io.github.spacedvoid.connection.characteristic.Sequenced
 
 interface SequencedCollection<T>: Collection<T>, Sequenced<T> {
-	fun reverse(): SequencedCollection<T>
+	override fun reverse(): SequencedCollection<T>
 
 	override fun first(): T
 
@@ -13,7 +13,7 @@ interface SequencedCollection<T>: Collection<T>, Sequenced<T> {
 }
 
 interface MutatingSequencedCollectionView<T>: MutatingCollectionView<T>, Sequenced<T> {
-	fun reverse(): MutatingSequencedCollectionView<T>
+	override fun reverse(): MutatingSequencedCollectionView<T>
 
 	override fun first(): T
 

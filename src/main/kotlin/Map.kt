@@ -13,11 +13,11 @@ interface Map<K, V>: Mappable<K, V> {
 
 	override operator fun get(key: K): V?
 
-	val keys: Set<out K>
+	override val keys: Set<out K>
 
-	val values: Collection<out V>
+	override val values: Collection<out V>
 
-	val entries: Set<out kotlin.collections.Map.Entry<K, V>>
+	override val entries: Set<out kotlin.collections.Map.Entry<K, V>>
 }
 
 interface MutatingMapView<K, V>: Mappable<K, V> {
@@ -29,11 +29,11 @@ interface MutatingMapView<K, V>: Mappable<K, V> {
 
 	override operator fun get(key: K): V?
 
-	val keys: MutatingSetView<out K>
+	override val keys: MutatingSetView<out K>
 
-	val values: MutatingCollectionView<out V>
+	override val values: MutatingCollectionView<out V>
 
-	val entries: MutatingSetView<out kotlin.collections.Map.Entry<K, V>>
+	override val entries: MutatingSetView<out kotlin.collections.Map.Entry<K, V>>
 }
 
 interface MutableMap<K, V>: MutatingMapView<K, V>, MutableMappable<K, V> {

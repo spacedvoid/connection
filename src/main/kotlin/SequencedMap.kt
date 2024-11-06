@@ -4,7 +4,7 @@ import io.github.spacedvoid.connection.characteristic.MutableSequencedMappable
 import io.github.spacedvoid.connection.characteristic.SequencedMappable
 
 interface SequencedMap<K, V>: SequencedMappable<K, V>, Map<K, V> {
-	fun reversed(): SequencedMap<K, V>
+	override fun reversed(): SequencedMap<K, V>
 
 	override fun first(): Pair<K, V>?
 
@@ -18,7 +18,7 @@ interface SequencedMap<K, V>: SequencedMappable<K, V>, Map<K, V> {
 }
 
 interface MutatingSequencedMapView<K, V>: SequencedMappable<K, V>, MutatingMapView<K, V> {
-	fun reversed(): MutatingSequencedMapView<K, V>
+	override fun reversed(): MutatingSequencedMapView<K, V>
 
 	override fun first(): Pair<K, V>?
 

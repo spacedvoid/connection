@@ -8,7 +8,7 @@ interface List<T>: SequencedCollection<T>, Listed<T> {
 
 	override fun reverse(): List<T>
 
-	fun slice(startInclusive: Int, endExclusive: Int): List<T>
+	override fun slice(startInclusive: Int, endExclusive: Int): List<T>
 
 	override operator fun get(index: Int): T
 
@@ -20,7 +20,7 @@ interface List<T>: SequencedCollection<T>, Listed<T> {
 interface MutatingListView<T>: MutatingSequencedCollectionView<T>, Listed<T> {
 	override fun reverse(): MutatingListView<T>
 
-	fun slice(startInclusive: Int, endExclusive: Int): MutatingListView<T>
+	override fun slice(startInclusive: Int, endExclusive: Int): MutatingListView<T>
 
 	override operator fun get(index: Int): T
 

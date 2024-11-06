@@ -5,11 +5,11 @@ import io.github.spacedvoid.connection.characteristic.Navigable
 interface SortedNavigableSet<T>: Navigable<T>, SequencedSet<T> {
 	override val comparator: Comparator<in T>?
 
-	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T>
+	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T>
 
-	fun headSet(before: T, inclusive: Boolean): SortedNavigableSet<T>
+	override fun headSet(before: T, inclusive: Boolean): SortedNavigableSet<T>
 
-	fun tailSet(after: T, inclusive: Boolean): SortedNavigableSet<T>
+	override fun tailSet(after: T, inclusive: Boolean): SortedNavigableSet<T>
 
 	override fun higher(than: T, inclusive: Boolean): T?
 
@@ -19,11 +19,11 @@ interface SortedNavigableSet<T>: Navigable<T>, SequencedSet<T> {
 interface MutatingSortedNavigableSetView<T>: Navigable<T>, MutatingSequencedSetView<T> {
 	override val comparator: Comparator<in T>?
 
-	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableSetView<T>
+	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableSetView<T>
 
-	fun headSet(before: T, inclusive: Boolean): MutatingSortedNavigableSetView<T>
+	override fun headSet(before: T, inclusive: Boolean): MutatingSortedNavigableSetView<T>
 
-	fun tailSet(after: T, inclusive: Boolean): MutatingSortedNavigableSetView<T>
+	override fun tailSet(after: T, inclusive: Boolean): MutatingSortedNavigableSetView<T>
 
 	override fun higher(than: T, inclusive: Boolean): T?
 

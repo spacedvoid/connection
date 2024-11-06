@@ -7,11 +7,11 @@ interface SortedNavigableMap<K, V>: NavigableMappable<K, V>, SequencedMap<K, V> 
 
 	override fun reversed(): SortedNavigableMap<K, V>
 
-	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMap<K, V>
+	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMap<K, V>
 
-	fun headMap(before: K, inclusive: Boolean): SortedNavigableMap<K, V>
+	override fun headMap(before: K, inclusive: Boolean): SortedNavigableMap<K, V>
 
-	fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V>
+	override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V>
 
 	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
 
@@ -29,11 +29,11 @@ interface MutatingSortedNavigableMapView<K, V>: NavigableMappable<K, V>, Mutatin
 
 	override fun reversed(): MutatingSortedNavigableMapView<K, V>
 
-	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableMapView<K, V>
+	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableMapView<K, V>
 
-	fun headMap(before: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V>
+	override fun headMap(before: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V>
 
-	fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V>
+	override fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V>
 
 	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
 
