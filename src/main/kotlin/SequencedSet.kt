@@ -1,14 +1,14 @@
 package io.github.spacedvoid.connection
 
-interface SequencedSet<T>: Set<T>, SequencedCollection<T> {
+interface SequencedSetView<T>: SetView<T>, SequencedCollectionView<T> {
+	override fun reverse(): SequencedSetView<T>
+}
+
+interface SequencedSet<T>: Set<T>, SequencedCollection<T>, SequencedSetView<T> {
 	override fun reverse(): SequencedSet<T>
 }
 
-interface MutatingSequencedSetView<T>: MutatingSequencedCollectionView<T>, MutatingSetView<T> {
-	override fun reverse(): MutatingSequencedSetView<T>
-}
-
-interface RemoveOnlySequencedSet<T>: RemoveOnlySet<T>, RemoveOnlySequencedCollection<T>, MutatingSequencedSetView<T> {
+interface RemoveOnlySequencedSet<T>: RemoveOnlySet<T>, RemoveOnlySequencedCollection<T>, SequencedSetView<T> {
 	override fun reverse(): RemoveOnlySequencedSet<T>
 }
 

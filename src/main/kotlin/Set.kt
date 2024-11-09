@@ -1,9 +1,9 @@
 package io.github.spacedvoid.connection
 
-interface Set<T>: Collection<T>
+interface SetView<T>: CollectionView<T>
 
-interface MutatingSetView<T>: MutatingCollectionView<T>
+interface Set<T>: Collection<T>, SetView<T>
 
-interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, MutatingSetView<T>
+interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T>
 
 interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T>

@@ -48,8 +48,8 @@ fun <T> KotlinCollection<T>.asConnection(): Collection<T> =
 		override fun iterator(): Iterator<T> = this@asConnection.iterator()
 	}
 
-fun <T> KotlinCollection<T>.asViewConnection(): MutatingCollectionView<T> =
-	object: Collectable<T> by CollectableImpl(this), Wrapper<KotlinCollection<T>> by WrapperImpl(this), MutatingCollectionView<T> {}
+fun <T> KotlinCollection<T>.asViewConnection(): CollectionView<T> =
+	object: Collectable<T> by CollectableImpl(this), Wrapper<KotlinCollection<T>> by WrapperImpl(this), CollectionView<T> {}
 
 fun <T> KotlinMutableCollection<T>.asRemoveOnlyConnection(): RemoveOnlyCollection<T> =
 	object: RemoveOnly<T> by RemoveOnlyImpl(this), Wrapper<KotlinMutableCollection<T>> by WrapperImpl(this), RemoveOnlyCollection<T> {}
@@ -67,10 +67,10 @@ fun <T> java.util.SequencedCollection<T>.asConnection(): SequencedCollection<T> 
 		override fun reverse(): SequencedCollection<T> = this@asConnection.reversed().asConnection()
 	}
 
-fun <T> java.util.SequencedCollection<T>.asViewConnection(): MutatingSequencedCollectionView<T> =
+fun <T> java.util.SequencedCollection<T>.asViewConnection(): SequencedCollectionView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this),
-			Wrapper<java.util.SequencedCollection<T>> by WrapperImpl(this), MutatingSequencedCollectionView<T> {
-		override fun reverse(): MutatingSequencedCollectionView<T> = this@asViewConnection.reversed().asViewConnection()
+			Wrapper<java.util.SequencedCollection<T>> by WrapperImpl(this), SequencedCollectionView<T> {
+		override fun reverse(): SequencedCollectionView<T> = this@asViewConnection.reversed().asViewConnection()
 	}
 
 fun <T> java.util.SequencedCollection<T>.asRemoveOnlyConnection(): RemoveOnlySequencedCollection<T> =
@@ -97,10 +97,10 @@ fun <T> KotlinList<T>.asSequencedConnection(): SequencedCollection<T> =
 	}
 
 @Suppress("UNCHECKED_CAST")
-fun <T> KotlinList<T>.asSequencedViewConnection(): MutatingSequencedCollectionView<T> =
+fun <T> KotlinList<T>.asSequencedViewConnection(): SequencedCollectionView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this as java.util.SequencedCollection<T>),
-			Wrapper<KotlinList<T>> by WrapperImpl(this), MutatingSequencedCollectionView<T> {
-		override fun reverse(): MutatingSequencedCollectionView<T> = this@asSequencedViewConnection.asReversed().asSequencedViewConnection()
+			Wrapper<KotlinList<T>> by WrapperImpl(this), SequencedCollectionView<T> {
+		override fun reverse(): SequencedCollectionView<T> = this@asSequencedViewConnection.asReversed().asSequencedViewConnection()
 	}
 
 @Suppress("UNCHECKED_CAST")
@@ -132,12 +132,12 @@ fun <T> KotlinList<T>.asConnection(): List<T> =
 	}
 
 @Suppress("UNCHECKED_CAST")
-fun <T> KotlinList<T>.asViewConnection(): MutatingListView<T> =
+fun <T> KotlinList<T>.asViewConnection(): ListView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this as java.util.SequencedCollection<T>),
-			Listed<T> by ListedImpl(this), Wrapper<KotlinList<T>> by WrapperImpl(this), MutatingListView<T> {
-		override fun reverse(): MutatingListView<T> = this@asViewConnection.asReversed().asViewConnection()
+			Listed<T> by ListedImpl(this), Wrapper<KotlinList<T>> by WrapperImpl(this), ListView<T> {
+		override fun reverse(): ListView<T> = this@asViewConnection.asReversed().asViewConnection()
 
-		override fun subList(startInclusive: Int, endExclusive: Int): MutatingListView<T> =
+		override fun subList(startInclusive: Int, endExclusive: Int): ListView<T> =
 			this@asViewConnection.subList(startInclusive, endExclusive).asViewConnection()
 	}
 
@@ -158,8 +158,8 @@ fun <T> KotlinSet<T>.asConnection(): Set<T> =
 		override fun iterator(): Iterator<T> = this@asConnection.iterator()
 	}
 
-fun <T> KotlinSet<T>.asViewConnection(): MutatingSetView<T> =
-	object: Collectable<T> by CollectableImpl(this), Wrapper<KotlinSet<T>> by WrapperImpl(this), MutatingSetView<T> {}
+fun <T> KotlinSet<T>.asViewConnection(): SetView<T> =
+	object: Collectable<T> by CollectableImpl(this), Wrapper<KotlinSet<T>> by WrapperImpl(this), SetView<T> {}
 
 fun <T> KotlinMutableSet<T>.asRemoveOnlyConnection(): RemoveOnlySet<T> =
 	object: RemoveOnly<T> by RemoveOnlyImpl(this), Wrapper<KotlinMutableSet<T>> by WrapperImpl(this), RemoveOnlySet<T> {}
@@ -177,10 +177,10 @@ fun <T> java.util.SequencedSet<T>.asConnection(): SequencedSet<T> =
 		override fun reverse(): SequencedSet<T> = this@asConnection.reversed().asConnection()
 	}
 
-fun <T> java.util.SequencedSet<T>.asViewConnection(): MutatingSequencedSetView<T> =
+fun <T> java.util.SequencedSet<T>.asViewConnection(): SequencedSetView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this),
-			Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this), MutatingSequencedSetView<T> {
-		override fun reverse(): MutatingSequencedSetView<T> = this@asViewConnection.reversed().asViewConnection()
+			Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this), SequencedSetView<T> {
+		override fun reverse(): SequencedSetView<T> = this@asViewConnection.reversed().asViewConnection()
 	}
 
 fun <T> java.util.SequencedSet<T>.asRemoveOnlyConnection(): RemoveOnlySequencedSet<T> =
@@ -230,18 +230,18 @@ fun <T> java.util.SortedSet<T>.asConnection(): SortedNavigableSet<T> =
 			this@asConnection.tailSet(higher(after, inclusive) ?: after).asConnection()
 	}
 
-fun <T> java.util.SortedSet<T>.asViewConnection(): MutatingSortedNavigableSetView<T> =
+fun <T> java.util.SortedSet<T>.asViewConnection(): SortedNavigableSetView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this),
-			Wrapper<java.util.SortedSet<T>> by WrapperImpl(this), Navigable<T> by SortedNavigableImpl(this), MutatingSortedNavigableSetView<T> {
-		override fun reverse(): MutatingSortedNavigableSetView<T> = this@asViewConnection.reversed().asViewConnection()
+			Wrapper<java.util.SortedSet<T>> by WrapperImpl(this), Navigable<T> by SortedNavigableImpl(this), SortedNavigableSetView<T> {
+		override fun reverse(): SortedNavigableSetView<T> = this@asViewConnection.reversed().asViewConnection()
 
-		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableSetView<T> =
+		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSetView<T> =
 			this@asViewConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asViewConnection()
 
-		override fun headSet(before: T, inclusive: Boolean): MutatingSortedNavigableSetView<T> =
+		override fun headSet(before: T, inclusive: Boolean): SortedNavigableSetView<T> =
 			this@asViewConnection.headSet(higher(before, !inclusive) ?: before).asViewConnection()
 
-		override fun tailSet(after: T, inclusive: Boolean): MutatingSortedNavigableSetView<T> =
+		override fun tailSet(after: T, inclusive: Boolean): SortedNavigableSetView<T> =
 			this@asViewConnection.tailSet(higher(after, inclusive) ?: after).asViewConnection()
 	}
 
@@ -294,18 +294,18 @@ fun <T> java.util.NavigableSet<T>.asConnection(): NavigableSet<T> =
 			this@asConnection.tailSet(after, inclusive).asConnection()
 	}
 
-fun <T> java.util.NavigableSet<T>.asViewConnection(): MutatingNavigableSetView<T> =
+fun <T> java.util.NavigableSet<T>.asViewConnection(): NavigableSetView<T> =
 	object: Collectable<T> by CollectableImpl(this), Sequenced<T> by SequencedImpl(this),
-			Navigable<T> by NavigableImpl(this), Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this), MutatingNavigableSetView<T> {
-		override fun reverse(): MutatingNavigableSetView<T> = this@asViewConnection.reversed().asViewConnection()
+			Navigable<T> by NavigableImpl(this), Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this), NavigableSetView<T> {
+		override fun reverse(): NavigableSetView<T> = this@asViewConnection.reversed().asViewConnection()
 
-		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutatingNavigableSetView<T> =
+		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T> =
 			this@asViewConnection.subSet(from, fromInclusive, to, toInclusive).asViewConnection()
 
-		override fun headSet(before: T, inclusive: Boolean): MutatingNavigableSetView<T> =
+		override fun headSet(before: T, inclusive: Boolean): NavigableSetView<T> =
 			this@asViewConnection.headSet(before, inclusive).asViewConnection()
 
-		override fun tailSet(after: T, inclusive: Boolean): MutatingNavigableSetView<T> =
+		override fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T> =
 			this@asViewConnection.tailSet(after, inclusive).asViewConnection()
 	}
 
@@ -350,13 +350,13 @@ fun <K, V> KotlinMap<K, V>.asConnection(): Map<K, V> =
 		override val entries: Set<KotlinMap.Entry<K, V>> = this@asConnection.entries.asConnection()
 	}
 
-fun <K, V> KotlinMap<K, V>.asViewConnection(): MutatingMapView<K, V> =
-	object: Mappable<K, V> by MappableImpl(this), Wrapper<KotlinMap<K, V>> by WrapperImpl(this), MutatingMapView<K, V> {
-		override val keys: MutatingSetView<out K> = this@asViewConnection.keys.asViewConnection()
+fun <K, V> KotlinMap<K, V>.asViewConnection(): MapView<K, V> =
+	object: Mappable<K, V> by MappableImpl(this), Wrapper<KotlinMap<K, V>> by WrapperImpl(this), MapView<K, V> {
+		override val keys: SetView<out K> = this@asViewConnection.keys.asViewConnection()
 
-		override val values: MutatingCollectionView<out V> = this@asViewConnection.values.asViewConnection()
+		override val values: CollectionView<out V> = this@asViewConnection.values.asViewConnection()
 
-		override val entries: MutatingSetView<KotlinMap.Entry<K, V>> = this@asViewConnection.entries.asViewConnection()
+		override val entries: SetView<KotlinMap.Entry<K, V>> = this@asViewConnection.entries.asViewConnection()
 	}
 
 fun <K, V> KotlinMutableMap<K, V>.asConnection(): MutableMap<K, V> =
@@ -382,16 +382,16 @@ fun <K, V> java.util.SequencedMap<K, V>.asConnection(): SequencedMap<K, V> =
 		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
 
-fun <K, V> java.util.SequencedMap<K, V>.asViewConnection(): MutatingSequencedMapView<K, V> =
+fun <K, V> java.util.SequencedMap<K, V>.asViewConnection(): SequencedMapView<K, V> =
 	object: Mappable<K, V> by MappableImpl(this), SequencedMappable<K, V> by SequencedMappableImpl(this),
-			Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this), MutatingSequencedMapView<K, V> {
-		override fun reversed(): MutatingSequencedMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
+			Wrapper<java.util.SequencedMap<K, V>> by WrapperImpl(this), SequencedMapView<K, V> {
+		override fun reversed(): SequencedMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
 
-		override val keys: MutatingSequencedSetView<out K> = this@asViewConnection.sequencedKeySet().asViewConnection()
+		override val keys: SequencedSetView<out K> = this@asViewConnection.sequencedKeySet().asViewConnection()
 
-		override val values: MutatingSequencedCollectionView<out V> = this@asViewConnection.sequencedValues().asViewConnection()
+		override val values: SequencedCollectionView<out V> = this@asViewConnection.sequencedValues().asViewConnection()
 
-		override val entries: MutatingSequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
+		override val entries: SequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
 
 fun <K, V> java.util.SequencedMap<K, V>.asMutableConnection(): MutableSequencedMap<K, V> =
@@ -431,25 +431,25 @@ fun <K, V> java.util.SortedMap<K, V>.asConnection(): SortedNavigableMap<K, V> =
 		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
 
-fun <K, V> java.util.SortedMap<K, V>.asViewConnection(): MutatingSortedNavigableMapView<K, V> =
+fun <K, V> java.util.SortedMap<K, V>.asViewConnection(): SortedNavigableMapView<K, V> =
 	object: Mappable<K, V> by MappableImpl(this), SequencedMappable<K, V> by SequencedMappableImpl(this),
-			NavigableMappable<K, V> by SortedNavigableMappableImpl(this), Wrapper<java.util.SortedMap<K, V>> by WrapperImpl(this), MutatingSortedNavigableMapView<K, V> {
-		override fun reversed(): MutatingSortedNavigableMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
+			NavigableMappable<K, V> by SortedNavigableMappableImpl(this), Wrapper<java.util.SortedMap<K, V>> by WrapperImpl(this), SortedNavigableMapView<K, V> {
+		override fun reversed(): SortedNavigableMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
 
-		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.subMap(higherKey(from, fromInclusive) ?: from, higherKey(to, !toInclusive) ?: to).asViewConnection()
 
-		override fun headMap(before: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.headMap(higherKey(before, !inclusive) ?: before).asViewConnection()
 
-		override fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(higherKey(after, inclusive) ?: after).asViewConnection()
 
-		override val keys: MutatingSortedNavigableSetView<K> = this@asViewConnection.keySet().asViewConnection()
+		override val keys: SortedNavigableSetView<K> = this@asViewConnection.keySet().asViewConnection()
 
-		override val values: MutatingSequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
+		override val values: SequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
 
-		override val entries: MutatingSequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
+		override val entries: SequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
 
 fun <K, V> java.util.SortedMap<K, V>.asMutableConnection(): MutableSortedNavigableMap<K, V> =
@@ -542,25 +542,25 @@ fun <K, V> java.util.NavigableMap<K, V>.asConnection(): NavigableMap<K, V> =
 		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
 
-fun <K, V> java.util.NavigableMap<K, V>.asViewConnection(): MutatingNavigableMapView<K, V> =
+fun <K, V> java.util.NavigableMap<K, V>.asViewConnection(): NavigableMapView<K, V> =
 	object: Mappable<K, V> by MappableImpl(this), SequencedMappable<K, V> by SequencedMappableImpl(this),
-			NavigableMappable<K, V> by NavigableMappableImpl(this), Wrapper<java.util.NavigableMap<K, V>> by WrapperImpl(this), MutatingNavigableMapView<K, V> {
-		override fun reversed(): MutatingNavigableMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
+			NavigableMappable<K, V> by NavigableMappableImpl(this), Wrapper<java.util.NavigableMap<K, V>> by WrapperImpl(this), NavigableMapView<K, V> {
+		override fun reversed(): NavigableMapView<K, V> = this@asViewConnection.reversed().asViewConnection()
 
-		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.subMap(from, fromInclusive, to, toInclusive).asViewConnection()
 
-		override fun headMap(before: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.headMap(before, inclusive).asViewConnection()
 
-		override fun tailMap(after: K, inclusive: Boolean): MutatingSortedNavigableMapView<K, V> =
+		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(after, inclusive).asViewConnection()
 
-		override val keys: MutatingNavigableSetView<K> = this@asViewConnection.navigableKeySet().asViewConnection()
+		override val keys: NavigableSetView<K> = this@asViewConnection.navigableKeySet().asViewConnection()
 
-		override val values: MutatingSequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
+		override val values: SequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
 
-		override val entries: MutatingSequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
+		override val entries: SequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
 
 fun <K, V> java.util.NavigableMap<K, V>.asMutableConnection(): MutableNavigableMap<K, V> =

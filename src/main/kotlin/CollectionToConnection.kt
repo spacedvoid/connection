@@ -13,7 +13,7 @@ import kotlin.collections.Set as KotlinSet
 
 fun <T> KotlinCollection<T>.toConnection(): Collection<T> = this.asViewConnection().snapshot()
 
-fun <T> KotlinCollection<T>.toViewConnection(): MutatingCollectionView<T> = this.asViewConnection().copy().asView()
+fun <T> KotlinCollection<T>.toViewConnection(): CollectionView<T> = this.asViewConnection().copy().asView()
 
 fun <T> KotlinMutableCollection<T>.toRemoveOnlyConnection(): RemoveOnlyCollection<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -23,7 +23,7 @@ fun <T> KotlinMutableCollection<T>.toConnection(): MutableCollection<T> = this.a
 
 fun <T> java.util.SequencedCollection<T>.toConnection(): SequencedCollection<T> = this.asViewConnection().snapshot()
 
-fun <T> java.util.SequencedCollection<T>.toViewConnection(): MutatingSequencedCollectionView<T> = this.asViewConnection().copy().asView()
+fun <T> java.util.SequencedCollection<T>.toViewConnection(): SequencedCollectionView<T> = this.asViewConnection().copy().asView()
 
 fun <T> java.util.SequencedCollection<T>.toRemoveOnlyConnection(): RemoveOnlySequencedCollection<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -33,7 +33,7 @@ fun <T> java.util.SequencedCollection<T>.toMutableConnection(): MutableSequenced
 
 fun <T> KotlinList<T>.toConnection(): List<T> = this.asViewConnection().snapshot()
 
-fun <T> KotlinList<T>.toViewConnection(): MutatingListView<T> = this.asViewConnection().copy().asView()
+fun <T> KotlinList<T>.toViewConnection(): ListView<T> = this.asViewConnection().copy().asView()
 
 fun <T> KotlinMutableList<T>.toConnection(): MutableList<T> = this.asConnection().copy()
 
@@ -41,7 +41,7 @@ fun <T> KotlinMutableList<T>.toConnection(): MutableList<T> = this.asConnection(
 
 fun <T> KotlinSet<T>.toConnection(): Set<T> = this.asViewConnection().snapshot()
 
-fun <T> KotlinSet<T>.toViewConnection(): MutatingSetView<T> = this.asViewConnection().copy().asView()
+fun <T> KotlinSet<T>.toViewConnection(): SetView<T> = this.asViewConnection().copy().asView()
 
 fun <T> KotlinMutableSet<T>.toRemoveOnlyConnection(): RemoveOnlySet<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -51,7 +51,7 @@ fun <T> KotlinMutableSet<T>.toConnection(): MutableSet<T> = this.asConnection().
 
 fun <T> java.util.SequencedSet<T>.toConnection(): SequencedSet<T> = this.asViewConnection().snapshot()
 
-fun <T> java.util.SequencedSet<T>.toViewConnection(): MutatingSequencedSetView<T> = this.asViewConnection().copy().asView()
+fun <T> java.util.SequencedSet<T>.toViewConnection(): SequencedSetView<T> = this.asViewConnection().copy().asView()
 
 fun <T> java.util.SequencedSet<T>.toRemoveOnlyConnection(): RemoveOnlySequencedSet<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -61,7 +61,7 @@ fun <T> java.util.SequencedSet<T>.toMutableConnection(): MutableSequencedSet<T> 
 
 fun <T> java.util.SortedSet<T>.toConnection(): SortedNavigableSet<T> = this.asViewConnection().snapshot()
 
-fun <T> java.util.SortedSet<T>.toViewConnection(): MutatingSortedNavigableSetView<T> = this.asViewConnection().copy().asView()
+fun <T> java.util.SortedSet<T>.toViewConnection(): SortedNavigableSetView<T> = this.asViewConnection().copy().asView()
 
 fun <T> java.util.SortedSet<T>.toRemoveOnlyConnection(): RemoveOnlySortedNavigableSet<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -71,7 +71,7 @@ fun <T> java.util.SortedSet<T>.toMutableConnection(): MutableSortedNavigableSet<
 
 fun <T> java.util.NavigableSet<T>.toConnection(): NavigableSet<T> = this.asViewConnection().snapshot()
 
-fun <T> java.util.NavigableSet<T>.toViewConnection(): MutatingNavigableSetView<T> = this.asViewConnection().copy().asView()
+fun <T> java.util.NavigableSet<T>.toViewConnection(): NavigableSetView<T> = this.asViewConnection().copy().asView()
 
 fun <T> java.util.NavigableSet<T>.toRemoveOnlyConnection(): RemoveOnlyNavigableSet<T> = this.asRemoveOnlyConnection().copy().asRemoveOnly()
 
@@ -81,7 +81,7 @@ fun <T> java.util.NavigableSet<T>.toMutableConnection(): MutableNavigableSet<T> 
 
 fun <K, V> KotlinMap<K, V>.toConnection(): Map<K, V> = this.asViewConnection().snapshot()
 
-fun <K, V> KotlinMap<K, V>.toViewConnection(): MutatingMapView<K, V> = this.asViewConnection().copy().asView()
+fun <K, V> KotlinMap<K, V>.toViewConnection(): MapView<K, V> = this.asViewConnection().copy().asView()
 
 fun <K, V> KotlinMutableMap<K, V>.toConnection(): MutableMap<K, V> = this.asConnection().copy()
 
@@ -89,7 +89,7 @@ fun <K, V> KotlinMutableMap<K, V>.toConnection(): MutableMap<K, V> = this.asConn
 
 fun <K, V> java.util.SequencedMap<K, V>.toConnection(): SequencedMap<K, V> = this.asViewConnection().snapshot()
 
-fun <K, V> java.util.SequencedMap<K, V>.toViewConnection(): MutatingSequencedMapView<K, V> = this.asViewConnection().copy().asView()
+fun <K, V> java.util.SequencedMap<K, V>.toViewConnection(): SequencedMapView<K, V> = this.asViewConnection().copy().asView()
 
 fun <K, V> java.util.SequencedMap<K, V>.toMutableConnection(): MutableSequencedMap<K, V> = this.asMutableConnection().copy()
 
@@ -97,7 +97,7 @@ fun <K, V> java.util.SequencedMap<K, V>.toMutableConnection(): MutableSequencedM
 
 fun <K, V> java.util.SortedMap<K, V>.toConnection(): SortedNavigableMap<K, V> = this.asViewConnection().snapshot()
 
-fun <K, V> java.util.SortedMap<K, V>.toViewConnection(): MutatingSortedNavigableMapView<K, V> = this.asViewConnection().copy().asView()
+fun <K, V> java.util.SortedMap<K, V>.toViewConnection(): SortedNavigableMapView<K, V> = this.asViewConnection().copy().asView()
 
 fun <K, V> java.util.SortedMap<K, V>.toMutableConnection(): MutableSortedNavigableMap<K, V> = this.asMutableConnection().copy()
 
@@ -105,6 +105,6 @@ fun <K, V> java.util.SortedMap<K, V>.toMutableConnection(): MutableSortedNavigab
 
 fun <K, V> java.util.NavigableMap<K, V>.toConnection(): NavigableMap<K, V> = this.asViewConnection().snapshot()
 
-fun <K, V> java.util.NavigableMap<K, V>.toViewConnection(): MutatingNavigableMapView<K, V> = this.asViewConnection().copy().asView()
+fun <K, V> java.util.NavigableMap<K, V>.toViewConnection(): NavigableMapView<K, V> = this.asViewConnection().copy().asView()
 
 fun <K, V> java.util.NavigableMap<K, V>.toMutableConnection(): MutableNavigableMap<K, V> = this.asMutableConnection().copy()

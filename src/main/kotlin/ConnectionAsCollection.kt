@@ -14,7 +14,7 @@ import kotlin.collections.Set as KotlinSet
 
 fun <T> Collection<T>.asKotlin(): KotlinCollection<T> = this.origin()
 
-fun <T> MutatingCollectionView<T>.asKotlin(): KotlinCollection<T> = this.origin()
+fun <T> CollectionView<T>.asKotlin(): KotlinCollection<T> = this.origin()
 
 fun <T> RemoveOnlyCollection<T>.asKotlin(): KotlinMutableCollection<T> = this.origin()
 
@@ -24,7 +24,7 @@ fun <T> MutableCollection<T>.asKotlin(): KotlinMutableCollection<T> = this.origi
 
 fun <T> SequencedCollection<T>.asKotlin(): java.util.SequencedCollection<T> = this.origin()
 
-fun <T> MutatingSequencedCollectionView<T>.asKotlin(): java.util.SequencedCollection<T> = this.origin()
+fun <T> SequencedCollectionView<T>.asKotlin(): java.util.SequencedCollection<T> = this.origin()
 
 fun <T> RemoveOnlySequencedCollection<T>.asKotlin(): java.util.SequencedCollection<T> = this.origin()
 
@@ -34,7 +34,7 @@ fun <T> MutableSequencedCollection<T>.asKotlin(): java.util.SequencedCollection<
 
 fun <T> List<T>.asKotlin(): KotlinList<T> = this.origin()
 
-fun <T> MutatingListView<T>.asKotlin(): KotlinList<T> = this.origin()
+fun <T> ListView<T>.asKotlin(): KotlinList<T> = this.origin()
 
 fun <T> MutableList<T>.asKotlin(): KotlinMutableList<T> = this.origin()
 
@@ -42,7 +42,7 @@ fun <T> MutableList<T>.asKotlin(): KotlinMutableList<T> = this.origin()
 
 fun <T> Set<T>.asKotlin(): KotlinSet<T> = this.origin()
 
-fun <T> MutatingSetView<T>.asKotlin(): KotlinSet<T> = this.origin()
+fun <T> SetView<T>.asKotlin(): KotlinSet<T> = this.origin()
 
 fun <T> RemoveOnlySet<T>.asKotlin(): KotlinMutableSet<T> = this.origin()
 
@@ -52,7 +52,7 @@ fun <T> MutableSet<T>.asKotlin(): KotlinMutableSet<T> = this.origin()
 
 fun <T> SequencedSet<T>.asKotlin(): java.util.SequencedSet<T> = this.origin()
 
-fun <T> MutatingSequencedSetView<T>.asKotlin(): java.util.SequencedSet<T> = this.origin()
+fun <T> SequencedSetView<T>.asKotlin(): java.util.SequencedSet<T> = this.origin()
 
 fun <T> RemoveOnlySequencedSet<T>.asKotlin(): java.util.SequencedSet<T> = this.origin()
 
@@ -62,7 +62,7 @@ fun <T> MutableSequencedSet<T>.asKotlin(): java.util.SequencedSet<T> = this.orig
 
 fun <T> SortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
-fun <T> MutatingSortedNavigableSetView<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
+fun <T> SortedNavigableSetView<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
 fun <T> RemoveOnlySortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.origin()
 
@@ -72,7 +72,7 @@ fun <T> MutableSortedNavigableSet<T>.asKotlin(): java.util.SortedSet<T> = this.o
 
 fun <T> NavigableSet<T>.asKotlin(): java.util.NavigableSet<T> = this.origin()
 
-fun <T> MutatingNavigableSetView<T>.asKotlin(): java.util.NavigableSet<T> = this.origin()
+fun <T> NavigableSetView<T>.asKotlin(): java.util.NavigableSet<T> = this.origin()
 
 fun <T> RemoveOnlyNavigableSet<T>.asKotlin(): java.util.NavigableSet<T> = this.origin()
 
@@ -82,7 +82,7 @@ fun <T> MutableNavigableSet<T>.asKotlin(): java.util.NavigableSet<T> = this.orig
 
 fun <K, V> Map<K, V>.asKotlin(): KotlinMap<K, V> = this.origin()
 
-fun <K, V> MutatingMapView<K, V>.asKotlin(): KotlinMap<K, V> = this.origin()
+fun <K, V> MapView<K, V>.asKotlin(): KotlinMap<K, V> = this.origin()
 
 fun <K, V> MutableMap<K, V>.asKotlin(): KotlinMutableMap<K, V> = this.origin()
 
@@ -90,7 +90,7 @@ fun <K, V> MutableMap<K, V>.asKotlin(): KotlinMutableMap<K, V> = this.origin()
 
 fun <K, V> SequencedMap<K, V>.asKotlin(): java.util.SequencedMap<K, V> = this.origin()
 
-fun <K, V> MutatingSequencedMapView<K, V>.asKotlin(): java.util.SequencedMap<K, V> = this.origin()
+fun <K, V> SequencedMapView<K, V>.asKotlin(): java.util.SequencedMap<K, V> = this.origin()
 
 fun <K, V> MutableSequencedMap<K, V>.asKotlin(): java.util.SequencedMap<K, V> = this.origin()
 
@@ -98,7 +98,7 @@ fun <K, V> MutableSequencedMap<K, V>.asKotlin(): java.util.SequencedMap<K, V> = 
 
 fun <K, V> SortedNavigableMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
-fun <K, V> MutatingSortedNavigableMapView<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
+fun <K, V> SortedNavigableMapView<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
 fun <K, V> MutableSortedNavigableMap<K, V>.asKotlin(): java.util.SortedMap<K, V> = this.origin()
 
@@ -106,7 +106,7 @@ fun <K, V> MutableSortedNavigableMap<K, V>.asKotlin(): java.util.SortedMap<K, V>
 
 fun <K, V> NavigableMap<K, V>.asKotlin(): java.util.NavigableMap<K, V> = this.origin()
 
-fun <K, V> MutatingNavigableMapView<K, V>.asKotlin(): java.util.NavigableMap<K, V> = this.origin()
+fun <K, V> NavigableMapView<K, V>.asKotlin(): java.util.NavigableMap<K, V> = this.origin()
 
 fun <K, V> MutableNavigableMap<K, V>.asKotlin(): java.util.NavigableMap<K, V> = this.origin()
 
