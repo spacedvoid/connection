@@ -3,6 +3,8 @@ package io.github.spacedvoid.connection
 import io.github.spacedvoid.connection.characteristic.Navigable
 
 interface NavigableSetView<T>: SortedNavigableSetView<T>, Navigable<T> {
+	override fun reverse(): NavigableSetView<T>
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
 
 	override fun headSet(before: T, inclusive: Boolean): NavigableSetView<T>
@@ -11,6 +13,8 @@ interface NavigableSetView<T>: SortedNavigableSetView<T>, Navigable<T> {
 }
 
 interface NavigableSet<T>: SortedNavigableSet<T>, NavigableSetView<T>, Navigable<T> {
+	override fun reverse(): NavigableSet<T>
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T>
 
 	override fun headSet(before: T, inclusive: Boolean): NavigableSet<T>
@@ -19,6 +23,8 @@ interface NavigableSet<T>: SortedNavigableSet<T>, NavigableSetView<T>, Navigable
 }
 
 interface RemoveOnlyNavigableSet<T>: RemoveOnlySortedNavigableSet<T>, NavigableSetView<T> {
+	override fun reverse(): RemoveOnlyNavigableSet<T>
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): RemoveOnlyNavigableSet<T>
 
 	override fun headSet(before: T, inclusive: Boolean): RemoveOnlyNavigableSet<T>
@@ -27,6 +33,8 @@ interface RemoveOnlyNavigableSet<T>: RemoveOnlySortedNavigableSet<T>, NavigableS
 }
 
 interface MutableNavigableSet<T>: MutableSortedNavigableSet<T>, RemoveOnlyNavigableSet<T> {
+	override fun reverse(): MutableNavigableSet<T>
+
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableSet<T>
 
 	override fun headSet(before: T, inclusive: Boolean): MutableNavigableSet<T>

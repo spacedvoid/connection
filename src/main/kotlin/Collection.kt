@@ -21,6 +21,8 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, RemoveOnly<T> {
 
 	override fun removeAll(from: Collection<T>): Boolean
 
+	override fun retainAll(from: Collection<T>): Boolean
+
 	override fun clear()
 }
 

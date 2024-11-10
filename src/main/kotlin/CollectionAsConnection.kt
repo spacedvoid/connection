@@ -218,7 +218,7 @@ fun <T> java.util.SortedSet<T>.asConnection(): SortedNavigableSet<T> =
 			Wrapper<java.util.SortedSet<T>> by WrapperImpl(this), Navigable<T> by SortedNavigableImpl(this), SortedNavigableSet<T> {
 		override fun iterator(): Iterator<T> = this@asConnection.iterator()
 
-		override fun reverse(): SequencedSet<T> = this@asConnection.reversed().asConnection()
+		override fun reverse(): SortedNavigableSet<T> = this@asConnection.reversed().asConnection()
 
 		override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T> =
 			this@asConnection.subSet(higher(from, fromInclusive) ?: from, higher(to, !toInclusive) ?: to).asConnection()
