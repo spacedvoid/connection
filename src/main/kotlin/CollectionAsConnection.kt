@@ -422,9 +422,9 @@ fun <K, V> java.util.SortedMap<K, V>.asConnection(): SortedNavigableMap<K, V> =
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V> =
 			this@asConnection.tailMap(higherKey(after, inclusive) ?: after).asConnection()
 
-		override val keys: SortedNavigableSet<K> = this@asConnection.keySet().asConnection()
+		override val keys: SortedNavigableSet<out K> = this@asConnection.keySet().asConnection()
 
-		override val values: SequencedCollection<V> = this@asConnection.sequencedValues().asConnection()
+		override val values: SequencedCollection<out V> = this@asConnection.sequencedValues().asConnection()
 
 		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
@@ -443,9 +443,9 @@ fun <K, V> java.util.SortedMap<K, V>.asViewConnection(): SortedNavigableMapView<
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(higherKey(after, inclusive) ?: after).asViewConnection()
 
-		override val keys: SortedNavigableSetView<K> = this@asViewConnection.keySet().asViewConnection()
+		override val keys: SortedNavigableSetView<out K> = this@asViewConnection.keySet().asViewConnection()
 
-		override val values: SequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
+		override val values: SequencedCollectionView<out V> = this@asViewConnection.sequencedValues().asViewConnection()
 
 		override val entries: SequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}
@@ -533,9 +533,9 @@ fun <K, V> java.util.NavigableMap<K, V>.asConnection(): NavigableMap<K, V> =
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMap<K, V> =
 			this@asConnection.tailMap(after, inclusive).asConnection()
 
-		override val keys: NavigableSet<K> = this@asConnection.navigableKeySet().asConnection()
+		override val keys: NavigableSet<out K> = this@asConnection.navigableKeySet().asConnection()
 
-		override val values: SequencedCollection<V> = this@asConnection.sequencedValues().asConnection()
+		override val values: SequencedCollection<out V> = this@asConnection.sequencedValues().asConnection()
 
 		override val entries: SequencedSet<out KotlinMap.Entry<K, V>> = this@asConnection.sequencedEntrySet().asConnection()
 	}
@@ -554,9 +554,9 @@ fun <K, V> java.util.NavigableMap<K, V>.asViewConnection(): NavigableMapView<K, 
 		override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V> =
 			this@asViewConnection.tailMap(after, inclusive).asViewConnection()
 
-		override val keys: NavigableSetView<K> = this@asViewConnection.navigableKeySet().asViewConnection()
+		override val keys: NavigableSetView<out K> = this@asViewConnection.navigableKeySet().asViewConnection()
 
-		override val values: SequencedCollectionView<V> = this@asViewConnection.sequencedValues().asViewConnection()
+		override val values: SequencedCollectionView<out V> = this@asViewConnection.sequencedValues().asViewConnection()
 
 		override val entries: SequencedSetView<out KotlinMap.Entry<K, V>> = this@asViewConnection.sequencedEntrySet().asViewConnection()
 	}

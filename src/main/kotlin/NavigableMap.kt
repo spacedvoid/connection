@@ -12,12 +12,13 @@ interface NavigableMapView<K, V>: SortedNavigableMapView<K, V>, NavigableMappabl
 	override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
 	override val keys: NavigableSetView<K>
+	override val keys: NavigableSetView<out K>
 }
 
 interface NavigableMap<K, V>: SortedNavigableMap<K, V>, NavigableMapView<K, V>, NavigableMappable<K, V> {
 	override fun reversed(): NavigableMap<K, V>
 
-	override val keys: NavigableSet<K>
+	override val keys: NavigableSet<out K>
 }
 
 interface MutableNavigableMap<K, V>: MutableSortedNavigableMap<K, V>, NavigableMapView<K, V> {

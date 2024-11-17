@@ -8,7 +8,9 @@ interface SequencedMapView<K, V>: MapView<K, V>, SequencedMappable<K, V> {
 
 	override fun first(): Pair<K, V>?
 
-	override fun last(): Pair<K, V>?
+	override fun firstKey(): K
+
+	override fun lastKey(): K
 
 	override val keys: SequencedSetView<out K>
 
