@@ -1,6 +1,5 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.MutableSequenced
 import io.github.spacedvoid.connection.characteristic.RemoveOnlySequenced
 import io.github.spacedvoid.connection.characteristic.Sequenced
 
@@ -24,6 +23,6 @@ interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, SequencedCo
 	override fun removeLast(): T
 }
 
-interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T>, MutableSequenced<T> {
+interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T> {
 	override fun reverse(): MutableSequencedCollection<T>
 }

@@ -45,12 +45,6 @@ interface RemoveOnlySequenced<T>: Sequenced<T> {
 	fun removeLast(): T
 }
 
-interface MutableSequenced<T>: RemoveOnlySequenced<T> {
-	fun addFirst(element: T)
-
-	fun addLast(element: T)
-}
-
 interface Listed<T> /* : Sequenced<T> */ {
 	fun subList(startInclusive: Int, endExclusive: Int): Listed<T>
 
@@ -63,6 +57,10 @@ interface Listed<T> /* : Sequenced<T> */ {
 
 interface MutableListed<T>: Listed<T> {
 	fun add(index: Int, element: T)
+
+	fun addFirst(element: T)
+
+	fun addLast(element: T)
 
 	operator fun set(index: Int, element: T): T
 

@@ -47,12 +47,6 @@ class RemoveOnlySequencedImpl<T>(private val kotlin: java.util.SequencedCollecti
 	override fun removeLast(): T = this.kotlin.removeLast()
 }
 
-class MutableSequencedImpl<T>(private val kotlin: java.util.SequencedCollection<T>): RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(kotlin), MutableSequenced<T> {
-	override fun addFirst(element: T) = this.kotlin.addFirst(element)
-
-	override fun addLast(element: T) = this.kotlin.addLast(element)
-}
-
 class ListedImpl<T>(private val kotlin: List<T>): Listed<T> {
 	override fun subList(startInclusive: Int, endExclusive: Int): Nothing = implementationRequired("slice")
 
@@ -65,6 +59,10 @@ class ListedImpl<T>(private val kotlin: List<T>): Listed<T> {
 
 class MutableListedImpl<T>(private val kotlin: MutableList<T>): Listed<T> by ListedImpl(kotlin), MutableListed<T> {
 	override fun add(index: Int, element: T) = this.kotlin.add(index, element)
+
+	override fun addFirst(element: T) = this.kotlin.addFirst(element)
+
+	override fun addLast(element: T) = this.kotlin.addLast(element)
 
 	override fun set(index: Int, element: T): T = this.kotlin.set(index, element)
 

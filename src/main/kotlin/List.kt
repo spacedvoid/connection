@@ -30,6 +30,10 @@ interface MutableList<T>: MutableSequencedCollection<T>, ListView<T>, MutableLis
 
 	override fun add(index: Int, element: T)
 
+	override fun addFirst(element: T)
+
+	override fun addLast(element: T)
+
 	override operator fun set(index: Int, element: T): T
 
 	override fun removeAt(index: Int): T

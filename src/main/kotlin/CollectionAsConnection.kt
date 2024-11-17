@@ -12,8 +12,6 @@ import io.github.spacedvoid.connection.characteristic.MutableListed
 import io.github.spacedvoid.connection.characteristic.MutableListedImpl
 import io.github.spacedvoid.connection.characteristic.MutableMappable
 import io.github.spacedvoid.connection.characteristic.MutableMappableImpl
-import io.github.spacedvoid.connection.characteristic.MutableSequenced
-import io.github.spacedvoid.connection.characteristic.MutableSequencedImpl
 import io.github.spacedvoid.connection.characteristic.MutableSequencedMappable
 import io.github.spacedvoid.connection.characteristic.MutableSequencedMappableImpl
 import io.github.spacedvoid.connection.characteristic.Navigable
@@ -80,7 +78,7 @@ fun <T> java.util.SequencedCollection<T>.asRemoveOnlyConnection(): RemoveOnlySeq
 	}
 
 fun <T> java.util.SequencedCollection<T>.asMutableConnection(): MutableSequencedCollection<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this),
 			Wrapper<java.util.SequencedCollection<T>> by WrapperImpl(this), MutableSequencedCollection<T> {
 		override fun reverse(): MutableSequencedCollection<T> = this@asMutableConnection.reversed().asMutableConnection()
 	}
@@ -112,7 +110,7 @@ fun <T> KotlinMutableList<T>.asSequencedRemoveOnlyConnection(): RemoveOnlySequen
 
 @Suppress("UNCHECKED_CAST")
 fun <T> KotlinMutableList<T>.asSequencedConnection(): MutableSequencedCollection<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this as java.util.SequencedCollection<T>),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this as java.util.SequencedCollection<T>),
 			Wrapper<KotlinMutableList<T>> by WrapperImpl(this), MutableSequencedCollection<T> {
 		override fun reverse(): MutableSequencedCollection<T> = asReversed().asConnection()
 	}
@@ -143,7 +141,7 @@ fun <T> KotlinList<T>.asViewConnection(): ListView<T> =
 
 @Suppress("UNCHECKED_CAST")
 fun <T> KotlinMutableList<T>.asConnection(): MutableList<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this as java.util.SequencedCollection<T>),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this as java.util.SequencedCollection<T>),
 			MutableListed<T> by MutableListedImpl(this), Wrapper<KotlinMutableList<T>> by WrapperImpl(this), MutableList<T> {
 		override fun reverse(): MutableList<T> = this@asConnection.asReversed().asConnection()
 
@@ -190,7 +188,7 @@ fun <T> java.util.SequencedSet<T>.asRemoveOnlyConnection(): RemoveOnlySequencedS
 	}
 
 fun <T> java.util.SequencedSet<T>.asMutableConnection(): MutableSequencedSet<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this),
 			Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this), MutableSequencedSet<T> {
 		override fun reverse(): MutableSequencedSet<T> = this@asMutableConnection.reversed().asMutableConnection()
 	}
@@ -261,7 +259,7 @@ fun <T> java.util.SortedSet<T>.asRemoveOnlyConnection(): RemoveOnlySortedNavigab
 	}
 
 fun <T> java.util.SortedSet<T>.asMutableConnection(): MutableSortedNavigableSet<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this),
 			Wrapper<java.util.SortedSet<T>> by WrapperImpl(this), Navigable<T> by SortedNavigableImpl(this), MutableSortedNavigableSet<T> {
 		override fun reverse(): MutableSortedNavigableSet<T> = this@asMutableConnection.reversed().asMutableConnection()
 
@@ -310,7 +308,7 @@ fun <T> java.util.NavigableSet<T>.asViewConnection(): NavigableSetView<T> =
 	}
 
 fun <T> java.util.NavigableSet<T>.asRemoveOnlyConnection(): RemoveOnlyNavigableSet<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this),
 			Navigable<T> by NavigableImpl(this), Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this), RemoveOnlyNavigableSet<T> {
 		override fun reverse(): RemoveOnlyNavigableSet<T> = this@asRemoveOnlyConnection.reversed().asRemoveOnlyConnection()
 
@@ -325,7 +323,7 @@ fun <T> java.util.NavigableSet<T>.asRemoveOnlyConnection(): RemoveOnlyNavigableS
 	}
 
 fun <T> java.util.NavigableSet<T>.asMutableConnection(): MutableNavigableSet<T> =
-	object: Mutable<T> by MutableImpl(this), MutableSequenced<T> by MutableSequencedImpl(this),
+	object: Mutable<T> by MutableImpl(this), RemoveOnlySequenced<T> by RemoveOnlySequencedImpl(this),
 			Navigable<T> by NavigableImpl(this), Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this), MutableNavigableSet<T> {
 		override fun reverse(): MutableNavigableSet<T> = this@asMutableConnection.reversed().asMutableConnection()
 
