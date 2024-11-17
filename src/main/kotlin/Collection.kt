@@ -7,6 +7,8 @@ import io.github.spacedvoid.connection.characteristic.RemoveOnly
 interface CollectionView<T>: Collectable<T> {
 	override fun size(): Int
 
+	override fun isEmpty(): Boolean
+
 	override operator fun contains(element: T): Boolean
 
 	override fun containsAll(from: Collection<T>): Boolean

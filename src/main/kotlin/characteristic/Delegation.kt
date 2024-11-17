@@ -12,6 +12,8 @@ class WrapperImpl<out T>(override val origin: T): Wrapper<T>
 class CollectableImpl<T>(private val kotlin: Collection<T>): Collectable<T> {
 	override fun size(): Int = this.kotlin.size
 
+	override fun isEmpty(): Boolean = this.kotlin.isEmpty()
+
 	override fun contains(element: T): Boolean = this.kotlin.contains(element)
 
 	override fun containsAll(from: io.github.spacedvoid.connection.Collection<T>): Boolean = this.kotlin.containsAll(from.asKotlin())
@@ -105,6 +107,8 @@ class NavigableImpl<T>(private val kotlin: NavigableSet<T>): Navigable<T> {
 
 class MappableImpl<K, V>(private val kotlin: Map<K, V>): Mappable<K, V> {
 	override fun size(): Int = this.kotlin.size
+
+	override fun isEmpty(): Boolean = this.kotlin.isEmpty()
 
 	override fun containsKey(key: K): Boolean = this.kotlin.containsKey(key)
 

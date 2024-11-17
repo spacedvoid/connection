@@ -10,6 +10,8 @@ interface Wrapper<out T> {
 interface Collectable<T> {
 	fun size(): Int
 
+	fun isEmpty(): Boolean
+
 	operator fun contains(element: T): Boolean
 
 	fun containsAll(from: Collection<T>): Boolean
@@ -83,6 +85,8 @@ interface Navigable<T> /* : Sequenced<T> */ {
 
 interface Mappable<K, V> {
 	fun size(): Int
+
+	fun isEmpty(): Boolean
 
 	fun containsKey(key: K): Boolean
 
