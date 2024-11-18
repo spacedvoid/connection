@@ -1,40 +1,48 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Listed
-import io.github.spacedvoid.connection.characteristic.MutableListed
-
-interface ListView<T>: SequencedCollectionView<T>, Listed<T> {
+interface ListView<T>: SequencedCollectionView<T> {
 	override fun reverse(): ListView<T>
 
-	override fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
+	fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
 
-	override operator fun get(index: Int): T
+	operator fun get(index: Int): T = kotlin[index]
 
-	override fun indexOf(element: T): Int
+	fun indexOf(element: T): Int = kotlin.indexOf(element)
 
-	override fun lastIndexOf(element: T): Int
+	fun lastIndexOf(element: T): Int = kotlin.lastIndexOf(element)
+
+	// On the JVM, kotlin.collections.List = java.util.List, which inherits from java.util.SequencedCollection.
+	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
+	override val CollectionView<T>.kotlin: kotlin.collections.List<T>
 }
 
-interface List<T>: SequencedCollection<T>, ListView<T>, Listed<T> {
-	override operator fun iterator(): ListIterator<T>
+interface List<T>: SequencedCollection<T>, ListView<T> {
+	override operator fun iterator(): ListIterator<T> = kotlin.listIterator()
 
 	override fun reverse(): List<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T>
+
+	// Force override, iterator() cannot resolve type as kotlin.collections.List<T>
+	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
+	override val CollectionView<T>.kotlin: kotlin.collections.List<T>
 }
 
-interface MutableList<T>: MutableSequencedCollection<T>, ListView<T>, MutableListed<T> {
+interface MutableList<T>: MutableSequencedCollection<T>, ListView<T> {
 	override fun reverse(): MutableList<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T>
 
-	override fun add(index: Int, element: T)
+	fun add(index: Int, element: T) = kotlin.add(index, element)
 
-	override fun addFirst(element: T)
+	fun addFirst(element: T) = kotlin.addFirst(element)
 
-	override fun addLast(element: T)
+	fun addLast(element: T) = kotlin.addLast(element)
 
-	override operator fun set(index: Int, element: T): T
+	operator fun set(index: Int, element: T): T= kotlin.set(index, element)
 
-	override fun removeAt(index: Int): T
+	fun removeAt(index: Int): T = kotlin.removeAt(index)
+
+	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
+	override val CollectionView<T>.kotlin: kotlin.collections.MutableList<T>
 }

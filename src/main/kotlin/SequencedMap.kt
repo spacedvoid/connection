@@ -1,25 +1,30 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.MutableSequencedMappable
-import io.github.spacedvoid.connection.characteristic.SequencedMappable
+interface SequencedMapView<K, V>: MapView<K, V> {
+	fun reversed(): SequencedMapView<K, V>
 
-interface SequencedMapView<K, V>: MapView<K, V>, SequencedMappable<K, V> {
-	override fun reversed(): SequencedMapView<K, V>
+	fun first(): Pair<K, V>? =
+		this.kotlin.firstEntry()?.let { it.key to it.value }
 
-	override fun first(): Pair<K, V>?
+	fun last(): Pair<K, V>? =
+		this.kotlin.firstEntry()?.let { it.key to it.value }
 
-	override fun firstKey(): K
+	fun firstKey(): K =
+		this.kotlin.firstEntry().key
 
-	override fun lastKey(): K
+	fun lastKey(): K =
+		this.kotlin.lastEntry().key
 
 	override val keys: SequencedSetView<out K>
 
 	override val values: SequencedCollectionView<out V>
 
 	override val entries: SequencedSetView<out kotlin.collections.Map.Entry<K, V>>
+
+	override val MapView<K, V>.kotlin: java.util.SequencedMap<K, V>
 }
 
-interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V>, SequencedMappable<K, V> {
+interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): SequencedMap<K, V>
 
 	override val keys: SequencedSet<out K>
@@ -29,12 +34,14 @@ interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V>, SequencedMappab
 	override val entries: SequencedSet<out kotlin.collections.Map.Entry<K, V>>
 }
 
-interface MutableSequencedMap<K, V>: MutableMap<K, V>, SequencedMapView<K, V>, MutableSequencedMappable<K, V> {
+interface MutableSequencedMap<K, V>: MutableMap<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): MutableSequencedMap<K, V>
 
-	override fun removeFirst(): Pair<K, V>?
+	fun removeFirst(): Pair<K, V>? =
+		this.kotlin.pollFirstEntry()?.let { it.key to it.value }
 
-	override fun removeLast(): Pair<K, V>?
+	fun removeLast(): Pair<K, V>? =
+		this.kotlin.pollLastEntry()?.let { it.key to it.value }
 
 	override val keys: RemoveOnlySequencedSet<K>
 

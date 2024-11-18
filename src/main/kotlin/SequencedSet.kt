@@ -2,6 +2,8 @@ package io.github.spacedvoid.connection
 
 interface SequencedSetView<T>: SetView<T>, SequencedCollectionView<T> {
 	override fun reverse(): SequencedSetView<T>
+
+	override val CollectionView<T>.kotlin: java.util.SequencedSet<T>
 }
 
 interface SequencedSet<T>: Set<T>, SequencedCollection<T>, SequencedSetView<T> {

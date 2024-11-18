@@ -1,35 +1,46 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Collectable
-import io.github.spacedvoid.connection.characteristic.Mutable
-import io.github.spacedvoid.connection.characteristic.RemoveOnly
+interface CollectionView<T> {
+	fun size(): Int =
+		this.kotlin.size
 
-interface CollectionView<T>: Collectable<T> {
-	override fun size(): Int
+	fun isEmpty(): Boolean =
+		this.kotlin.isEmpty()
 
-	override fun isEmpty(): Boolean
+	operator fun contains(element: T): Boolean =
+		this.kotlin.contains(element)
 
-	override operator fun contains(element: T): Boolean
+	fun containsAll(from: Collection<T>): Boolean =
+		this.kotlin.containsAll(from.kotlin)
 
-	override fun containsAll(from: Collection<T>): Boolean
+	val CollectionView<T>.kotlin: kotlin.collections.Collection<T>
 }
 
 interface Collection<T>: CollectionView<T>, Iterable<T> {
-	override operator fun iterator(): Iterator<T>
+	override operator fun iterator(): Iterator<T> =
+		this.kotlin.iterator()
 }
 
-interface RemoveOnlyCollection<T>: CollectionView<T>, RemoveOnly<T> {
-	override fun remove(element: T): Boolean
+interface RemoveOnlyCollection<T>: CollectionView<T> {
+	fun remove(element: T): Boolean =
+		this.kotlin.remove(element)
 
-	override fun removeAll(from: Collection<T>): Boolean
+	fun removeAll(from: Collection<T>): Boolean =
+		this.kotlin.removeAll(from.kotlin.toSet())
 
-	override fun retainAll(from: Collection<T>): Boolean
+	fun retainAll(from: Collection<T>): Boolean =
+		this.kotlin.retainAll(from.kotlin.toSet())
 
-	override fun clear()
+	fun clear() =
+		this.kotlin.clear()
+
+	override val CollectionView<T>.kotlin: kotlin.collections.MutableCollection<T>
 }
 
-interface MutableCollection<T>: RemoveOnlyCollection<T>, Mutable<T> {
-	override fun add(element: T): Boolean
+interface MutableCollection<T>: RemoveOnlyCollection<T> {
+	fun add(element: T): Boolean =
+		this.kotlin.add(element)
 
-	override fun addAll(from: Collection<T>): Boolean
+	fun addAll(from: Collection<T>): Boolean =
+		this.kotlin.addAll(from.kotlin)
 }

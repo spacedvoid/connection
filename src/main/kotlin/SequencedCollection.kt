@@ -1,26 +1,29 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.RemoveOnlySequenced
-import io.github.spacedvoid.connection.characteristic.Sequenced
+interface SequencedCollectionView<T>: CollectionView<T> {
+	fun reverse(): SequencedCollectionView<T>
 
-interface SequencedCollectionView<T>: CollectionView<T>, Sequenced<T> {
-	override fun reverse(): SequencedCollectionView<T>
+	fun first(): T =
+		this.kotlin.first
 
-	override fun first(): T
+	fun last(): T =
+		this.kotlin.last
 
-	override fun last(): T
+	override val CollectionView<T>.kotlin: java.util.SequencedCollection<T>
 }
 
-interface SequencedCollection<T>: Collection<T>, SequencedCollectionView<T>, Sequenced<T> {
+interface SequencedCollection<T>: Collection<T>, SequencedCollectionView<T>{
 	override fun reverse(): SequencedCollection<T>
 }
 
-interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, SequencedCollectionView<T>, RemoveOnlySequenced<T> {
+interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, SequencedCollectionView<T> {
 	override fun reverse(): RemoveOnlySequencedCollection<T>
 
-	override fun removeFirst(): T
+	fun removeFirst(): T =
+		this.kotlin.removeFirst()
 
-	override fun removeLast(): T
+	fun removeLast(): T =
+		this.kotlin.removeLast()
 }
 
 interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T> {

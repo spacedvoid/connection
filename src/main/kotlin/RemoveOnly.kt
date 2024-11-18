@@ -1,22 +1,20 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Wrapper
-import io.github.spacedvoid.connection.characteristic.WrapperImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlyCollectionImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlyNavigableSetImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlySequencedCollectionImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlySequencedSetImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlySetImpl
+import io.github.spacedvoid.connection.impl.RemoveOnlySortedNavigableSetImpl
 
-fun <T> RemoveOnlyCollection<T>.asRemoveOnly(): RemoveOnlyCollection<T> =
-	object: RemoveOnlyCollection<T> by this, Wrapper<kotlin.collections.MutableCollection<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlyCollection<T>.asRemoveOnly(): RemoveOnlyCollection<T> = RemoveOnlyCollectionImpl(this.kotlin)
 
-fun <T> RemoveOnlySequencedCollection<T>.asRemoveOnly(): RemoveOnlySequencedCollection<T> =
-	object: RemoveOnlySequencedCollection<T> by this, Wrapper<java.util.SequencedCollection<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlySequencedCollection<T>.asRemoveOnly(): RemoveOnlySequencedCollection<T> = RemoveOnlySequencedCollectionImpl(this.kotlin)
 
-fun <T> RemoveOnlySet<T>.asRemoveOnly(): RemoveOnlySet<T> =
-	object: RemoveOnlySet<T> by this, Wrapper<kotlin.collections.MutableSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlySet<T>.asRemoveOnly(): RemoveOnlySet<T> = RemoveOnlySetImpl(this.kotlin)
 
-fun <T> RemoveOnlySequencedSet<T>.asRemoveOnly(): RemoveOnlySequencedSet<T> =
-	object: RemoveOnlySequencedSet<T> by this, Wrapper<java.util.SequencedSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlySequencedSet<T>.asRemoveOnly(): RemoveOnlySequencedSet<T> = RemoveOnlySequencedSetImpl(this.kotlin)
 
-fun <T> RemoveOnlySortedNavigableSet<T>.asRemoveOnly(): RemoveOnlySortedNavigableSet<T> =
-	object: RemoveOnlySortedNavigableSet<T> by this, Wrapper<java.util.SortedSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlySortedNavigableSet<T>.asRemoveOnly(): RemoveOnlySortedNavigableSet<T> = RemoveOnlySortedNavigableSetImpl(this.kotlin)
 
-fun <T> RemoveOnlyNavigableSet<T>.asRemoveOnly(): RemoveOnlyNavigableSet<T> =
-	object: RemoveOnlyNavigableSet<T> by this, Wrapper<java.util.NavigableSet<T>> by WrapperImpl(this.origin()) {}
+fun <T> RemoveOnlyNavigableSet<T>.asRemoveOnly(): RemoveOnlyNavigableSet<T> = RemoveOnlyNavigableSetImpl(this.kotlin)

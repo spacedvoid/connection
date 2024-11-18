@@ -1,7 +1,5 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Wrapper
-
 fun <T> CollectionView<T>.snapshot(): Collection<T> = collectionOf(*toGenericArray())
 
 fun <T> SequencedCollectionView<T>.snapshot(): SequencedCollection<T> = sequencedCollectionOf(*toGenericArray())
@@ -38,7 +36,7 @@ fun <K, V> NavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapO
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
-	val iterator = (this as Wrapper<kotlin.collections.Collection<T>>).origin.iterator()
+	val iterator = this.kotlin.iterator()
 	return this.size().let { size ->
 		Array<Any?>(size) {
 			try {
@@ -54,7 +52,7 @@ internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
 
 @Suppress("UNCHECKED_CAST")
 internal fun <K, V> MapView<K, V>.toGenericArray(): Array<Pair<K, V>> {
-	val iterator = (this.entries as Wrapper<kotlin.collections.Collection<kotlin.collections.Map.Entry<K, V>>>).origin.iterator()
+	val iterator = this.kotlin.iterator()
 	return this.size().let { size ->
 		Array(size) {
 			try {

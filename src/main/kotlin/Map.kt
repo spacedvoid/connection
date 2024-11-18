@@ -1,23 +1,28 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Mappable
-import io.github.spacedvoid.connection.characteristic.MutableMappable
-import kotlin.collections.MutableMap
+interface MapView<K, V> {
+	fun size(): Int =
+		this.kotlin.size
 
-interface MapView<K, V>: Mappable<K, V> {
-	override fun size(): Int
+	fun isEmpty(): Boolean =
+		this.kotlin.isEmpty()
 
-	override fun containsKey(key: K): Boolean
+	fun containsKey(key: K): Boolean =
+		this.kotlin.containsKey(key)
 
-	override fun containsValue(value: V): Boolean
+	fun containsValue(value: V): Boolean =
+		this.kotlin.containsValue(value)
 
-	override operator fun get(key: K): V?
+	operator fun get(key: K): V? =
+		this.kotlin[key]
 
-	override val keys: SetView<out K>
+	val keys: SetView<out K>
 
-	override val values: CollectionView<out V>
+	val values: CollectionView<out V>
 
-	override val entries: SetView<out kotlin.collections.Map.Entry<K, V>>
+	val entries: SetView<out kotlin.collections.Map.Entry<K, V>>
+
+	val MapView<K, V>.kotlin: kotlin.collections.Map<K, V>
 }
 
 interface Map<K, V>: MapView<K, V> {
@@ -28,18 +33,25 @@ interface Map<K, V>: MapView<K, V> {
 	override val entries: Set<out kotlin.collections.Map.Entry<K, V>>
 }
 
-interface MutableMap<K, V>: MapView<K, V>, MutableMappable<K, V> {
-	override fun put(key: K, value: V): V?
+interface MutableMap<K, V>: MapView<K, V> {
+	fun put(key: K, value: V): V? =
+		this.kotlin.put(key, value)
 
-	override fun putAll(map: Map<out K, out V>)
+	@Suppress("UNCHECKED_CAST")
+	fun putAll(map: Map<out K, out V>) =
+		this.kotlin.putAll((map as Map<K, V>).kotlin)
 
-	override fun remove(key: K): V?
+	fun remove(key: K): V? =
+		this.kotlin.remove(key)
 
-	override fun clear()
+	fun clear() =
+		this.kotlin.clear()
 
 	override val keys: RemoveOnlySet<K>
 
 	override val values: RemoveOnlyCollection<V>
 
-	override val entries: RemoveOnlySet<MutableMap.MutableEntry<K, V>>
+	override val entries: RemoveOnlySet<kotlin.collections.MutableMap.MutableEntry<K, V>>
+
+	override val MapView<K, V>.kotlin: kotlin.collections.MutableMap<K, V>
 }

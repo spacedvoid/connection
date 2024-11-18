@@ -1,8 +1,6 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.Navigable
-
-interface NavigableSetView<T>: SortedNavigableSetView<T>, Navigable<T> {
+interface NavigableSetView<T>: SortedNavigableSetView<T> {
 	override fun reverse(): NavigableSetView<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
@@ -10,9 +8,17 @@ interface NavigableSetView<T>: SortedNavigableSetView<T>, Navigable<T> {
 	override fun headSet(before: T, inclusive: Boolean): NavigableSetView<T>
 
 	override fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T>
+
+	override fun higher(than: T, inclusive: Boolean): T? =
+		if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
+
+	override fun lower(than: T, inclusive: Boolean): T? =
+		if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
+
+	override val CollectionView<T>.kotlin: java.util.NavigableSet<T>
 }
 
-interface NavigableSet<T>: SortedNavigableSet<T>, NavigableSetView<T>, Navigable<T> {
+interface NavigableSet<T>: SortedNavigableSet<T>, NavigableSetView<T> {
 	override fun reverse(): NavigableSet<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T>

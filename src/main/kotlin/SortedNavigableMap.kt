@@ -1,30 +1,35 @@
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.characteristic.NavigableMappable
-
-interface SortedNavigableMapView<K, V>: SequencedMapView<K, V>, NavigableMappable<K, V> {
-	override val comparator: Comparator<in K>?
+interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
+	val comparator: Comparator<in K>?
+		get() = this.kotlin.comparator()
 
 	override fun reversed(): SortedNavigableMapView<K, V>
 
-	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V>
+	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V>
 
-	override fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V>
+	fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
-	override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V>
+	fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
-	override fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>?
+	fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
+		tailMap(than, inclusive).first()
 
-	override fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>?
+	fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>? =
+		headMap(than, inclusive).last()
 
-	override fun higherKey(than: K, inclusive: Boolean): K?
+	fun higherKey(than: K, inclusive: Boolean): K? =
+		tailMap(than, inclusive).firstKey()
 
-	override fun lowerKey(than: K, inclusive: Boolean): K?
+	fun lowerKey(than: K, inclusive: Boolean): K? =
+		headMap(than, inclusive).lastKey()
 
 	override val keys: SortedNavigableSetView<out K>
+
+	override val MapView<K, V>.kotlin: java.util.SortedMap<K, V>
 }
 
-interface SortedNavigableMap<K, V>: SequencedMap<K, V>, SortedNavigableMapView<K, V>, NavigableMappable<K, V> {
+interface SortedNavigableMap<K, V>: SequencedMap<K, V>, SortedNavigableMapView<K, V> {
 	override fun reversed(): SortedNavigableMap<K, V>
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMap<K, V>
