@@ -27,7 +27,7 @@ fun <T> java.util.SequencedCollection<T>.toViewConnection(): SequencedCollection
 
 fun <T> java.util.SequencedCollection<T>.toRemoveOnlyConnection(): RemoveOnlySequencedCollection<T> = this.asViewConnection().snapshot().toMutable().asRemoveOnly()
 
-fun <T> java.util.SequencedCollection<T>.toMutableConnection(): MutableSequencedCollection<T> = this.asMutableConnection()
+fun <T> java.util.SequencedCollection<T>.toMutableConnection(): MutableSequencedCollection<T> = this.asViewConnection().snapshot().toMutable()
 
 // kotlin.collections.List -> List
 
@@ -45,7 +45,7 @@ fun <T> KotlinSet<T>.toViewConnection(): SetView<T> = this.asViewConnection()
 
 fun <T> KotlinMutableSet<T>.toRemoveOnlyConnection(): RemoveOnlySet<T> = this.asViewConnection().snapshot().toMutable().asRemoveOnly()
 
-fun <T> KotlinMutableSet<T>.toConnection(): MutableSet<T> = this.asConnection()
+fun <T> KotlinMutableSet<T>.toConnection(): MutableSet<T> = this.asViewConnection().snapshot().toMutable()
 
 // java.util.SequencedSet -> SequencedSet
 

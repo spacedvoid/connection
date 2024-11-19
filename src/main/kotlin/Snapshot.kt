@@ -13,12 +13,12 @@ fun <T> SequencedSetView<T>.snapshot(): SequencedSet<T> = sequencedSetOf(*toGene
 @JvmName("snapshotComparable")
 fun <T: Comparable<T>> SortedNavigableSetView<T>.snapshot(): SortedNavigableSet<T> = navigableSetOf(*toGenericArray())
 
-fun <T> SortedNavigableSetView<T>.snapshot(): SortedNavigableSet<T> = navigableSetOf(this.comparator!!, *toGenericArray())
+fun <T> SortedNavigableSetView<T>.snapshot(): SortedNavigableSet<T> = navigableSetOf(this.comparator, *toGenericArray())
 
 @JvmName("snapshotComparable")
 fun <T: Comparable<T>> NavigableSetView<T>.snapshot(): NavigableSet<T> = navigableSetOf(*toGenericArray())
 
-fun <T> NavigableSetView<T>.snapshot(): NavigableSet<T> = navigableSetOf(this.comparator!!, *toGenericArray())
+fun <T> NavigableSetView<T>.snapshot(): NavigableSet<T> = navigableSetOf(this.comparator, *toGenericArray())
 
 fun <K, V> MapView<K, V>.snapshot(): Map<K, V> = mapOf(*toGenericArray())
 
@@ -27,12 +27,12 @@ fun <K, V> SequencedMapView<K, V>.snapshot(): SequencedMap<K, V> = sequencedMapO
 @JvmName("snapshotComparable")
 fun <K: Comparable<K>, V> SortedNavigableMapView<K, V>.snapshot(): SortedNavigableMap<K, V> = navigableMapOf(*toGenericArray())
 
-fun <K, V> SortedNavigableMapView<K, V>.snapshot(): SortedNavigableMap<K, V> = navigableMapOf(this.comparator!!, *toGenericArray())
+fun <K, V> SortedNavigableMapView<K, V>.snapshot(): SortedNavigableMap<K, V> = navigableMapOf(this.comparator, *toGenericArray())
 
 @JvmName("snapshotComparable")
 fun <K: Comparable<K>, V> NavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapOf(*toGenericArray())
 
-fun <K, V> NavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapOf(this.comparator!!, *toGenericArray())
+fun <K, V> NavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = navigableMapOf(this.comparator, *toGenericArray())
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
