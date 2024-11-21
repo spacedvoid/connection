@@ -37,6 +37,14 @@ fun <T> ListView<T>.toKotlin(): KotlinList<T> = this.asKotlin()
 
 fun <T> MutableList<T>.toKotlin(): KotlinMutableList<T> = this.snapshot().toMutable().asKotlin()
 
+// List -> java.util.SequencedCollection
+
+fun <T> List<T>.toSequencedKotlin(): java.util.SequencedCollection<T> = this.asSequencedKotlin()
+
+fun <T> ListView<T>.toSequencedKotlin(): java.util.SequencedCollection<T> = this.asSequencedKotlin()
+
+fun <T> MutableList<T>.toSequencedKotlin(): java.util.SequencedCollection<T> = this.snapshot().toMutable().asSequencedKotlin()
+
 // Set -> kotlin.collections.Set
 
 fun <T> Set<T>.toKotlin(): KotlinSet<T> = this.asKotlin()

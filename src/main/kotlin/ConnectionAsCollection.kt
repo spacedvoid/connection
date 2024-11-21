@@ -37,6 +37,17 @@ fun <T> ListView<T>.asKotlin(): KotlinList<T> = object: KotlinList<T> by this.ko
 
 fun <T> MutableList<T>.asKotlin(): KotlinMutableList<T> = object: KotlinMutableList<T> by this.kotlin {}
 
+// List -> java.util.SequencedCollection
+
+@Suppress("UNCHECKED_CAST")
+fun <T> List<T>.asSequencedKotlin(): java.util.SequencedCollection<T> = object: java.util.SequencedCollection<T> by this.kotlin as java.util.SequencedCollection<T> {}
+
+@Suppress("UNCHECKED_CAST")
+fun <T> ListView<T>.asSequencedKotlin(): java.util.SequencedCollection<T> = object: java.util.SequencedCollection<T> by this.kotlin as java.util.SequencedCollection<T> {}
+
+@Suppress("UNCHECKED_CAST")
+fun <T> MutableList<T>.asSequencedKotlin(): java.util.SequencedCollection<T> = object: java.util.SequencedCollection<T> by this.kotlin as java.util.SequencedCollection<T> {}
+
 // Set -> kotlin.collections.Set
 
 fun <T> Set<T>.asKotlin(): KotlinSet<T> = object: KotlinSet<T> by this.kotlin {}

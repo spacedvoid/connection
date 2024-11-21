@@ -68,20 +68,6 @@ fun <T> java.util.SequencedCollection<T>.asRemoveOnlyConnection(): RemoveOnlySeq
 
 fun <T> java.util.SequencedCollection<T>.asMutableConnection(): MutableSequencedCollection<T> = MutableSequencedCollectionImpl(this)
 
-// kotlin.collections.List -> SequencedCollection
-
-@Suppress("UNCHECKED_CAST")
-fun <T> KotlinList<T>.asSequencedConnection(): SequencedCollection<T> = SequencedCollectionImpl(this as java.util.SequencedCollection<T>)
-
-@Suppress("UNCHECKED_CAST")
-fun <T> KotlinList<T>.asSequencedViewConnection(): SequencedCollectionView<T> = SequencedCollectionViewImpl(this as java.util.SequencedCollection<T>)
-
-@Suppress("UNCHECKED_CAST")
-fun <T> KotlinMutableList<T>.asSequencedRemoveOnlyConnection(): RemoveOnlySequencedCollection<T> = RemoveOnlySequencedCollectionImpl(this as java.util.SequencedCollection<T>)
-
-@Suppress("UNCHECKED_CAST")
-fun <T> KotlinMutableList<T>.asSequencedConnection(): MutableSequencedCollection<T> = MutableSequencedCollectionImpl(this as java.util.SequencedCollection<T>)
-
 // kotlin.collections.List -> List
 
 fun <T> KotlinList<T>.asConnection(): List<T> = ListImpl(this)
