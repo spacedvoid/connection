@@ -13,11 +13,11 @@ import kotlin.collections.Map as KotlinMap
 import kotlin.collections.MutableMap as KotlinMutableMap
 
 open class MapViewImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapView<K, V> {
-	override val keys: SetView<out K> = SetViewImpl(kotlin.keys)
+	override val keys: SetView<out K> = SetViewImpl(this.kotlin.keys)
 
-	override val values: CollectionView<out V> = CollectionViewImpl(kotlin.values)
+	override val values: CollectionView<out V> = CollectionViewImpl(this.kotlin.values)
 
-	override val entries: SetView<out KotlinMap.Entry<K, V>> = SetViewImpl(kotlin.entries)
+	override val entries: SetView<out KotlinMap.Entry<K, V>> = SetViewImpl(this.kotlin.entries)
 
 	override val MapView<K, V>.kotlin: KotlinMap<K, V>
 		get() = this@MapViewImpl.kotlin
@@ -25,11 +25,11 @@ open class MapViewImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapView<K, V>
 }
 
 open class MapImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapViewImpl<K, V>(kotlin), Map<K, V> {
-	override val keys: Set<out K> = SetImpl(kotlin.keys)
+	override val keys: Set<out K> = SetImpl(this.kotlin.keys)
 
-	override val values: Collection<out V> = CollectionImpl(kotlin.values)
+	override val values: Collection<out V> = CollectionImpl(this.kotlin.values)
 
-	override val entries: Set<out KotlinMap.Entry<K, V>> = SetImpl(kotlin.entries)
+	override val entries: Set<out KotlinMap.Entry<K, V>> = SetImpl(this.kotlin.entries)
 
 	override val MapView<K, V>.kotlin: KotlinMap<K, V>
 		get() = this@MapImpl.kotlin
