@@ -5,6 +5,7 @@ import io.github.spacedvoid.connection.MutableSortedNavigableSet
 import io.github.spacedvoid.connection.RemoveOnlySortedNavigableSet
 import io.github.spacedvoid.connection.SortedNavigableSet
 import io.github.spacedvoid.connection.SortedNavigableSetView
+import io.github.spacedvoid.connection.utils.naturalOrdering
 import java.util.SortedSet
 
 /*
@@ -24,7 +25,7 @@ import java.util.SortedSet
  */
 
 open class SortedNavigableSetViewImpl<T>(private val kotlin: SortedSet<T>): SequencedSetViewImpl<T>(kotlin), SortedNavigableSetView<T> {
-	override val comparator: Comparator<in T>? = this.kotlin.comparator()
+	override val comparator: Comparator<in T> = this.kotlin.comparator() ?: naturalOrdering()
 
 	override fun reverse(): SortedNavigableSetView<T> = SortedNavigableSetViewImpl(this.kotlin.reversed())
 
@@ -42,8 +43,6 @@ open class SortedNavigableSetViewImpl<T>(private val kotlin: SortedSet<T>): Sequ
 }
 
 open class SortedNavigableSetImpl<T>(private val kotlin: SortedSet<T>): SortedNavigableSetViewImpl<T>(kotlin), SortedNavigableSet<T> {
-	override val comparator: Comparator<in T>? = this.kotlin.comparator()
-
 	override fun reverse(): SortedNavigableSet<T> = SortedNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T> =
@@ -57,8 +56,6 @@ open class SortedNavigableSetImpl<T>(private val kotlin: SortedSet<T>): SortedNa
 }
 
 open class RemoveOnlySortedNavigableSetImpl<T>(private val kotlin: SortedSet<T>): SortedNavigableSetViewImpl<T>(kotlin), RemoveOnlySortedNavigableSet<T> {
-	override val comparator: Comparator<in T>? = this.kotlin.comparator()
-
 	override fun reverse(): RemoveOnlySortedNavigableSet<T> = RemoveOnlySortedNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): RemoveOnlySortedNavigableSet<T> =
@@ -72,8 +69,6 @@ open class RemoveOnlySortedNavigableSetImpl<T>(private val kotlin: SortedSet<T>)
 }
 
 open class MutableSortedNavigableSetImpl<T>(private val kotlin: SortedSet<T>): RemoveOnlySortedNavigableSetImpl<T>(kotlin), MutableSortedNavigableSet<T> {
-	override val comparator: Comparator<in T>? = this.kotlin.comparator()
-
 	override fun reverse(): MutableSortedNavigableSet<T> = MutableSortedNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableSortedNavigableSet<T> =

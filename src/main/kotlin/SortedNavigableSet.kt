@@ -1,8 +1,7 @@
 package io.github.spacedvoid.connection
 
 interface SortedNavigableSetView<T>: SequencedSetView<T> {
-	val comparator: Comparator<in T>?
-		get() = this.kotlin.comparator()
+	val comparator: Comparator<in T>
 
 	override fun reverse(): SortedNavigableSetView<T>
 

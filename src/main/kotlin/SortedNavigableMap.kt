@@ -1,8 +1,7 @@
 package io.github.spacedvoid.connection
 
 interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
-	val comparator: Comparator<in K>?
-		get() = this.kotlin.comparator()
+	val comparator: Comparator<in K>
 
 	override fun reversed(): SortedNavigableMapView<K, V>
 

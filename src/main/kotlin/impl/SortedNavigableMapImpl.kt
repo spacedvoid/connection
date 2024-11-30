@@ -11,13 +11,14 @@ import io.github.spacedvoid.connection.SortedNavigableMap
 import io.github.spacedvoid.connection.SortedNavigableMapView
 import io.github.spacedvoid.connection.SortedNavigableSet
 import io.github.spacedvoid.connection.SortedNavigableSetView
+import io.github.spacedvoid.connection.utils.naturalOrdering
 import java.util.SortedMap
 import java.util.SortedSet
 
 // For the implementations of subMap() and its variants, see [SortedNavigableSetImpl].
 
 open class SortedNavigableMapViewImpl<K, V>(private val kotlin: SortedMap<K, V>): SequencedMapViewImpl<K, V>(kotlin), SortedNavigableMapView<K, V> {
-	final override val comparator: Comparator<in K>? = this.kotlin.comparator()
+	final override val comparator: Comparator<in K> = this.kotlin.comparator() ?: naturalOrdering()
 
 	override fun reversed(): SortedNavigableMapView<K, V> = SortedNavigableMapViewImpl(this.kotlin.reversed())
 
