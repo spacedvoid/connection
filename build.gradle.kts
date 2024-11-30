@@ -5,6 +5,7 @@ import java.net.URI
 plugins {
     kotlin("jvm") version "2.0.21"
     id("org.jetbrains.dokka") version "1.9.20"
+    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
 group = "io.github.spacedvoid"
@@ -15,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":connection-gen"))
+    ksp(project(":connection-gen"))
     testImplementation(kotlin("test"))
 }
 
@@ -27,12 +30,13 @@ kotlin {
 }
 
 tasks.dokkaHtml {
-    outputDirectory = projectDir.resolve("docs").apply(File::mkdirs)
+    outputDirectory = projectDir.resolve("docs")
     failOnWarning = true
+
     dokkaSourceSets {
         configureEach {
             documentedVisibilities = setOf(DokkaConfiguration.Visibility.PUBLIC, DokkaConfiguration.Visibility.PROTECTED)
-            reportUndocumented = true
+            reportUndocumented = false
             skipDeprecated = true
             suppressGeneratedFiles = false
             jdkVersion = 21
@@ -45,15 +49,11 @@ tasks.dokkaHtml {
         }
 
         named("main") {
-            includes += files("src/main/docs/module.md")
+            includes += file("src/main/docs/module.md")
         }
     }
 }
 
-tasks.register("cleanDokka") {
-    delete(projectDir.resolve("docs"))
-}
-
-private operator fun ConfigurableFileCollection.plusAssign(files: ConfigurableFileCollection) {
-    setFrom(*from.toTypedArray(), *files.from.toTypedArray())
+private operator fun ConfigurableFileCollection.plusAssign(file: File) {
+    setFrom(*this.from.toTypedArray(), file)
 }

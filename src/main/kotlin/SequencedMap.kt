@@ -1,17 +1,37 @@
 package io.github.spacedvoid.connection
 
+/**
+ * A [MapView] that additionally defines the iteration order.
+ */
 interface SequencedMapView<K, V>: MapView<K, V> {
+	/**
+	 * Returns a reverse-ordered map of this map.
+	 *
+	 * Operations on the returned map delegates to this map.
+	 */
 	fun reversed(): SequencedMapView<K, V>
 
+	/**
+	 * Returns the first entry of this map, defined by the iteration order.
+	 */
 	fun first(): Pair<K, V>? =
 		this.kotlin.firstEntry()?.let { it.key to it.value }
 
+	/**
+	 * Returns the last entry of this map, defined by the iteration order.
+	 */
 	fun last(): Pair<K, V>? =
 		this.kotlin.firstEntry()?.let { it.key to it.value }
 
+	/**
+	 * Returns the key of the first entry of this map, defined by the iteration order.
+	 */
 	fun firstKey(): K =
 		this.kotlin.firstEntry().key
 
+	/**
+	 * Returns the key of the last entry of this map, defined by the iteration order.
+	 */
 	fun lastKey(): K =
 		this.kotlin.lastEntry().key
 
@@ -24,6 +44,9 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 	override val MapView<K, V>.kotlin: java.util.SequencedMap<K, V>
 }
 
+/**
+ * An immutable [SequencedMapView].
+ */
 interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): SequencedMap<K, V>
 
@@ -34,6 +57,9 @@ interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 	override val entries: SequencedSet<out kotlin.collections.Map.Entry<K, V>>
 }
 
+/**
+ * A [SequencedMapView] that additionally supports entry addition, removal, and mutation operations.
+ */
 interface MutableSequencedMap<K, V>: MutableMap<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): MutableSequencedMap<K, V>
 

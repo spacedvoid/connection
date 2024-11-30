@@ -1,5 +1,8 @@
 package io.github.spacedvoid.connection.utils
 
+/**
+ * Returns a [Comparator] that casts the objects to [Comparable] and invokes [Comparable.compareTo].
+ */
 @Suppress("UNCHECKED_CAST")
 fun <T> naturalOrdering(): Comparator<T> = NaturalOrdering as Comparator<T>
 
