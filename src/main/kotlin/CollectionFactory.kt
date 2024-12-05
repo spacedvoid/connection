@@ -73,7 +73,7 @@ fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> = link
  * Creates a [NavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
  */
 fun <T: Comparable<T>> navigableSetOf(vararg elements: T): NavigableSet<T> =
-	kotlinSortedSetOf(*elements).asConnection()
+	kotlinSortedSetOf(naturalOrder(), *elements).asConnection()
 
 /**
  * Creates a [NavigableSet] with the given [elements] using the [comparator].
@@ -85,7 +85,7 @@ fun <T> navigableSetOf(comparator: Comparator<in T>, vararg elements: T): Naviga
  * Creates a [MutableNavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
  */
 fun <T: Comparable<T>> mutableNavigableSetOf(vararg elements: T): MutableNavigableSet<T> =
-	kotlinSortedSetOf(*elements).asMutableConnection()
+	kotlinSortedSetOf(naturalOrder(), *elements).asMutableConnection()
 
 /**
  * Creates a [MutableNavigableSet] with the given [elements] using the [comparator].
@@ -121,7 +121,7 @@ fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMa
  * Creates a [NavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
  */
 fun <K: Comparable<K>, V> navigableMapOf(vararg entries: Pair<K, V>): NavigableMap<K, V> =
-	TreeMap<K, V>().apply { entries.forEach { put(it.first, it.second) } }.asConnection()
+	TreeMap<K, V>(naturalOrder()).apply { entries.forEach { put(it.first, it.second) } }.asConnection()
 
 /**
  * Creates a [NavigableMap] with the given [entries] using the [comparator].
@@ -133,7 +133,7 @@ fun <K, V> navigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, 
  * Creates a [MutableNavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
  */
 fun <K: Comparable<K>, V> mutableNavigableMapOf(vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
-	TreeMap<K, V>().apply { entries.forEach { put(it.first, it.second) } }.asMutableConnection()
+	TreeMap<K, V>(naturalOrder()).apply { entries.forEach { put(it.first, it.second) } }.asMutableConnection()
 
 /**
  * Creates a [MutableNavigableMap] with the given [entries] using the [comparator].
