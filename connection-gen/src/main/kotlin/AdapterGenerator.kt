@@ -22,9 +22,7 @@ object AdapterGenerator {
 				}
 			}
 		environment.codeGenerator.generateColAsCon(collectionMap)
-		environment.codeGenerator.generateColToCon(collectionMap)
 		environment.codeGenerator.generateConAsCol(collectionMap)
-		environment.codeGenerator.generateConToCol(collectionMap)
 	}
 
 	private fun CodeGenerator.generateColAsCon(collectionMap: Map<ConnectionTypeKind, String>) {
@@ -92,57 +90,6 @@ object AdapterGenerator {
 		}
 	}
 
-	private fun CodeGenerator.generateColToCon(collectionMap: Map<ConnectionTypeKind, String>) {
-		createNewFile("CollectionToConnection").use { out ->
-			out.write("package io.github.spacedvoid.connection\n")
-			val history = mutableSetOf<ConnectionType>()
-			collectionMap.entries.forEach { (typeKind, kotlin) ->
-				if(history.add(typeKind.type)) out.write("\n// $kotlin -> ${typeKind.type.typeName}\n")
-				out.write(
-					when(typeKind.kind) {
-						ConnectionKind.IMMUTABLE -> """
-						
-						/**
-						 * Returns an immutable collection from the Kotlin collection.
-						 * This extension is equivalent to [asConnection].
-						 */
-						fun ${typeKind.typeParamDeclaration()} $kotlin${typeKind.typeParamDeclaration()}.toConnection(): ${typeKind.fullIdentifier} = this.asConnection()
-						
-					""".trimIndent()
-
-						ConnectionKind.VIEW -> """
-						
-						/**
-						 * Returns a collection view from the Kotlin collection.
-						 * This extension is equivalent to [asViewConnection].
-						 */
-						fun ${typeKind.typeParamDeclaration()} $kotlin${typeKind.typeParamDeclaration()}.toViewConnection(): ${typeKind.fullIdentifier} = this.asViewConnection()
-						
-					""".trimIndent()
-
-						ConnectionKind.REMOVE_ONLY -> """
-						
-						/**
-						 * Returns a new remove-only collection by copying the elements from the Kotlin collection.
-						 */
-						fun ${typeKind.typeParamDeclaration()} $kotlin${typeKind.typeParamDeclaration()}.toRemoveOnlyConnection(): ${typeKind.fullIdentifier} = this.asViewConnection().snapshot().toMutable().asRemoveOnly()
-						
-					""".trimIndent()
-
-						ConnectionKind.MUTABLE -> """
-						
-						/**
-						 * Returns a new mutable collection by copying the elements from the Kotlin collection.
-						 */
-						fun ${typeKind.typeParamDeclaration()} $kotlin${typeKind.typeParamDeclaration()}.to${if(kotlin.startsWith("java")) "Mutable" else ""}Connection(): ${typeKind.fullIdentifier} = this.asViewConnection().snapshot().toMutable()
-						
-					""".trimIndent()
-					}
-				)
-			}
-		}
-	}
-
 	private fun CodeGenerator.generateConAsCol(collectionMap: Map<ConnectionTypeKind, String>) {
 		createNewFile("ConnectionAsCollection").use { out ->
 			out.write("package io.github.spacedvoid.connection\n")
@@ -188,59 +135,4 @@ object AdapterGenerator {
 		}
 	}
 
-	private fun CodeGenerator.generateConToCol(collectionMap: Map<ConnectionTypeKind, String>) {
-		createNewFile("ConnectionToCollection").use { out ->
-			out.write("package io.github.spacedvoid.connection\n")
-
-			fun generateExtension(typeKind: ConnectionTypeKind, kotlin: String, adapter: String) {
-				out.write("fun ${typeKind.typeParamDeclaration()} ${typeKind.fullIdentifier}.to$adapter(): $kotlin${typeKind.typeParamDeclaration()} = ")
-				out.write(
-					when(typeKind.kind) {
-						ConnectionKind.IMMUTABLE, ConnectionKind.VIEW -> "this.as$adapter()\n"
-						ConnectionKind.REMOVE_ONLY -> "this.snapshot().toMutable().asRemoveOnly().as$adapter()\n"
-						ConnectionKind.MUTABLE -> "this.snapshot().toMutable().as$adapter()\n"
-					}
-				)
-			}
-
-			val history = mutableSetOf<ConnectionType>()
-			collectionMap.entries.forEach { (typeKind, kotlin) ->
-				if(history.add(typeKind.type)) {
-					if(typeKind.type == CollectionTypes.SET) {
-						out.write("\n// List -> java.util.SequencedCollection\n")
-						listOf(
-							ConnectionTypeKind(CollectionTypes.LIST, ConnectionKind.IMMUTABLE),
-							ConnectionTypeKind(CollectionTypes.LIST, ConnectionKind.VIEW),
-							ConnectionTypeKind(CollectionTypes.LIST, ConnectionKind.MUTABLE)
-						).forEach {
-							out.write(
-								"""
-								
-								/**
-								 * Returns a new Kotlin collection by copying the elements from this collection.
-								 *
-								 * @apiNote
-								 * This extension exists since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
-								 */
-								 
-							""".trimIndent()
-							)
-							generateExtension(it, "java.util.SequencedCollection", "SequencedKotlin")
-						}
-					}
-					out.write("\n// ${typeKind.type.typeName} -> $kotlin\n")
-				}
-				out.write(
-					"""
-					
-					/**
-					 * Returns a new Kotlin collection by copying the elements from this collection.
-					 */
-					 
-				""".trimIndent()
-				)
-				generateExtension(typeKind, kotlin, "Kotlin")
-			}
-		}
-	}
 }

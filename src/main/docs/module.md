@@ -33,7 +33,9 @@ Some exceptions include decorator types, such as [java.util.ConcurrentMap]:
 | [java.util.concurrent.ConcurrentMap] | [java.util.concurrent.ConcurrentHashMap]   | `ConcurrentHashMap().asMutableConnection()`                               |
 | [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                         |
 | [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                         |
-| Type-safe collections*               | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asConnection()` |
+| Type-safe collections                | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asConnection()` |
+| [java.util.EnumSet]*                 | [java.util.EnumSet.of]                     | -                                                                         |
+| [java.util.EnumMap]*                 | [java.util.EnumMap]                        | -                                                                         |
 
 (*: Planned for support.)
 
@@ -55,74 +57,32 @@ Collections in this package are separated into 4 kinds, based on their propertie
 
 Remove-only collections, by their name, support only element removal operations, such as [RemoveOnlyCollection.remove].
 They are normally obtained by map entry collections, such as [MutableMap.keys].
-Also, these collections and mutable collections might be a delegation of another collection,
-such as collections obtained by [SequencedCollection.reverse].
 
 This list of kinds will be enough for all sorts of collections from throwing [UnsupportedOperationException].
 Therefore, there are no *optional operations* in Connection.
 However, not all collection types support all kinds.
 For example, there are no remove-only lists or maps.
 
-Immutable collections do not have any prefixes or postfixes in their names
-(for example, [Collection] is the immutable version of [java.util.Collection]).
-
 Because of the properties above, the inheritance tree isolates immutable collections from mutable(remove-only) collections;
 immutable collections cannot be assigned to a mutable collection kind, and vice versa.
 
 ## From Kotlin, to Kotlin (or: Adapters)
 
-There are two ways to convert between a Kotlin(Java) collection and a Connection: delegation and copy.
-Delegation simply delegates all operations to the underlying collection, 
-while copying prevents operations from affecting the original collection.
+Adapters are extension methods that convert between Kotlin collections and Connections:
 
-<table>
-<tr>
-<th>Adapter mode</th>
-<th>From → To</th>
-<th>Extension method</th>
-</tr>
-<tr>
-<td rowspan="2">Delegation</td>
-<td>Kotlin → Connection</td>
-<td>
+| From → To           | Extension method |
+|---------------------|------------------|
+| Kotlin → Connection | [asConnection]   |
+| Connection → Kotlin | [asKotlin]       |
 
-[asConnection]
+These adapters are delegations, where operations on the resulting collection modifies the original collection.
 
-</td>
-</tr>
-<tr>
-<td>Connection → Kotlin</td>
-<td>
-
-[asKotlin]
-
-</td>
-</tr>
-<tr>
-<td rowspan="2">Copy</td>
-<td>Kotlin → Connection</td>
-<td>
-
-[toConnection]
-
-</td>
-</tr>
-<tr>
-<td>Connection → Kotlin</td>
-<td>
-
-[toKotlin]
-
-</td>
-</tr>
-</table>
-
-Additionally, [List] can be converted to [java.util.SequencedCollection] by [asSequencedKotlin] or [toSequencedKotlin],
+Additionally, [List] can be converted to [java.util.SequencedCollection] by [asSequencedKotlin],
 since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
 
 ### Adapters are user-dependent
 
-Do note that adapter methods cannot verify whether the originating collection is really a collection of the kind.
+Do note that adapter methods cannot verify whether the originating collection is really a collection of the type or kind.
 For example, in the following snippet:
 
 ```kotlin
@@ -171,47 +131,12 @@ To convert between collection types or kinds, one can use the corresponding exte
 
 The following extensions convert collections between kinds, maintaining the same type:
 
-<table>
-<tr>
-<th>Conversion mode</th>
-<th>From → To</th>
-<th>Extension method</th>
-</tr>
-<tr>
-<td rowspan="2">Delegation</td>
-<td>View → View</td>
-<td>
-
-[asView]
-
-</td>
-</tr>
-<tr>
-<td>View → Remove-only</td>
-<td>
-
-[asRemoveOnly]
-
-</td>
-</tr>
-<tr>
-<td rowspan="2">Copy</td>
-<td>View → Immutable</td>
-<td>
-
-[snapshot]
-
-</td>
-</tr>
-<tr>
-<td>Immutable → Mutable</td>
-<td>
-
-[toMutable]
-
-</td>
-</tr>
-</table>
+| From → To                            | Extension method | Delegation? |
+|--------------------------------------|------------------|-------------|
+| View (or its subkinds) → View        | [asView]         | Yes         |
+| View (or its subkinds) → Remove-only | [asRemoveOnly]   | Yes         |
+| View (or its subkinds) → Immutable   | [snapshot]       | No          |
+| Immutable → Mutable                  | [toMutable]      | No          |
 
 Note that although simple assignments to superkinds are available, these conversions exist to prevent downcasting.
 For example:
@@ -221,31 +146,17 @@ val collection: MutableList<String> = ArrayList<String>().asConnection()
 val assignment: ListView<String> = collection
 val typeSafe: ListView<String> = collection.asView()
 (assignment as MutableList<*>).clear() // No exception here, but we don't want this to happen.
-(typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListViewImpl cannot be cast to class MutableList
+(typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
 ### Type conversions
 
 The following extensions convert collections between types, maintaining the same kind:
 
-<table>
-    <tr>
-        <th>Conversion mode</th>
-        <th>From → To</th>
-        <th>Extension method</th>
-        <th>Defined in</th>
-    </tr>
-    <tr>
-        <td rowspan="2">Copy</td>
-        <td>Immutable → Mutable</td>
-        <td><code>toMutable&lt;CollectionType&gt;()</code></td>
-        <td rowspan="2"><code>Conversion.kt</code></td>
-    </tr>
-    <tr>
-        <td>Immutable → Immutable</td>
-        <td><code>to&lt;CollectionType&gt;()</code></td>
-    </tr>
-</table>
+| From → To             | Extension method            |
+|-----------------------|-----------------------------|
+| Immutable → Mutable   | `toMutable<CollectionType>` |
+| Immutable → Immutable | `to<CollectionType>`        |
 
 # Package io.github.spacedvoid.connection.impl
 
