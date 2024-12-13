@@ -4,34 +4,6 @@ import java.util.TreeMap
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
 /**
- * Creates a [Collection] with the given [elements].
- */
-fun <T> collectionOf(vararg elements: T): Collection<T> =
-	(arrayListOf(*elements) as kotlin.collections.Collection<T>).asConnection()
-
-/**
- * Creates a [MutableCollection] with the given [elements].
- */
-fun <T> mutableCollectionOf(vararg elements: T): MutableCollection<T> =
-	(arrayListOf(*elements) as kotlin.collections.MutableCollection<T>).asConnection()
-
-/**
- * Creates a [SequencedCollection] with the given [elements].
- *
- * The iteration order is defined as the encounter order.
- */
-fun <T> sequencedCollectionOf(vararg elements: T): SequencedCollection<T> =
-	(arrayListOf(*elements) as kotlin.collections.List<T>).asConnection()
-
-/**
- * Creates a [MutableSequencedCollection] with the given [elements].
- *
- * The iteration order is defined as the encounter order.
- */
-fun <T> mutableSequencedCollectionOf(vararg elements: T): MutableSequencedCollection<T> =
-	(arrayListOf(*elements) as kotlin.collections.MutableList<T>).asConnection()
-
-/**
  * Creates a [List] with the given [elements].
  *
  * The iteration order is defined as the encounter order.

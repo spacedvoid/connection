@@ -7,8 +7,11 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFile
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
+import java.io.Writer
 import java.nio.charset.StandardCharsets
 
 class ConnectionGeneratorProvider: SymbolProcessorProvider {
@@ -24,6 +27,15 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 	}
 }
 
-//TODO: Rewrite method to allow configuration of [Dependencies]
-fun CodeGenerator.createNewFile(name: String): BufferedWriter =
-	BufferedWriter(OutputStreamWriter(createNewFile(Dependencies.ALL_FILES, "io.github.spacedvoid.connection", name), StandardCharsets.UTF_8))
+internal fun CodeGenerator.createNewFile(name: String, dependencies: Dependencies = Dependencies(false)): BufferedWriter =
+	BufferedWriter(OutputStreamWriter(createNewFile(dependencies, "io.github.spacedvoid.connection", name), StandardCharsets.UTF_8)).also {
+		it += "// Auto-generated file. The declaration order might change without notice.\n\n"
+	}
+
+internal fun Sequence<KSClassDeclaration>.files(): Array<KSFile> =
+	this.map { it.containingFile }
+		.filterNotNull()
+		.toSet()
+		.toTypedArray()
+
+internal operator fun Writer.plusAssign(s: String) = write(s)

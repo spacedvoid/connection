@@ -23,13 +23,6 @@ fun <K, V> Map<K, V>.toArray(): Array<Pair<K, V>> {
 }
 
 /**
- * Returns a [SequencedCollection] converted from this collection.
- *
- * The iteration order is defined as the encounter order.
- */
-fun <T> Collection<T>.toSequencedCollection(): SequencedCollection<T> = if(this is SequencedCollection<T>) this else sequencedCollectionOf(*toGenericArray())
-
-/**
  * Returns a [List] converted from this collection.
  *
  * The iteration order is defined as the encounter order.
@@ -74,18 +67,6 @@ fun <K: Comparable<K>, V> Map<K, V>.toNavigableMap(): NavigableMap<K, V> = if(th
  * Returns a [NavigableMap] converted from this map, using the [comparator].
  */
 fun <K, V> Map<K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> = if(this is NavigableMap<K, V>) this else navigableMapOf(comparator, *toArray())
-
-/**
- * Returns a [MutableCollection] converted from this collection.
- */
-fun <T> Collection<T>.toMutableCollection(): MutableCollection<T> = mutableCollectionOf(*toGenericArray())
-
-/**
- * Returns a [MutableSequencedCollection] converted from this collection.
- *
- * The iteration order is defined as the encounter order.
- */
-fun <T> Collection<T>.toMutableSequencedCollection(): MutableSequencedCollection<T> = mutableSequencedCollectionOf(*toGenericArray())
 
 /**
  * Returns a [MutableList] converted from this collection.
