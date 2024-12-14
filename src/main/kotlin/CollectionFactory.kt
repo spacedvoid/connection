@@ -20,12 +20,12 @@ fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*element
 /**
  * Creates a [Set] with the given [elements].
  */
-fun <T> setOf(vararg elements: T): Set<T> = kotlin.collections.setOf(*elements).asConnection()
+fun <T> setOf(vararg elements: T): Set<T> = (hashSetOf(*elements) as kotlin.collections.Set<T>).asConnection()
 
 /**
  * Creates a [MutableSet] with the given [elements].
  */
-fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = kotlin.collections.mutableSetOf(*elements).asConnection()
+fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = hashSetOf(*elements).asConnection()
 
 /**
  * Creates a [SequencedSet] with the given [elements].

@@ -17,7 +17,6 @@ object AdapterGenerator {
 						ConnectionKind.IMMUTABLE, ConnectionKind.VIEW -> "kotlin.collections.${it.type.typeName}"
 						else -> "kotlin.collections.Mutable${it.type.typeName}"
 					}
-
 					CollectionTypes.SORTED_NAVIGABLE_SET -> "java.util.SortedSet"
 					MapTypes.SORTED_NAVIGABLE_MAP -> "java.util.SortedMap"
 					else -> "java.util.${it.type.typeName}"

@@ -125,18 +125,14 @@ For more information, refer to the documentation.
 
 ## Conversions
 
-To convert between collection types or kinds, one can use the corresponding extension methods.
-
-### Kind conversions
-
 The following extensions convert collections between kinds, maintaining the same type:
 
-| From → To                            | Extension method | Delegation? |
-|--------------------------------------|------------------|-------------|
-| View (or its subkinds) → View        | [asView]         | Yes         |
-| View (or its subkinds) → Remove-only | [asRemoveOnly]   | Yes         |
-| View (or its subkinds) → Immutable   | [snapshot]       | No          |
-| Immutable → Mutable                  | [toMutable]      | No          |
+| From → To                            | Extension method |
+|--------------------------------------|------------------|
+| View (or its subkinds) → View        | [asView]         |
+| View (or its subkinds) → Remove-only | [asRemoveOnly]   |
+
+These conversions are delegations, where operations on the resulting collection delegates to the original collection.
 
 Note that although simple assignments to superkinds are available, these conversions exist to prevent downcasting.
 For example:
@@ -149,14 +145,28 @@ val typeSafe: ListView<String> = collection.asView()
 (typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
-### Type conversions
+The following extensions change both the type and kind:
 
-The following extensions convert collections between types, maintaining the same kind:
+| From → To                          | Extension method            |
+|------------------------------------|-----------------------------|
+| View (or its subkinds) → Mutable   | `toMutable<CollectionType>` |
+| View (or its subkinds) → Immutable | `to<CollectionType>`        |
 
-| From → To             | Extension method            |
-|-----------------------|-----------------------------|
-| Immutable → Mutable   | `toMutable<CollectionType>` |
-| Immutable → Immutable | `to<CollectionType>`        |
+These conversions are copies, where operations on the resulting collection does not affect the original collection.
+
+## Specifications and thread safety
+
+As mentioned in the [previous](#adapters-are-user-dependent) section, most of the specifications work well only if the adapter methods are used properly.
+Other specifications, such as thread safety, are defined based on the originating Kotlin collection.
+For example, thread safety is guaranteed when using `CopyOnWriteArrayList().asConnection()`, but not with `ArrayList().asConnection()`.
+
+[ConcurrentModificationException] is also another example.
+The primary reason why non-immutable view collections do not define an `operator fun iterator()` is the misuse of such iterators,
+such as removing an element by [MutableCollection.remove] while also using the iterator.
+As such, operations such as [asSequence] strictly require to snapshot the collection by [toList] or other methods.
+(For example, when calling [asSequence], we don't *expect* any modifications to the collection in the sequence's lifetime.)
+However, since the default implementation uses the iterator obtained from [CollectionView.kotlin],
+such exceptions can still occur if the originating collection is modified afterward.
 
 # Package io.github.spacedvoid.connection.impl
 
