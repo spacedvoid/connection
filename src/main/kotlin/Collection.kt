@@ -103,6 +103,17 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 		this.kotlin.remove(element)
 
 	/**
+	 * Removes all occurrences of the elements that match the given [predicate].
+	 * Returns `true` if any elements were removed, `false` otherwise.
+	 *
+	 * @apiNote
+	 * This method should be used in place of [kotlin.collections.removeAll],
+	 * since the implementation may use a better strategy.
+	 */
+	fun removeIf(predicate: (T) -> Boolean): Boolean =
+		this.kotlin.removeIf(predicate)
+
+	/**
 	 * Removes all occurrences of the elements in this collection that are also contained in the given collection.
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
