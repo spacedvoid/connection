@@ -9,12 +9,21 @@ package io.github.spacedvoid.connection
  *
  * Thread-safety is not defined, unless the underlying collection ensures such.
  * As such, the behavior of operations when involved in a data race is not defined.
- * Additionally, this class (and specific subclasses) do not declare an [Iterator],
- * since they cannot consistently detect concurrent modifications.
+ *
+ * The [iterator] may, but is not required to, throw [ConcurrentModificationException]
+ * if the collection is modified while it is in use.
  *
  * Operations are not optional, and must not throw [UnsupportedOperationException].
  */
-interface CollectionView<T> {
+interface CollectionView<T>: Iterable<T> {
+	/**
+	 * Returns an [Iterator] for this collection.
+	 *
+	 * The iteration order is not defined, and might not be consistent.
+	 */
+	override operator fun iterator(): Iterator<T> =
+		this.kotlin.iterator()
+
 	/**
 	 * Returns the size of this collection.
 	 */
@@ -72,22 +81,16 @@ interface CollectionView<T> {
 
 /**
  * An immutable collection.
- * This class additionally provides an [Iterator].
  */
-interface Collection<T>: CollectionView<T>, Iterable<T> {
-	/**
-	 * Returns an [Iterator] for this collection.
-	 *
-	 * The iteration order is not defined, and may not be consistent.
-	 */
-	override operator fun iterator(): Iterator<T> =
-		this.kotlin.iterator()
-}
+interface Collection<T>: CollectionView<T>
 
 /**
  * A mutable collection that only supports element removal operations.
  */
-interface RemoveOnlyCollection<T>: CollectionView<T> {
+interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
+	override fun iterator(): MutableIterator<T> =
+		this.kotlin.iterator()
+
 	/**
 	 * Removes a single occurrence of the given [element] from this collection.
 	 * Returns `true` if an element was removed, `false` otherwise.

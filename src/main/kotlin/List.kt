@@ -5,6 +5,14 @@ package io.github.spacedvoid.connection
  * The index ranges from `0` to `size - 1`, inclusive.
  */
 interface ListView<T>: SequencedCollectionView<T> {
+	/**
+	 * Returns a new iterator for this list.
+	 *
+	 * The iteration order is based on the index.
+	 */
+	override operator fun iterator(): ListIterator<T> =
+		this.kotlin.listIterator()
+
 	override fun reverse(): ListView<T>
 
 	/**
@@ -54,13 +62,6 @@ interface ListView<T>: SequencedCollectionView<T> {
  * An immutable [ListView].
  */
 interface List<T>: SequencedCollection<T>, ListView<T> {
-	/**
-	 * Returns a [ListIterator] for this collection.
-	 *
-	 * The iteration order is based on the index.
-	 */
-	override operator fun iterator(): ListIterator<T> =
-		this.kotlin.listIterator()
 
 	override fun reverse(): List<T>
 
@@ -75,6 +76,14 @@ interface List<T>: SequencedCollection<T>, ListView<T> {
  * A [ListView] that additionally supports element addition and removal operations.
  */
 interface MutableList<T>: MutableSequencedCollection<T>, ListView<T> {
+	/**
+	 * Returns a new iterator for this list.
+	 *
+	 * The iteration order is based on the index.
+	 */
+	override fun iterator(): MutableListIterator<T> =
+		this.kotlin.listIterator()
+
 	override fun reverse(): MutableList<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T>
