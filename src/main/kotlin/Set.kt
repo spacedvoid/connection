@@ -25,12 +25,8 @@ interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T> {
 
 /**
  * A [RemoveOnlySet] that additionally supports element addition operations.
+ *
+ * When an element which already matches an instance in the set is added,
+ * the contained instance is not replace, and the set remains unchanged.
  */
-interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T> {
-	/**
-	 * Adds the given [element] to this set and returns `true` if no elements in this set matches the [element], `false` otherwise.
-	 */
-	@Suppress("RedundantOverride") // Don't know why, might be a K1 bug
-	override fun add(element: T): Boolean =
-		super.add(element)
-}
+interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T>

@@ -25,12 +25,21 @@ tasks.test {
     useJUnitPlatform()
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 kotlin {
     jvmToolchain(21)
 }
 
+tasks.compileKotlin {
+    compilerOptions.freeCompilerArgs += "-Xjvm-default=all-compatibility"
+}
+
 tasks.dokkaHtml {
-    outputDirectory = projectDir.resolve("docs")
+    outputDirectory = file("docs")
     failOnWarning = true
 
     dokkaSourceSets {
@@ -43,7 +52,7 @@ tasks.dokkaHtml {
             platform = Platform.jvm
 
             sourceLink {
-                localDirectory = projectDir.resolve("src/main/kotlin")
+                localDirectory = file("src/main/kotlin")
                 remoteUrl = URI("https://github.com/spacedvoid/connection/tree/main/src/main/kotlin").toURL()
             }
         }
@@ -56,4 +65,8 @@ tasks.dokkaHtml {
 
 private operator fun ConfigurableFileCollection.plusAssign(file: File) {
     setFrom(*this.from.toTypedArray(), file)
+}
+
+private operator fun <T: Any> ListProperty<T>.plusAssign(element: T) {
+    add(element)
 }

@@ -61,8 +61,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 /**
  * An immutable [ListView].
  */
-interface List<T>: SequencedCollection<T>, ListView<T> {
-
+interface List<T>: ListView<T>, SequencedCollection<T> {
 	override fun reverse(): List<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T>
@@ -75,7 +74,7 @@ interface List<T>: SequencedCollection<T>, ListView<T> {
 /**
  * A [ListView] that additionally supports element addition and removal operations.
  */
-interface MutableList<T>: MutableSequencedCollection<T>, ListView<T> {
+interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	/**
 	 * Returns a new iterator for this list.
 	 *

@@ -119,7 +119,7 @@ interface SortedNavigableSetView<T>: SequencedSetView<T> {
 /**
  * An immutable [SortedNavigableSetView].
  */
-interface SortedNavigableSet<T>: SequencedSet<T>, SortedNavigableSetView<T> {
+interface SortedNavigableSet<T>: SortedNavigableSetView<T>, SequencedSet<T> {
 	override fun reverse(): SortedNavigableSet<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableSet<T>
@@ -145,7 +145,7 @@ interface RemoveOnlySortedNavigableSet<T>: RemoveOnlySequencedSet<T>, SortedNavi
 /**
  * A [RemoveOnlySortedNavigableSet] that additionally supports element addition operations.
  */
-interface MutableSortedNavigableSet<T>: MutableSequencedSet<T>, RemoveOnlySortedNavigableSet<T> {
+interface MutableSortedNavigableSet<T>: RemoveOnlySortedNavigableSet<T>, MutableSequencedSet<T> {
 	override fun reverse(): MutableSortedNavigableSet<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableSortedNavigableSet<T>

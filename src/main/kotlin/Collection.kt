@@ -1,5 +1,7 @@
 package io.github.spacedvoid.connection
 
+import java.util.function.Consumer
+
 /**
  * A collection view.
  * Base interface for the Connection API.
@@ -17,7 +19,7 @@ package io.github.spacedvoid.connection
  */
 interface CollectionView<T>: Iterable<T> {
 	/**
-	 * Returns an [Iterator] for this collection.
+	 * Returns a new iterator for this collection.
 	 *
 	 * The iteration order is not defined, and might not be consistent.
 	 */
@@ -77,6 +79,15 @@ interface CollectionView<T>: Iterable<T> {
 	 * always return the current class's Kotlin representation instead.
 	 */
 	val CollectionView<T>.kotlin: kotlin.collections.Collection<T>
+
+	//<editor-fold defaultState="collapsed" desc="// Hidden overrides, deprecated since these become problematic when generating documentation">
+	/*
+	 * Since kotlin.collections.forEach is annotated with @HidesMembers, this method won't be selected.
+	 * Compile with `-Xjvm-default=all-compatibility` in K1, although this will be the default behavior in K2, as this will be fixed at 2.2.0.
+	 */
+	@Deprecated("This method is problematic when generating documentation via Dokka.", ReplaceWith("forEach { action(it) }", "kotlin.collections.forEach"), level = DeprecationLevel.HIDDEN)
+	override fun forEach(action: Consumer<in T>?) = super.forEach(action)
+	//</editor-fold>
 }
 
 /**
@@ -88,8 +99,7 @@ interface Collection<T>: CollectionView<T>
  * A mutable collection that only supports element removal operations.
  */
 interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
-	override fun iterator(): MutableIterator<T> =
-		this.kotlin.iterator()
+	override fun iterator(): MutableIterator<T> = this.kotlin.iterator()
 
 	/**
 	 * Removes a single occurrence of the given [element] from this collection.

@@ -5,6 +5,14 @@ package io.github.spacedvoid.connection
  */
 interface SequencedCollectionView<T>: CollectionView<T> {
 	/**
+	 * Returns a new for this collection.
+	 *
+	 * The iteration order is defined by the specification.
+	 */
+	override fun iterator(): Iterator<T> =
+		this.kotlin.iterator()
+
+	/**
 	 * Returns a reverse-ordered collection of this collection.
 	 *
 	 * Operations on the returned collection delegates to this collection.
@@ -31,22 +39,17 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 /**
  * An immutable [SequencedCollectionView].
  */
-interface SequencedCollection<T>: Collection<T>, SequencedCollectionView<T>{
-	/**
-	 * Returns an [Iterator] for this collection.
-	 *
-	 * The iteration order is defined by the specification.
-	 */
-	override fun iterator(): Iterator<T> =
-		this.kotlin.iterator()
-
+interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T>{
 	override fun reverse(): SequencedCollection<T>
 }
 
 /**
  * A [SequencedCollectionView] that additionally supports element removal operations.
  */
-interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, SequencedCollectionView<T> {
+interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOnlyCollection<T> {
+	override fun iterator(): MutableIterator<T> =
+		this.kotlin.iterator()
+
 	override fun reverse(): RemoveOnlySequencedCollection<T>
 
 	/**
@@ -71,6 +74,6 @@ interface RemoveOnlySequencedCollection<T>: RemoveOnlyCollection<T>, SequencedCo
  * This class does not define `addFirst` and `addLast` operations;
  * most subtypes of this collection(namely [MutableNavigableSet]) manages the iteration order by other criteria.
  */
-interface MutableSequencedCollection<T>: MutableCollection<T>, RemoveOnlySequencedCollection<T> {
+interface MutableSequencedCollection<T>: RemoveOnlySequencedCollection<T>, MutableCollection<T> {
 	override fun reverse(): MutableSequencedCollection<T>
 }

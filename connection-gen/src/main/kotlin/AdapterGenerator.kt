@@ -31,7 +31,7 @@ object AdapterGenerator {
 						ConnectionKind.IMMUTABLE -> "asConnection"
 						ConnectionKind.VIEW -> "asViewConnection"
 						ConnectionKind.REMOVE_ONLY -> "asRemoveOnlyConnection"
-						ConnectionKind.MUTABLE -> if(typeKind.kotlin.startsWith("java")) "asMutableConnection" else "asConnection"
+						ConnectionKind.MUTABLE -> "asMutableConnection"
 					}
 					out += "\nfun ${typeKind.typeParams} ${typeKind.kotlin}${typeKind.typeParams}.$adapterName(): ${typeKind.fullIdentifier} = ${typeKind.impl.name}(this)\n"
 				}
