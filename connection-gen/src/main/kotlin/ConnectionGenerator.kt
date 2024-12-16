@@ -8,7 +8,6 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
 import java.io.Writer
@@ -32,10 +31,13 @@ internal fun CodeGenerator.createNewFile(name: String, dependencies: Dependencie
 		it += "// Auto-generated file. The declaration order might change without notice.\n\n"
 	}
 
-internal fun Sequence<KSClassDeclaration>.files(): Array<KSFile> =
-	this.map { it.containingFile }
-		.filterNotNull()
-		.toSet()
-		.toTypedArray()
+internal fun Sequence<KSClassDeclaration>.toDependencies(aggregating: Boolean = false): Dependencies =
+	Dependencies(
+		aggregating,
+		*this.map { it.containingFile }
+			.filterNotNull()
+			.toSet()
+			.toTypedArray()
+	)
 
 internal operator fun Writer.plusAssign(s: String) = write(s)

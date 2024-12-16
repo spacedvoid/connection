@@ -2,7 +2,6 @@ package io.github.spacedvoid.connection.gen
 
 import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 
@@ -13,15 +12,14 @@ object ConversionGenerator {
 	}
 
 	private fun CodeGenerator.generateView(resolver: Resolver) {
-		val viewCollections = (CollectionTypes.entries + MapTypes.entries).asSequence()
-			.map { ConnectionTypeKind(it, ConnectionKind.VIEW) }
-			.filter { it !in ConnectionTypeKind.nonExistent }
+		val viewCollections = ConnectionTypeKind.all.asSequence()
+			.filter { typeKind -> typeKind.kind == ConnectionKind.VIEW && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind > ConnectionKind.VIEW } }
 			.toList()
 		val dependencies = viewCollections.asSequence()
 			.flatMap { sequenceOf(it, it.impl) }
 			.map { resolver.getClassDeclarationByName(it.qualifiedName)!! }
-			.files()
-		createNewFile("View", Dependencies(aggregating = false, *dependencies)).use { out ->
+			.toDependencies()
+		createNewFile("View", dependencies).use { out ->
 			out += """
 				package io.github.spacedvoid.connection
 				
@@ -34,7 +32,7 @@ object ConversionGenerator {
 					/**
 					 * Returns a collection view, converted from this collection.
 					 */
-					 fun ${it.typeParamDeclaration()} ${it.fullIdentifier}.asView(): ${it.fullIdentifier} = ${it.impl.name}(this.kotlin)
+					fun ${it.typeParams} ${it.fullIdentifier}.asView(): ${it.fullIdentifier} = ${it.impl.name}(this.kotlin)
 					
 				""".trimIndent()
 			}
@@ -42,15 +40,14 @@ object ConversionGenerator {
 	}
 
 	private fun CodeGenerator.generateRemoveOnly(resolver: Resolver) {
-		val removeOnlyCollections = CollectionTypes.entries.asSequence()
-			.map { ConnectionTypeKind(it, ConnectionKind.REMOVE_ONLY) }
-			.filter { it !in ConnectionTypeKind.nonExistent }
+		val removeOnlyCollections = ConnectionTypeKind.all.asSequence()
+			.filter { typeKind -> typeKind.kind == ConnectionKind.REMOVE_ONLY && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind > ConnectionKind.REMOVE_ONLY } }
 			.toList()
 		val dependencies = removeOnlyCollections.asSequence()
 			.flatMap { sequenceOf(it, it.impl) }
 			.map { resolver.getClassDeclarationByName(it.qualifiedName)!! }
-			.files()
-		createNewFile("RemoveOnly", Dependencies(aggregating = false, *dependencies)).use { out ->
+			.toDependencies()
+		createNewFile("RemoveOnly", dependencies).use { out ->
 			out += """
 				package io.github.spacedvoid.connection
 				
@@ -63,7 +60,7 @@ object ConversionGenerator {
 					/**
 					 * Returns a remove-only collection, converted from this collection.
 					 */
-					 fun ${it.typeParamDeclaration()} ${it.fullIdentifier}.asRemoveOnly(): ${it.fullIdentifier} = ${it.impl.name}(this.kotlin)
+					fun ${it.typeParams} ${it.fullIdentifier}.asRemoveOnly(): ${it.fullIdentifier} = ${it.impl.name}(this.kotlin)
 					 
 				""".trimIndent()
 			}
