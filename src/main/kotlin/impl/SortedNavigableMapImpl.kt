@@ -76,7 +76,7 @@ open class MutableSortedNavigableMapImpl<K, V>(private val kotlin: SortedMap<K, 
 }
 
 private fun <K> SortedMap<K, *>.keySet(): SortedSet<K> = object: java.util.SequencedSet<K> by this.sequencedKeySet(), SortedSet<K> {
-	override fun comparator(): java.util.Comparator<in K>? = this.comparator()
+	override fun comparator(): java.util.Comparator<in K>? = this@keySet.comparator()
 
 	override fun reversed(): SortedSet<K> = this@keySet.reversed().keySet()
 
