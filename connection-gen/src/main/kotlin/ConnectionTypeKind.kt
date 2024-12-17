@@ -67,7 +67,7 @@ enum class MapTypes(override val typeName: String): ConnectionType {
 }
 
 enum class ConnectionKind(val typeNameTransformer: (String) -> String) {
-	IMMUTABLE({ it }), VIEW({ "${it}View" }), REMOVE_ONLY({ "RemoveOnly$it" }), MUTABLE({ "Mutable$it" })
+	VIEW({ "${it}View" }), IMMUTABLE({ it }),REMOVE_ONLY({ "RemoveOnly$it" }), MUTABLE({ "Mutable$it" })
 }
 
 val ConnectionTypeKind.impl: ConnectionImpl
@@ -135,11 +135,11 @@ private fun generateAllTypeKinds(): List<ConnectionTypeKind> = (CollectionTypes.
 	.filterNot { ConnectionTypeKind.nonExistent(it) }
 	.toList()
 
-private fun createConnectionTypeKind(type: ConnectionType, it: ConnectionKind) = ConnectionTypeKind(
+private fun createConnectionTypeKind(type: ConnectionType, kind: ConnectionKind) = ConnectionTypeKind(
 	type,
-	it,
+	kind,
 	when(type) {
-		CollectionTypes.COLLECTION, CollectionTypes.LIST, CollectionTypes.SET, MapTypes.MAP -> when(it) {
+		CollectionTypes.COLLECTION, CollectionTypes.LIST, CollectionTypes.SET, MapTypes.MAP -> when(kind) {
 			ConnectionKind.IMMUTABLE, ConnectionKind.VIEW -> "kotlin.collections.${type.typeName}"
 			else -> "kotlin.collections.Mutable${type.typeName}"
 		}
@@ -147,9 +147,10 @@ private fun createConnectionTypeKind(type: ConnectionType, it: ConnectionKind) =
 		MapTypes.SORTED_NAVIGABLE_MAP -> "java.util.SortedMap"
 		else -> "java.util.${type.typeName}"
 	},
-	listOf(AsConnectionAdapter(toConnectionAdapterDocs.getValue(it))),
+	listOf(AsConnectionAdapter(toConnectionAdapterDocs.getValue(kind))),
 	buildList {
-		if(type == CollectionTypes.LIST) {
+		add(AsKotlinAdapter(toKotlinAdapterDoc))
+		if(type == CollectionTypes.LIST && kind == ConnectionKind.VIEW) {
 			add(AsKotlinAdapter("""
 				/**
 				 * Returns a Kotlin collection that delegates to this collection.
@@ -159,7 +160,6 @@ private fun createConnectionTypeKind(type: ConnectionType, it: ConnectionKind) =
 				 */
 			""".trimIndent(), customName = "asSequencedKotlin", uncheckedCast = UncheckedCast("java.util.SequencedCollection")))
 		}
-		add(AsKotlinAdapter(toKotlinAdapterDoc))
 	}
 )
 

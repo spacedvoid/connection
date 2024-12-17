@@ -40,13 +40,14 @@ object AdapterGenerator {
 	}
 
 	private fun CodeGenerator.generateConAsCol(resolver: Resolver) {
-		val dependencies = ConnectionTypeKind.all.asSequence()
+		val targets = ConnectionTypeKind.all.distinctBy { it.kotlin }
+		val dependencies = targets.asSequence()
 			.flatMap { listOf(it, it.impl) }
 			.map { resolver.getClassDeclarationByName(it.qualifiedName)!! }
 			.toDependencies()
 		createNewFile("ConnectionAsCollection", dependencies).use { out ->
 			out.write("package io.github.spacedvoid.connection\n")
-			ConnectionTypeKind.all.forEach { typeKind ->
+			targets.forEach { typeKind ->
 				typeKind.asKotlinAdapters.forEach {
 					out += "\n"
 					out += it.docs

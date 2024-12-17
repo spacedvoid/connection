@@ -15,7 +15,7 @@ fun <T> listOf(vararg elements: T): List<T> = (arrayListOf(*elements) as kotlin.
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*elements).asConnection()
+fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*elements).asMutableConnection()
 
 /**
  * Creates a [Set] with the given [elements].
@@ -25,7 +25,7 @@ fun <T> setOf(vararg elements: T): Set<T> = (hashSetOf(*elements) as kotlin.coll
 /**
  * Creates a [MutableSet] with the given [elements].
  */
-fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = hashSetOf(*elements).asConnection()
+fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = hashSetOf(*elements).asMutableConnection()
 
 /**
  * Creates a [SequencedSet] with the given [elements].
@@ -73,7 +73,7 @@ fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> = (hashMapOf(*entries) a
 /**
  * Creates a [MutableMap] with the given [entries].
  */
-fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> = hashMapOf(*entries).asConnection()
+fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> = hashMapOf(*entries).asMutableConnection()
 
 /**
  * Creates a [SequencedMap] with the given [entries].

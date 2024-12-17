@@ -12,15 +12,15 @@ import java.util.SortedSet
  * Manual conversion from java.util.SortedSet to java.util.NavigableSet.
  * For all subSet-creation methods, higher() returns `null` if:
  * 1. Set is empty.
- * 2. No entries are higher than the given entry.
+ * 2. No elements are higher (or equal) than the given element.
  *
- * In both cases, the returned `null` can be safely replaced with the given entry because:
+ * In both cases, the returned `null` can be safely replaced with the given element because:
  * 1. -> The subSet will also be empty.
- * 2. -> The entry is higher (or equal) than the highest entry.
+ * 2. -> The element is higher (or equal) than the highest element.
  *
- * If the entry was `null`, higher() will throw (and propagate) a NullPointerException if the set does not permit `null` entries.
+ * If the element was `null`, higher() will throw (and propagate) a NullPointerException if the set does not permit `null` elements.
  * Otherwise, no visual differences are made(`null` replaced by `null`, or non-`null` not being replaced).
- * In other exceptional cases(where the `from` entry is higher than the `to` entry, or the entry is outside the (sub)set's range),
+ * In other exceptional cases(where the `from` element is higher than the `to` element, or the element is outside the (sub)set's range),
  * the underlying method will propagate the exceptions, mostly being IllegalArgumentException.
  */
 

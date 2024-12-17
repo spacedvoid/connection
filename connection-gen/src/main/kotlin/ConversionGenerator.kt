@@ -13,7 +13,7 @@ object ConversionGenerator {
 
 	private fun CodeGenerator.generateView(resolver: Resolver) {
 		val viewCollections = ConnectionTypeKind.all.asSequence()
-			.filter { typeKind -> typeKind.kind == ConnectionKind.VIEW && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind > ConnectionKind.VIEW } }
+			.filter { typeKind -> typeKind.kind == ConnectionKind.VIEW && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind >= ConnectionKind.REMOVE_ONLY } }
 			.toList()
 		val dependencies = viewCollections.asSequence()
 			.flatMap { sequenceOf(it, it.impl) }
@@ -41,7 +41,7 @@ object ConversionGenerator {
 
 	private fun CodeGenerator.generateRemoveOnly(resolver: Resolver) {
 		val removeOnlyCollections = ConnectionTypeKind.all.asSequence()
-			.filter { typeKind -> typeKind.kind == ConnectionKind.REMOVE_ONLY && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind > ConnectionKind.REMOVE_ONLY } }
+			.filter { typeKind -> typeKind.kind == ConnectionKind.REMOVE_ONLY && ConnectionTypeKind.all.any { it.type == typeKind.type && it.kind >= ConnectionKind.MUTABLE } }
 			.toList()
 		val dependencies = removeOnlyCollections.asSequence()
 			.flatMap { sequenceOf(it, it.impl) }
