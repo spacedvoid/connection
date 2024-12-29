@@ -11,28 +11,38 @@ interface Configurable {
 
 operator fun <T: Configurable> T?.invoke(configuration: T.() -> Unit) = this?.configuration()
 
+@ConnectionDSL
+interface Named: Configurable {
+	var name: String
+	var inPackage: String
+
+	val qualifiedName: String
+		get() = "${this.inPackage}.${this.name}"
+}
+
 class ConnectionGeneration: Configurable {
 	@ConnectionDSL
 	inner class ConnectionType(val name: String, val typeArgCount: Int): Configurable {
 		@ConnectionDSL
-		inner class ConnectionTypeKind internal constructor(val kind: ConnectionKind): Configurable {
-			var name: String = when(this.kind) {
+		inner class ConnectionTypeKind internal constructor(val kind: ConnectionKind): Configurable, Named {
+			override var name: String = when(this.kind) {
 				ConnectionKind.VIEW -> "${this@ConnectionType.name}View"
 				ConnectionKind.IMMUTABLE -> this@ConnectionType.name
 				ConnectionKind.REMOVE_ONLY -> "RemoveOnly${this@ConnectionType.name}"
 				ConnectionKind.MUTABLE -> "Mutable${this@ConnectionType.name}"
 			}
-			var inPackage: String = "io.github.spacedvoid.connection"
-			var impl: String = this.name + "Impl"
-				get() = when(this.customImpl) {
-					true -> field
-					false -> this.name + "Impl"
-				}
-				set(value) {
-					field = value
-					this.customImpl = true
-				}
-			private var customImpl: Boolean = false
+			override var inPackage: String = "io.github.spacedvoid.connection"
+			var impl: Named = object: Named {
+				override var name: String = this@ConnectionTypeKind.name + "Impl"
+					get() = if(this.customName) field else this@ConnectionTypeKind.name + "Impl"
+					set(value) {
+						this.customName = true
+						field = value
+					}
+				override var inPackage: String = "io.github.spacedvoid.connection.impl"
+
+				private var customName = false
+			}
 
 			val adapters = Adapters()
 		}
@@ -70,6 +80,3 @@ class ConnectionGeneration: Configurable {
 		return type
 	}
 }
-
-val ConnectionGeneration.ConnectionType.ConnectionTypeKind.qualifiedName: String
-	get() = "${this.inPackage}.${this.name}"

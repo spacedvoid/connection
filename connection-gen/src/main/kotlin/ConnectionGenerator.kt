@@ -8,7 +8,6 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
-import io.github.spacedvoid.connection.gen.dsl.qualifiedName
 
 class ConnectionGeneratorProvider: SymbolProcessorProvider {
 	override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor = ConnectionGenerator(environment)
@@ -33,6 +32,12 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				null -> from
 				else -> requested.kinds[ConnectionKind.VIEW] ?: throw IllegalArgumentException("Type ${requested.name} does not have a view kind")
 			}
+			generatingFiles.view.attach(
+				listOf(from.qualifiedName, view.qualifiedName, view.impl.qualifiedName).asSequence()
+					.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+					.mapNotNull { it.containingFile }
+					.toList()
+			)
 			generatingFiles.generateView(
 				it.name ?: "asView",
 				it.docs ?: """
@@ -43,7 +48,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				type.typeArgs,
 				from.name,
 				view.name,
-				view.impl
+				view.impl.name
 			)
 		}
 		// RemoveOnly
@@ -53,6 +58,12 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				null -> from
 				else -> requested.kinds[ConnectionKind.REMOVE_ONLY] ?: throw IllegalArgumentException("Type ${requested.name} does not have a remove-only kind")
 			}
+			generatingFiles.removeOnly.attach(
+				listOf(from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName).asSequence()
+					.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+					.mapNotNull { it.containingFile }
+					.toList()
+			)
 			generatingFiles.generateRemoveOnly(
 				it.name ?: "asRemoveOnly",
 				it.docs ?: """
@@ -63,7 +74,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				type.typeArgs,
 				from.name,
 				removeOnly.name,
-				removeOnly.impl
+				removeOnly.impl.name
 			)
 		}
 
@@ -80,6 +91,12 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			// CollectionAsConnection
 			(kind.adapters.asConnection.extra + kind.adapters.asConnection.default).forEach next@{
 				if(it == null) return@next
+				generatingFiles.colAsCon.attach(
+					listOf(kind.qualifiedName, kind.impl.qualifiedName).asSequence()
+						.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+						.mapNotNull { it.containingFile }
+						.toList()
+				)
 				generatingFiles.generateColAsCon(
 					it.name ?: when(kind.kind) {
 						ConnectionKind.VIEW -> "asViewConnection"
@@ -124,12 +141,18 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 					type.typeArgs,
 					it.kotlin ?: kotlin,
 					kind.name,
-					kind.impl
+					kind.impl.name
 				)
 			}
 			// ConnectionAsCollection
 			(kind.adapters.asKotlin.extra + kind.adapters.asKotlin.default).forEach next@{
 				if(it == null) return@next
+				generatingFiles.conAsCol.attach(
+					listOf(kind.qualifiedName, kind.impl.qualifiedName).asSequence()
+						.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+						.mapNotNull { it.containingFile }
+						.toList()
+				)
 				generatingFiles.generateConAsCol(
 					it.name ?: "asKotlin",
 					it.docs ?: """
