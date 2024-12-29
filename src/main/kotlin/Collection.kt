@@ -85,7 +85,7 @@ interface CollectionView<T>: Iterable<T> {
 	 * Since kotlin.collections.forEach is annotated with @HidesMembers, this method won't be selected.
 	 * Compile with `-Xjvm-default=all-compatibility` in K1, although this will be the default behavior in K2, as this will be fixed at 2.2.0.
 	 */
-	@Deprecated("This method is problematic when generating documentation via Dokka.", ReplaceWith("forEach { action(it) }", "kotlin.collections.forEach"), level = DeprecationLevel.HIDDEN)
+	@Deprecated("This method is problematic when generating documentation via Dokka.", ReplaceWith("forEach { action(it) }"), level = DeprecationLevel.HIDDEN)
 	override fun forEach(action: Consumer<in T>?) = super.forEach(action)
 	//</editor-fold>
 }
