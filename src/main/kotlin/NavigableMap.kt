@@ -18,8 +18,7 @@ interface NavigableMapView<K, V>: SortedNavigableMapView<K, V> {
 	 * the returned subset's [firstKey] and [lastKey] might not be equal to the given arguments.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 */
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V>
 
@@ -34,8 +33,7 @@ interface NavigableMapView<K, V>: SortedNavigableMapView<K, V> {
 	 * the returned subset's [lastKey] might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 */
 	override fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
@@ -50,8 +48,7 @@ interface NavigableMapView<K, V>: SortedNavigableMapView<K, V> {
 	 * the returned subset's [firstKey] might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 */
 	override fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 

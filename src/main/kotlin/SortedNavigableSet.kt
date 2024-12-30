@@ -35,8 +35,7 @@ interface SortedNavigableSetView<T>: SequencedSetView<T> {
 	 * the returned subset's [first] and [last] element might not be equal to the given arguments.
 	 * In such cases, the range is defined by the actual elements in this collection.
 	 *
-	 * The behavior of the returned collection when this collection is *structurally modified*(that is, changing the size of this collection)
-	 * by operations on this collection is not defined.
+	 * The behavior of the returned collection when this collection is modified by operations on this collection in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.
@@ -56,8 +55,7 @@ interface SortedNavigableSetView<T>: SequencedSetView<T> {
 	 * the returned subset's [last] element might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual elements in this collection.
 	 *
-	 * The behavior of the returned collection when this collection is *structurally modified*(that is, changing the size of this collection)
-	 * by operations on this collection is not defined.
+	 * The behavior of the returned collection when this collection is modified by operations on this collection in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.
@@ -77,8 +75,7 @@ interface SortedNavigableSetView<T>: SequencedSetView<T> {
 	 * the returned subset's [first] element might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual elements in this collection.
 	 *
-	 * The behavior of the returned collection when this collection is *structurally modified*(that is, changing the size of this collection)
-	 * by operations on this collection is not defined.
+	 * The behavior of the returned collection when this collection is modified by operations on this collection in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.

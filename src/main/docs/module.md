@@ -23,7 +23,7 @@ Most collection interfaces from the Java Collections Framework are supported:
 | [java.util.SortedMap]           | -                               | [SortedNavigableMap]          |
 | [java.util.NavigableMap]        | -                               | [NavigableMap]                |
 
-Some exceptions include decorator types, such as [java.util.ConcurrentMap]:
+Some exceptions include decorator types, such as [java.util.concurrent.ConcurrentMap]:
 
 | Java collection                      | Obtainable by(example)                     | Obtainable by in Connection(example)                                      |
 |--------------------------------------|--------------------------------------------|---------------------------------------------------------------------------|
@@ -50,7 +50,7 @@ Collections in this package are separated into 4 kinds, based on their propertie
 
 | Collection type        | Mutability   | Delegation of another collection? | Superkind              |
 |------------------------|--------------|-----------------------------------|------------------------|
-| View collection        | Unknown      | Unknown                           | None                   |
+| View collection        | Unknown      | Unknown                           | -                      |
 | Immutable collection   | No           | No                                | View collection        |
 | Remove-only collection | Yes(limited) | Unknown(probably yes)             | View collection        |
 | Mutable collection     | Yes          | Unknown(probably no)              | Remove-only collection |
@@ -86,8 +86,7 @@ Do note that adapter methods cannot verify whether the originating collection is
 For example, in the following snippet:
 
 ```kotlin
-val kotlinCollection = kotlin.collections.HashMap<String, Any>().keys
-// working with `kotlinCollection`...
+val kotlinCollection = hashMapOf<String, Any>().keys
 val right = kotlinCollection.asRemoveOnlyConnection()
 // val wrong = kotlinCollection.asConnection() 
 ```
@@ -103,11 +102,11 @@ Exceptions are similar to the following:
 val connection = arrayListOf("a", "b", "c").asRemoveOnlyConnection()
 ```
 
-Because the created [ArrayList] will never be directly used afterward, one can safely apply [asRemoveOnlyConnection] to the collection.
+Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward, one can safely apply [asRemoveOnlyConnection] to the collection.
 
 ### The unsafe way
 
-[Collection.kotlin] is a direct representation of the collection as Kotlin.
+[CollectionView.kotlin] is a direct representation of the collection as a Kotlin collection.
 However, use of this property is considered **unsafe**.
 The result is **not** statically bound;
 even if a collection is represented as [Collection], the returned collection by this property might be a [List].
@@ -156,17 +155,12 @@ These conversions are copies, where operations on the resulting collection does 
 
 ## Specifications and thread safety
 
-As mentioned in the [previous](#adapters-are-user-dependent) section, most of the specifications work well only if the adapter methods are used properly.
+As mentioned in the previous(Adapters are user-dependent) section, most of the specifications work well only if the adapter methods are used properly.
 Other specifications, such as thread safety, are defined based on the originating Kotlin collection.
 For example, thread safety is guaranteed when using `CopyOnWriteArrayList().asConnection()`, but not with `ArrayList().asConnection()`.
 
-[ConcurrentModificationException] is also another example.
-The primary reason why non-immutable view collections do not define an `operator fun iterator()` is the misuse of such iterators,
-such as removing an element by [MutableCollection.remove] while also using the iterator.
-As such, operations such as [asSequence] strictly require to snapshot the collection by [toList] or other methods.
-(For example, when calling [asSequence], we don't *expect* any modifications to the collection in the sequence's lifetime.)
-However, since the default implementation uses the iterator obtained from [CollectionView.kotlin],
-such exceptions can still occur if the originating collection is modified afterward.
+A simple way to determine such properties is to know that Connection is a mere wrapper for Kotlin collections;
+if the property comes from the Kotlin collection, it is also guaranteed in Connection as well, unless the specification from Connection says about it.
 
 # Package io.github.spacedvoid.connection.impl
 

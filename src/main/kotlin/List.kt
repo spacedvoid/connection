@@ -16,15 +16,15 @@ interface ListView<T>: SequencedCollectionView<T> {
 	override fun reverse(): ListView<T>
 
 	/**
-	 * Returns a sublist of this collection, in the given range.
+	 * Returns a sublist of this list, in the given range.
 	 * Throws [IndexOutOfBoundsException] if [startInclusive] is less than `0`,
-	 * [endExclusive] is greater than this collection's size,
+	 * [endExclusive] is greater than this list's size,
 	 * or [startInclusive] is greater than [endExclusive].
 	 *
-	 * Operations on the returned collection is delegated to this collection.
+	 * Operations on the returned list is delegated to this list.
 	 *
-	 * The behavior of the returned collection when this collection is *structurally modified*(that is, changing the size of this collection)
-	 * by operations on this collection is not defined.
+	 * The behavior of the returned list when this list is *structurally modified*(that is, changing the size of this list)
+	 * by operations on this list is not defined.
 	 */
 	fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
 
@@ -36,13 +36,13 @@ interface ListView<T>: SequencedCollectionView<T> {
 		this.kotlin[index]
 
 	/**
-	 * Returns the index of the first occurrence of the given [element], or `-1` if the [element] is not in this collection.
+	 * Returns the index of the first occurrence of the given [element], or `-1` if the [element] is not in this list.
 	 */
 	fun indexOf(element: T): Int =
 		this.kotlin.indexOf(element)
 
 	/**
-	 * Returns the index of the last occurrence of the given [element], or `-1` if the [element] is not in this collection.
+	 * Returns the index of the last occurrence of the given [element], or `-1` if the [element] is not in this list.
 	 */
 	fun lastIndexOf(element: T): Int =
 		this.kotlin.lastIndexOf(element)
@@ -95,7 +95,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 		this.kotlin.add(index, element)
 
 	/**
-	 * Adds the [element] to the beginning of this collection.
+	 * Adds the [element] to the beginning of this list.
 	 *
 	 * @apiNote
 	 * This method is equivalent with `add(0, element)`.
@@ -104,7 +104,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 		this.kotlin.addFirst(element)
 
 	/**
-	 * Adds the [element] to the end of this collection.
+	 * Adds the [element] to the end of this list.
 	 *
 	 * @apiNote
 	 * This method is equivalent with `add(size - 1, element)`.

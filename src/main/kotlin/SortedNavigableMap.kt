@@ -2,8 +2,8 @@ package io.github.spacedvoid.connection
 
 /**
  * A [SequencedMapView] that defines the iteration order based on a [Comparator].
- * Elements inserted in this map must be comparable by the [comparator].
- * A [TypeCastException] is thrown if the element is not comparable.
+ * Keys inserted in this map must be comparable by the [comparator].
+ * A [TypeCastException] is thrown if the key is not comparable.
  *
  * The [comparator] must be *consistent with equals*;
  * that is, `comparator.compare(a, b) == 0` if and only if `a.equals(b)`.
@@ -17,7 +17,7 @@ package io.github.spacedvoid.connection
  */
 interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 	/**
-	 * The comparator used to sort the entries in this map.
+	 * The comparator used to sort the keys in this map.
 	 */
 	val comparator: Comparator<in K>
 
@@ -35,8 +35,7 @@ interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 	 * the returned subset's [firstKey] and [lastKey] might not be equal to the given arguments.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.
@@ -56,8 +55,7 @@ interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 	 * the returned subset's [lastKey] might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.
@@ -77,8 +75,7 @@ interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 	 * the returned subset's [firstKey] might not be equal to the given argument.
 	 * In such cases, the range is defined by the actual keys in this map.
 	 *
-	 * The behavior of the returned map when this map is *structurally modified*(that is, changing the size of this map)
-	 * by operations on this map is not defined.
+	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
 	 *
 	 * This method makes no guarantees about its performance and thread-safety.
 	 * This operation might not be atomic, which may return undefined results.
