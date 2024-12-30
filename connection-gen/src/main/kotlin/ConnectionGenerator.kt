@@ -8,23 +8,36 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
+import io.github.spacedvoid.connection.gen.dsl.DslInternal
+import io.github.spacedvoid.connection.gen.dsl.qualifiedName
 
+/**
+ * The [SymbolProcessorProvider] for [ConnectionGenerator].
+ */
 class ConnectionGeneratorProvider: SymbolProcessorProvider {
 	override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor = ConnectionGenerator(environment)
 }
 
+/**
+ * The main generator.
+ */
+@OptIn(DslInternal::class)
 class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): SymbolProcessor {
 	override fun process(resolver: Resolver): List<KSAnnotated> {
 		if(resolver.getAllFiles().find { it.fileName == "CollectionAsConnection.kt" } != null) return listOf()
 		val generation = ConnectionGeneration()
 		generation.collect()
-		val generatingFiles = GeneratingFiles(this.environment.codeGenerator)
-		generation.connections.values.forEach { generatePerType(generatingFiles, resolver, it) }
-		generatingFiles.close()
+		GeneratingFiles(this.environment.codeGenerator).use { files ->
+			generation.connections.values.forEach { generatePerType(files, resolver, it) }
+		}
 		return listOf()
 	}
 
+	/**
+	 * Generates sources based on the [collected][collect] Connection [type].
+	 */
 	private fun generatePerType(generatingFiles: GeneratingFiles, resolver: Resolver, type: ConnectionGeneration.ConnectionType) {
+		// Conversions
 		// View
 		type.conversions.view?.let {
 			val from = type.kinds[ConnectionKind.VIEW] ?: return@let
@@ -33,7 +46,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				else -> requested.kinds[ConnectionKind.VIEW] ?: throw IllegalArgumentException("Type ${requested.name} does not have a view kind")
 			}
 			generatingFiles.view.attach(
-				listOf(from.qualifiedName, view.qualifiedName, view.impl.qualifiedName).asSequence()
+				sequenceOf(from.qualifiedName, view.qualifiedName, view.impl.qualifiedName)
 					.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
 					.mapNotNull { it.containingFile }
 					.toList()
@@ -59,7 +72,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				else -> requested.kinds[ConnectionKind.REMOVE_ONLY] ?: throw IllegalArgumentException("Type ${requested.name} does not have a remove-only kind")
 			}
 			generatingFiles.removeOnly.attach(
-				listOf(from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName).asSequence()
+				sequenceOf(from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName)
 					.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
 					.mapNotNull { it.containingFile }
 					.toList()
@@ -77,7 +90,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				removeOnly.impl.name
 			)
 		}
-
+		// Adapters
 		type.kinds.values.forEach { kind ->
 			val kindClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
 			val kotlin = kindClass.getAllProperties()
@@ -92,7 +105,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			(kind.adapters.asConnection.extra + kind.adapters.asConnection.default).forEach next@{
 				if(it == null) return@next
 				generatingFiles.colAsCon.attach(
-					listOf(kind.qualifiedName, kind.impl.qualifiedName).asSequence()
+					sequenceOf(kind.qualifiedName, kind.impl.qualifiedName)
 						.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
 						.mapNotNull { it.containingFile }
 						.toList()
@@ -148,7 +161,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			(kind.adapters.asKotlin.extra + kind.adapters.asKotlin.default).forEach next@{
 				if(it == null) return@next
 				generatingFiles.conAsCol.attach(
-					listOf(kind.qualifiedName, kind.impl.qualifiedName).asSequence()
+					sequenceOf(kind.qualifiedName, kind.impl.qualifiedName)
 						.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
 						.mapNotNull { it.containingFile }
 						.toList()
