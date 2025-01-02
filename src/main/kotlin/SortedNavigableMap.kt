@@ -1,17 +1,16 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [SequencedMapView] that defines the iteration order based on a [Comparator].
- * Keys inserted in this map must be comparable by the [comparator].
- * A [TypeCastException] is thrown if the key is not comparable.
+ * A [SequencedMapView] that defines the iteration order of the entries based on a [Comparator].
+ * The entries are sorted with the [comparator] based on their keys.
  *
- * The [comparator] must be *consistent with equals*;
- * that is, `comparator.compare(a, b) == 0` if and only if `a.equals(b)`.
+ * The [comparator] must satisfy `comparator.compare(a, b) == 0` if and only if `a.equals(b)`,
+ * which is also called as *consistent with equals*.
  * Otherwise, the behavior of this map is not defined.
  *
  * @apiNote
- * This type is not different with [NavigableMapView];
- * however, because this type was intended to migrate a [java.util.SortedMap] to a [java.util.NavigableMap],
+ * This type is not different with [NavigableMapView].
+ * However, because this type was intended to migrate a [java.util.SortedMap] to a [java.util.NavigableMap],
  * operations on this map makes no guarantees about performance and thread-safety.
  * If you can select the type of the map, use [NavigableMapView] instead.
  */
@@ -29,96 +28,51 @@ interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 	 * or if this set has a restricted range, and [from] or [to] lies outside the range.
 	 *
 	 * Operations on the returned map is delegated to this map.
-	 * Mutating the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * Since keys in this map are compared by the [comparator],
-	 * the returned subset's [firstKey] and [lastKey] might not be equal to the given arguments.
-	 * In such cases, the range is defined by the actual keys in this map.
-	 *
-	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
-	 * The only exception is when [fromInclusive] is `true` and [toInclusive] is `false`;
-	 * in such cases, this directly invokes [java.util.SortedMap.subMap].
+	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
 	 */
 	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): SortedNavigableMapView<K, V>
 
 	/**
-	 * Returns a submap of this map, based on the given key.
+	 * Returns a submap of this map, in the range before the given key.
 	 * Throws [IllegalArgumentException] if this set has a restricted range, and [before] lies outside the range.
 	 *
 	 * Operations on the returned map is delegated to this map.
-	 * Mutating the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * Since keys in this map are compared by the [comparator],
-	 * the returned subset's [lastKey] might not be equal to the given argument.
-	 * In such cases, the range is defined by the actual keys in this map.
-	 *
-	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
-	 * The only exception is when [inclusive] is `false`;
-	 * in such cases, this directly invokes [java.util.SortedMap.headMap].
+	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
 	 */
 	fun headMap(before: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
 	/**
-	 * Returns a submap of this map, based on the given key.
+	 * Returns a submap of this map, in the range after the given key.
 	 * Throws [IllegalArgumentException] if this set has a restricted range, and [after] lies outside the range.
 	 *
 	 * Operations on the returned map is delegated to this map.
-	 * Mutating the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * Since keys in this map are compared by the [comparator],
-	 * the returned subset's [firstKey] might not be equal to the given argument.
-	 * In such cases, the range is defined by the actual keys in this map.
-	 *
-	 * The behavior of the returned map when this map is modified by operations on this map in any way is not defined.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
-	 * The only exception is when [inclusive] is `true`;
-	 * in such cases, this directly invokes [java.util.SortedMap.tailMap].
+	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
 	 */
 	fun tailMap(after: K, inclusive: Boolean): SortedNavigableMapView<K, V>
 
 	/**
 	 * Returns the entry higher than the given key, or `null` if there is no such entry.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
 	 */
-	fun higherEntry(than: K, inclusive: Boolean): Pair<K, V>? =
-		tailMap(than, inclusive).first()
+	fun higherEntry(key: K, inclusive: Boolean): Pair<K, V>? =
+		tailMap(key, inclusive).first()
 
 	/**
 	 * Returns the entry lower than the given key, or `null` if there is no such entry.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
 	 */
-	fun lowerEntry(than: K, inclusive: Boolean): Pair<K, V>? =
-		headMap(than, inclusive).last()
+	fun lowerEntry(key: K, inclusive: Boolean): Pair<K, V>? =
+		headMap(key, inclusive).last()
 
 	/**
 	 * Returns the key of the entry higher than the given key, or `null` if there is no such entry.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
 	 */
-	fun higherKey(than: K, inclusive: Boolean): K? =
-		tailMap(than, inclusive).firstKey()
+	fun higherKey(key: K, inclusive: Boolean): K? =
+		tailMap(key, inclusive).first()?.first
 
 	/**
 	 * Returns the key of the entry lower the given key, or `null` if there is no such entry.
-	 *
-	 * This method makes no guarantees about its performance and thread-safety.
-	 * This operation might not be atomic, which may return undefined results.
 	 */
-	fun lowerKey(than: K, inclusive: Boolean): K? =
-		headMap(than, inclusive).lastKey()
+	fun lowerKey(key: K, inclusive: Boolean): K? =
+		headMap(key, inclusive).last()?.first
 
 	override val keys: SortedNavigableSetView<out K>
 
@@ -127,6 +81,12 @@ interface SortedNavigableMapView<K, V>: SequencedMapView<K, V> {
 
 /**
  * An immutable [SortedNavigableMapView].
+ *
+ * @apiNote
+ * This type is not different with [NavigableMap].
+ * However, because this type was intended to migrate a [java.util.SortedMap] to a [java.util.NavigableMap],
+ * operations on this map makes no guarantees about performance and thread-safety.
+ * If you can select the type of the map, use [NavigableMap] instead.
  */
 interface SortedNavigableMap<K, V>: SequencedMap<K, V>, SortedNavigableMapView<K, V> {
 	override fun reversed(): SortedNavigableMap<K, V>
@@ -142,6 +102,12 @@ interface SortedNavigableMap<K, V>: SequencedMap<K, V>, SortedNavigableMapView<K
 
 /**
  * A [SortedNavigableMapView] that additionally supports entry addition, removal, and mutation operations.
+ *
+ * @apiNote
+ * This type is not different with [MutableNavigableMap].
+ * However, because this type was intended to migrate a [java.util.SortedMap] to a [java.util.NavigableMap],
+ * operations on this map makes no guarantees about performance and thread-safety.
+ * If you can select the type of the map, use [MutableNavigableMap] instead.
  */
 interface MutableSortedNavigableMap<K, V>: MutableSequencedMap<K, V>, SortedNavigableMapView<K, V> {
 	override fun reversed(): MutableSortedNavigableMap<K, V>

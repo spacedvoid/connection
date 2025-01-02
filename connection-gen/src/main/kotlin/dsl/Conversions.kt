@@ -22,4 +22,5 @@ class Conversions: Configurable {
  * `null` properties will be replaced with default values, which might cause compilation errors.
  */
 @ConnectionDSL
+@ConsistentCopyVisibility
 data class Conversion @DslInternal internal constructor(var to: ConnectionGeneration.ConnectionType? = null, var name: String? = null, var docs: String? = null): Configurable

@@ -47,12 +47,13 @@ interface CollectionView<T>: Iterable<T> {
 		this.kotlin.contains(element)
 
 	/**
-	 * Returns `true` if this collection contains all elements in the given collection, `false` otherwise.
+	 * Returns `true` if this collection contains all elements from the given [collection], `false` otherwise.
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun containsAll(from: Collection<T>): Boolean =
-		this.kotlin.containsAll(from.kotlin)
+	@Suppress("UNCHECKED_CAST")
+	fun containsAll(collection: Collection<out T>): Boolean =
+		this.kotlin.containsAll((collection as Collection<T>).kotlin)
 
 	/**
 	 * Returns a direct Kotlin representation of this collection.
@@ -99,7 +100,8 @@ interface Collection<T>: CollectionView<T>
  * A mutable collection that only supports element removal operations.
  */
 interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
-	override fun iterator(): MutableIterator<T> = this.kotlin.iterator()
+	override fun iterator(): MutableIterator<T> =
+		this.kotlin.iterator()
 
 	/**
 	 * Removes a single occurrence of the given [element] from this collection.
@@ -113,33 +115,35 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 		this.kotlin.remove(element)
 
 	/**
-	 * Removes all occurrences of the elements that match the given [predicate].
+	 * Removes all elements from this collection which matches the given [predicate].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
 	 * @apiNote
-	 * This method should be used in place of [kotlin.collections.removeAll],
+	 * This method should be used in place of [MutableIterable.removeAll],
 	 * since the implementation may use a better strategy.
 	 */
 	fun removeIf(predicate: (T) -> Boolean): Boolean =
 		this.kotlin.removeIf(predicate)
 
 	/**
-	 * Removes all occurrences of the elements in this collection that are also contained in the given collection.
+	 * Removes all elements from this collection which are also contained in the given [collection].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun removeAll(from: Collection<T>): Boolean =
-		this.kotlin.removeAll(from.kotlin.toSet())
+	@Suppress("UNCHECKED_CAST")
+	fun removeAll(collection: Collection<out T>): Boolean =
+		this.kotlin.removeAll((collection as Collection<T>).kotlin.toSet())
 
 	/**
-	 * Removes all occurrences of the elements in this collection that are not contained in the given collection.
+	 * Removes all elements from this collection which are not contained in the given [collection].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun retainAll(from: Collection<T>): Boolean =
-		this.kotlin.retainAll(from.kotlin.toSet())
+	@Suppress("UNCHECKED_CAST")
+	fun retainAll(collection: Collection<out T>): Boolean =
+		this.kotlin.retainAll((collection as Collection<T>).kotlin.toSet())
 
 	/**
 	 * Removes all elements in this collection.
@@ -162,9 +166,10 @@ interface MutableCollection<T>: RemoveOnlyCollection<T> {
 		this.kotlin.add(element)
 
 	/**
-	 * Adds all elements in the given collection to this collection.
+	 * Adds all elements from the given [collection] to this collection.
 	 * Returns `true` if the addition changed this collection, `false` otherwise.
 	 */
-	fun addAll(from: Collection<T>): Boolean =
-		this.kotlin.addAll(from.kotlin)
+	@Suppress("UNCHECKED_CAST")
+	fun addAll(collection: Collection<out T>): Boolean =
+		this.kotlin.addAll((collection as Collection<T>).kotlin)
 }

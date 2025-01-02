@@ -1,13 +1,9 @@
 package io.github.spacedvoid.connection.impl
 
-import io.github.spacedvoid.connection.CollectionView
-import io.github.spacedvoid.connection.MutableNavigableSet
-import io.github.spacedvoid.connection.NavigableSet
-import io.github.spacedvoid.connection.NavigableSetView
-import io.github.spacedvoid.connection.RemoveOnlyNavigableSet
+import io.github.spacedvoid.connection.*
 
 open class NavigableSetViewImpl<T>(private val kotlin: java.util.NavigableSet<T>): SortedNavigableSetViewImpl<T>(kotlin), NavigableSetView<T> {
-	override fun reverse(): NavigableSetView<T> = NavigableSetViewImpl(this.kotlin.reversed())
+	override fun reversed(): NavigableSetView<T> = NavigableSetViewImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T> =
 		NavigableSetViewImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))
@@ -23,7 +19,7 @@ open class NavigableSetViewImpl<T>(private val kotlin: java.util.NavigableSet<T>
 }
 
 open class NavigableSetImpl<T>(private val kotlin: java.util.NavigableSet<T>): NavigableSetViewImpl<T>(kotlin), NavigableSet<T> {
-	override fun reverse(): NavigableSet<T> = NavigableSetImpl(this.kotlin.reversed())
+	override fun reversed(): NavigableSet<T> = NavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T> =
 		NavigableSetImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))
@@ -36,7 +32,7 @@ open class NavigableSetImpl<T>(private val kotlin: java.util.NavigableSet<T>): N
 }
 
 open class RemoveOnlyNavigableSetImpl<T>(private val kotlin: java.util.NavigableSet<T>): NavigableSetViewImpl<T>(kotlin), RemoveOnlyNavigableSet<T> {
-	override fun reverse(): RemoveOnlyNavigableSet<T> = RemoveOnlyNavigableSetImpl(this.kotlin.reversed())
+	override fun reversed(): RemoveOnlyNavigableSet<T> = RemoveOnlyNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): RemoveOnlyNavigableSet<T> =
 		RemoveOnlyNavigableSetImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))
@@ -49,7 +45,7 @@ open class RemoveOnlyNavigableSetImpl<T>(private val kotlin: java.util.Navigable
 }
 
 open class MutableNavigableSetImpl<T>(private val kotlin: java.util.NavigableSet<T>): RemoveOnlyNavigableSetImpl<T>(kotlin), MutableNavigableSet<T> {
-	override fun reverse(): MutableNavigableSet<T> = MutableNavigableSetImpl(this.kotlin.reversed())
+	override fun reversed(): MutableNavigableSet<T> = MutableNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableSet<T> =
 		MutableNavigableSetImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))

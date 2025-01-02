@@ -17,7 +17,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 *
 	 * Operations on the returned collection delegates to this collection.
 	 */
-	fun reverse(): SequencedCollectionView<T>
+	fun reversed(): SequencedCollectionView<T>
 
 	/**
 	 * Returns the first element of this collection, defined by the iteration order.
@@ -40,7 +40,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
  * An immutable [SequencedCollectionView].
  */
 interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T>{
-	override fun reverse(): SequencedCollection<T>
+	override fun reversed(): SequencedCollection<T>
 }
 
 /**
@@ -50,7 +50,7 @@ interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOn
 	override fun iterator(): MutableIterator<T> =
 		this.kotlin.iterator()
 
-	override fun reverse(): RemoveOnlySequencedCollection<T>
+	override fun reversed(): RemoveOnlySequencedCollection<T>
 
 	/**
 	 * Removes and returns the first element of this collection, defined by the iteration order.
@@ -75,5 +75,5 @@ interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOn
  * most subtypes of this collection(namely [MutableNavigableSet]) manages the iteration order by other criteria.
  */
 interface MutableSequencedCollection<T>: RemoveOnlySequencedCollection<T>, MutableCollection<T> {
-	override fun reverse(): MutableSequencedCollection<T>
+	override fun reversed(): MutableSequencedCollection<T>
 }

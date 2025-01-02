@@ -13,7 +13,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 	override operator fun iterator(): ListIterator<T> =
 		this.kotlin.listIterator()
 
-	override fun reverse(): ListView<T>
+	override fun reversed(): ListView<T>
 
 	/**
 	 * Returns a sublist of this list, in the given range.
@@ -48,12 +48,17 @@ interface ListView<T>: SequencedCollectionView<T> {
 		this.kotlin.lastIndexOf(element)
 
 	/**
+	 * @inheritDoc
+	 *
+	 * @apiNote
+	 * @inheritDoc
+	 *
 	 * @implNote
 	 * @inheritDoc
 	 *
 	 * Implementations might require `@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")`.
 	 */
-	// On the JVM, kotlin.collections.List = java.util.List, which inherits from java.util.SequencedCollection.
+	// On the JVM, kotlin.collections.List = java.util.List, which inherits from java.util.SequencedCollection
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: kotlin.collections.List<T>
 }
@@ -62,7 +67,7 @@ interface ListView<T>: SequencedCollectionView<T> {
  * An immutable [ListView].
  */
 interface List<T>: ListView<T>, SequencedCollection<T> {
-	override fun reverse(): List<T>
+	override fun reversed(): List<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T>
 
@@ -83,19 +88,32 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	override fun iterator(): MutableListIterator<T> =
 		this.kotlin.listIterator()
 
-	override fun reverse(): MutableList<T>
+	override fun reversed(): MutableList<T>
 
 	override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T>
 
 	/**
-	 * Inserts the [element] to the given [index].
+	 * Adds the given [element] to the end of this list, and returns `true`.
+	 */
+	override fun add(element: T): Boolean =
+		super.add(element)
+
+	/**
+	 * Inserts the given [element] to the given [index].
 	 * Throws [IndexOutOfBoundsException] if the [index] is out of range.
 	 */
 	fun add(index: Int, element: T) =
 		this.kotlin.add(index, element)
 
 	/**
-	 * Adds the [element] to the beginning of this list.
+	 * Adds all elements from the given [collection] to the end of this list by their encounter order,
+	 * and returns `true`.
+	 */
+	override fun addAll(collection: Collection<out T>): Boolean =
+		super.addAll(collection)
+
+	/**
+	 * Adds the given [element] to the beginning of this list.
 	 *
 	 * @apiNote
 	 * This method is equivalent with `add(0, element)`.
@@ -107,7 +125,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 * Adds the [element] to the end of this list.
 	 *
 	 * @apiNote
-	 * This method is equivalent with `add(size - 1, element)`.
+	 * This method is equivalent with [add].
 	 */
 	fun addLast(element: T) =
 		this.kotlin.addLast(element)
@@ -118,6 +136,14 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 */
 	operator fun set(index: Int, element: T): T =
 		this.kotlin.set(index, element)
+
+	/**
+	 * Removes the first occurrence of the given [element], which has the lowest index.
+	 *
+	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
+	 */
+	override fun remove(element: T): Boolean =
+		super.remove(element)
 
 	/**
 	 * Removes and returns the element at the [index].

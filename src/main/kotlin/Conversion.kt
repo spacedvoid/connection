@@ -104,36 +104,31 @@ fun <T> CollectionView<T>.toMutableNavigableSet(comparator: Comparator<in T>): M
 /**
  * Returns a new [MutableMap] copied from the map.
  */
-fun <K, V> MapView<K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf(*toGenericArray())
+fun <K, V> MapView<K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf(*toArray())
 
 /**
  * Returns a new [MutableSequencedMap] copied from the map.
  *
  * The iteration order is defined as the encounter order.
  */
-fun <K, V> MapView<K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf(*toGenericArray())
+fun <K, V> MapView<K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf(*toArray())
 
 /**
  * Returns a new [MutableNavigableMap] copied from the map.
  *
  * The [natural order][naturalOrder] is used.
  */
-fun <K: Comparable<K>, V> MapView<K, V>.toMutableNavigableMap(): MutableNavigableMap<K, V> = mutableNavigableMapOf(*toGenericArray())
+fun <K: Comparable<K>, V> MapView<K, V>.toMutableNavigableMap(): MutableNavigableMap<K, V> = mutableNavigableMapOf(*toArray())
 
 /**
  * Returns a new [MutableNavigableMap] copied from the collection.
  *
  * The given [comparator] is used.
  */
-fun <K, V> MapView<K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf(comparator, *toGenericArray())
+fun <K, V> MapView<K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf(comparator, *toArray())
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
 	val iterator = this.kotlin.iterator()
 	return Array<Any?>(size()) { iterator.next() } as Array<T>
-}
-
-internal fun <K, V> MapView<K, V>.toGenericArray(): Array<Pair<K, V>> {
-	val iterator = this.kotlin.entries.iterator()
-	return Array(size()) { iterator.next().let { it.key to it.value } }
 }

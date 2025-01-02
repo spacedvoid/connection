@@ -1,7 +1,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [MapView] that additionally defines the iteration order.
+ * A [MapView] that additionally defines the iteration order of the entries.
  */
 interface SequencedMapView<K, V>: MapView<K, V> {
 	/**
@@ -12,28 +12,30 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 	fun reversed(): SequencedMapView<K, V>
 
 	/**
-	 * Returns the first entry of this map, defined by the iteration order.
+	 * Returns the first entry of this map defined by the iteration order, or `null` if this map is empty.
 	 */
 	fun first(): Pair<K, V>? =
 		this.kotlin.firstEntry()?.let { it.key to it.value }
 
 	/**
-	 * Returns the last entry of this map, defined by the iteration order.
+	 * Returns the last entry of this map defined by the iteration order, or `null` if this map is empty.
 	 */
 	fun last(): Pair<K, V>? =
 		this.kotlin.firstEntry()?.let { it.key to it.value }
 
 	/**
 	 * Returns the key of the first entry of this map, defined by the iteration order.
+	 * Throws [NoSuchElementException] if this map is empty.
 	 */
 	fun firstKey(): K =
-		this.kotlin.firstEntry().key
+		this.kotlin.firstEntry()?.key ?: throw NoSuchElementException("Map is empty")
 
 	/**
 	 * Returns the key of the last entry of this map, defined by the iteration order.
+	 * Throws [NoSuchElementException] if this map is empty.
 	 */
 	fun lastKey(): K =
-		this.kotlin.lastEntry().key
+		this.kotlin.lastEntry()?.key ?: throw NoSuchElementException("Map is empty")
 
 	override val keys: SequencedSetView<out K>
 
@@ -63,9 +65,15 @@ interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 interface MutableSequencedMap<K, V>: MutableMap<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): MutableSequencedMap<K, V>
 
+	/**
+	 * Removes and returns the first entry defined by the iteration order, or returns `null` if this map is empty.
+	 */
 	fun removeFirst(): Pair<K, V>? =
 		this.kotlin.pollFirstEntry()?.let { it.key to it.value }
 
+	/**
+	 * Removes and returns the last entry defined by the iteration order, or returns `null` if this map is empty.
+	 */
 	fun removeLast(): Pair<K, V>? =
 		this.kotlin.pollLastEntry()?.let { it.key to it.value }
 

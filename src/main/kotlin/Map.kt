@@ -4,14 +4,12 @@ package io.github.spacedvoid.connection
  * A map view.
  * Base interface for the Connection API.
  *
- * Elements in this collection are called *entries*,
- * which hold a key-value pair.
+ * Elements in this collection are called *entries*, which hold a key-value pair.
  * These 'elements' can be obtained by [entries].
- * Entries are unique by their keys;
- * two entries cannot have the same key.
+ * Entries are unique by their keys; two entries in a map cannot have the same key.
  *
- * The mutability of this collection is not defined.
- * This collection might be mutable, and might also be self-mutating.
+ * The mutability of this map is not defined.
+ * This map might be mutable, and might also be self-mutating.
  *
  * Whether a key matches another key is determined via [Any.equals].
  *
@@ -34,13 +32,13 @@ interface MapView<K, V> {
 		this.kotlin.isEmpty()
 
 	/**
-	 * Returns `true` if there exists an entry that has the given [key] in this map, `false` otherwise.
+	 * Returns `true` if an entry has the given [key] in this map, `false` otherwise.
 	 */
 	fun containsKey(key: K): Boolean =
 		this.kotlin.containsKey(key)
 
 	/**
-	 * Returns `true` if there exists an entry that has the given [value] in this map, `false` otherwise.
+	 * Returns `true` if an entry has the given [value] in this map, `false` otherwise.
 	 */
 	fun containsValue(value: V): Boolean =
 		this.kotlin.containsValue(value)
@@ -114,7 +112,7 @@ interface Map<K, V>: MapView<K, V> {
 interface MutableMap<K, V>: MapView<K, V> {
 	/**
 	 * Puts a new entry to this map and returns `null`,
-	 * or replaces the value of the entry associated with the given [key] with the [value] and returns the old value.
+	 * or replaces the value of the entry associated with the given [key] by the [value] and returns the old value.
 	 */
 	fun put(key: K, value: V): V? =
 		this.kotlin.put(key, value)
@@ -128,7 +126,7 @@ interface MutableMap<K, V>: MapView<K, V> {
 		this.kotlin.putAll((map as Map<K, V>).kotlin)
 
 	/**
-	 * Removes the entry associated with the given [key] and returns the value, or returns `null`.
+	 * Removes the entry associated with the given [key] and returns the value, or returns `null` if no entries have the [key].
 	 */
 	fun remove(key: K): V? =
 		this.kotlin.remove(key)
