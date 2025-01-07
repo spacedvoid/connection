@@ -2,7 +2,6 @@ package io.github.spacedvoid.connection.gen
 
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
-import io.github.spacedvoid.connection.gen.dsl.invoke
 
 /**
  * The main DSL for the Connection Generator.

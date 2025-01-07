@@ -21,21 +21,21 @@ Most collection interfaces from the Java Collections Framework are supported:
 | [java.util.SequencedMap]        | -                               | [SequencedMap]                                 |
 | [java.util.NavigableMap]        | -                               | [NavigableMap]                                 |
 
-Some exceptions include decorator types, such as [java.util.concurrent.ConcurrentMap]:
+Below are unsupported types because of various reasons, such as replaceable by another type.
 
-| Java collection                      | Obtainable by(example)                     | Obtainable by in Connection(example)                                      |
-|--------------------------------------|--------------------------------------------|---------------------------------------------------------------------------|
-| [java.util.SortedSet]                | [java.util.TreeSet]                        | -                                                                         |
-| [java.util.SortedMap]                | [java.util.TreeMap]                        | -                                                                         |
-| Stacks*                              | [java.util.Collections.asLifoQueue]        | -                                                                         |
-| [java.util.Queue]*                   | [java.util.LinkedList]                     | -                                                                         |
-| [java.util.Deque]*                   | [java.util.ArrayDeque]                     | -                                                                         |
-| [java.util.concurrent.ConcurrentMap] | [java.util.concurrent.ConcurrentHashMap]   | `ConcurrentHashMap().asMutableConnection()`                               |
-| [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                         |
-| [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                         |
-| Type-safe collections                | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asConnection()` |
-| [java.util.EnumSet]*                 | [java.util.EnumSet.of]                     | -                                                                         |
-| [java.util.EnumMap]*                 | [java.util.EnumMap]                        | -                                                                         |
+| Java collection                      | Obtainable by(example)                     | Obtainable by in Connection(example)                                             |
+|--------------------------------------|--------------------------------------------|----------------------------------------------------------------------------------|
+| [java.util.SortedSet]                | [java.util.TreeSet]                        | `TreeSet().asMutableConnection()`                                                |
+| [java.util.SortedMap]                | [java.util.TreeMap]                        | `TreeMap().asMutableConnection()`                                                |
+| Stacks*                              | [java.util.Collections.asLifoQueue]        | -                                                                                |
+| [java.util.Queue]*                   | [java.util.LinkedList]                     | -                                                                                |
+| [java.util.Deque]*                   | [java.util.ArrayDeque]                     | -                                                                                |
+| [java.util.concurrent.ConcurrentMap] | [java.util.concurrent.ConcurrentHashMap]   | `ConcurrentHashMap().asMutableConnection()`                                      |
+| [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                                |
+| [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                                |
+| Type-safe collections                | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asMutableConnection()` |
+| [java.util.EnumSet]*                 | [java.util.EnumSet.of]                     | `EnumSet.noneOf(EnumClass::class).asMutableConnection()`                         |
+| [java.util.EnumMap]*                 | [java.util.EnumMap]                        | `EnumMap(EnumClass::class).asMutableConnection()`                                |
 
 (*: Planned for support.)
 
@@ -43,12 +43,12 @@ Some exceptions include decorator types, such as [java.util.concurrent.Concurren
 
 Collections in this package are separated into 4 kinds, based on their properties:
 
-| Collection type        | Mutability   | Delegation of another collection? | Superkind              |
-|------------------------|--------------|-----------------------------------|------------------------|
-| View collection        | Unknown      | Unknown                           | -                      |
-| Immutable collection   | No           | No                                | View collection        |
-| Remove-only collection | Yes(limited) | Unknown(probably yes)             | View collection        |
-| Mutable collection     | Yes          | Unknown(probably no)              | Remove-only collection |
+| Collection kind | Mutability   | Delegation of another collection? | Superkind   |
+|-----------------|--------------|-----------------------------------|-------------|
+| View            | Unknown      | Unknown                           | -           |
+| Immutable       | No           | No                                | View        |
+| Remove-only     | Yes(limited) | Unknown(probably yes)             | View        |
+| Mutable         | Yes          | Unknown(probably no)              | Remove-only |
 
 Remove-only collections, by their name, support only element removal operations, such as [RemoveOnlyCollection.remove].
 They are normally obtained by map entry collections, such as [MutableMap.keys].
@@ -63,17 +63,33 @@ immutable collections cannot be assigned to a mutable collection kind, and vice 
 
 ## From Kotlin, to Kotlin (or: Adapters)
 
-Adapters are extension methods that convert between Kotlin collections and Connections:
+Adapters are extension methods that convert between Kotlin collections and Connections.
 
-| From → To           | Extension method |
-|---------------------|------------------|
-| Kotlin → Connection | [asConnection]   |
-| Connection → Kotlin | [asKotlin]       |
+Adapters that convert Kotlin collections to Connections are:
+
+| Target kind | Extension method         |
+|-------------|--------------------------|
+| View        | [asViewConnection]       |
+| Immutable   | [asConnection]           |
+| Remove-only | [asRemoveOnlyConnection] |
+| Mutable     | [asMutableConnection]    |
+
+And for Connection to Kotlin:
+
+| Target kind | Extension method |
+|-------------|------------------|
+| Any         | [asKotlin]       |
 
 These adapters are delegations, where operations on the resulting collection modifies the original collection.
 
-Additionally, [List] can be converted to [java.util.SequencedCollection] by [asSequencedKotlin],
-since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
+<details>
+<summary>Additional adapters</summary>
+
+| From → To                                    | Extension method    |
+|----------------------------------------------|---------------------|
+| [ListView] → [java.util.SequencedCollection] | [asSequencedKotlin] |
+
+</details>
 
 ### Adapters are user-dependent
 
@@ -86,7 +102,7 @@ val right = kotlinCollection.asRemoveOnlyConnection()
 // val wrong = kotlinCollection.asConnection() 
 ```
 
-When using the element addition operators with `wrong`, [UnsupportedOperationException] might be thrown,
+When adding elements to `wrong`, [UnsupportedOperationException] might be thrown,
 which shouldn't be happening according to the specification of Connection(no optional operations).
 If you are not highly certain of how the collection will be handled,
 ***always*** convert the collection to the corresponding connection kind, or just use [asViewConnection].
@@ -94,10 +110,10 @@ If you are not highly certain of how the collection will be handled,
 Exceptions are similar to the following:
 
 ```kotlin
-val connection = arrayListOf("a", "b", "c").asRemoveOnlyConnection()
+val connection = arrayListOf("a", "b", "c").asConnection()
 ```
 
-Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward, one can safely apply [asRemoveOnlyConnection] to the collection.
+Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward, one can safely apply [asConnection] to the collection.
 
 ### The unsafe way
 
@@ -132,10 +148,10 @@ Note that although simple assignments to superkinds are available, these convers
 For example:
 
 ```kotlin
-val collection: MutableList<String> = ArrayList<String>().asConnection()
+val collection: MutableList<String> = ArrayList<String>().asMutableConnection()
 val assignment: ListView<String> = collection
 val typeSafe: ListView<String> = collection.asView()
-(assignment as MutableList<*>).clear() // No exception here, but we don't want this to happen.
+(assignment as MutableList<*>).clear() // No exception here, but we don't want this to be allowed.
 (typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
@@ -146,13 +162,27 @@ The following extensions change both the type and kind:
 | View (or its subkinds) → Mutable   | `toMutable<CollectionType>` |
 | View (or its subkinds) → Immutable | `to<CollectionType>`        |
 
+<details>
+<summary>Full list of type conversions</summary>
+
+| To             | Immutable        | Mutable                 |
+|----------------|------------------|-------------------------|
+| [List]         | [toList]         | [toMutableList]         |
+| [Set]          | [toSet]          | [toMutableSet]          |
+| [SequencedSet] | [toSequencedSet] | [toMutableSequencedSet] |
+| [NavigableSet] | [toNavigableSet] | [toMutableNavigableSet] |
+| [SequencedMap] | [toSequencedMap] | [toMutableSequencedMap] |
+| [NavigableMap] | [toNavigableMap] | [toMutableNavigableMap] |
+
+</details>
+
 These conversions are copies, where operations on the resulting collection does not affect the original collection.
 
 ## Specifications and thread safety
 
 As mentioned in the previous(Adapters are user-dependent) section, most of the specifications work well only if the adapter methods are used properly.
 Other specifications, such as thread safety, are defined based on the originating Kotlin collection.
-For example, thread safety is guaranteed when using `CopyOnWriteArrayList().asConnection()`, but not with `ArrayList().asConnection()`.
+For example, thread safety is guaranteed when using `CopyOnWriteArrayList().asMutableConnection()`, but not with `ArrayList().asMutableConnection()`.
 
 A simple way to determine such properties is to know that Connection is a mere wrapper for Kotlin collections;
 if the property comes from the Kotlin collection, it is also guaranteed in Connection as well, unless the specification from Connection says about it.

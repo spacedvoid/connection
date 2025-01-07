@@ -114,20 +114,16 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 		 */
 		fun kinds(vararg kinds: ConnectionKind) {
 			kinds.forEach {
-				ConnectionTypeKind(it).apply {
-					this@ConnectionType.kinds[it] = this
-				}
+				this@ConnectionType.kinds.putIfAbsent(it, ConnectionTypeKind(it))
 			}
 		}
 
 		/**
 		 * Defines a [kind] that this family has, and configures it.
+		 * Previous configurations with the [kind] will be preserved.
 		 */
 		fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}) {
-			ConnectionTypeKind(kind).apply {
-				configuration()
-				this@ConnectionType.kinds[kind] = this
-			}
+			this@ConnectionType.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
 		}
 	}
 

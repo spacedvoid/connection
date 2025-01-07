@@ -2,17 +2,6 @@
 
 A wrapper around the Kotlin collections API(`kotlin.collections`) for more utilities
 
-## Importing
-
-Copy-paste the snippet below:
-
-```kotlin
-import io.github.spacedvoid.connection.*
-```
-
-The IDE might require additional configurations to preserve the star imports;
-for example, in IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
-
 ## What is this?
 
 This is yet another a collection API based on Kotlin; most collection types from the Java Collections Framework are supported.
@@ -33,9 +22,20 @@ And as an implementor, you either implement all operations or make your own type
 ### Other collection types
 
 There are no *synchronized* or *[type-safe](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#checkedCollection(java.util.Collection,java.lang.Class))* collections here.
-Since this is just a wrapper around the collections, you can just do `CopyOnWriteArrayList().asConnection()` or `Collections.checkedList(ArrayList(), String::class.java).asConnection()`.
+Since this is just a wrapper around the collections, you can just do `CopyOnWriteArrayList().asMutableConnection()` 
+or `Collections.checkedList(ArrayList(), String::class.java).asMutableConnection()`.
 
 ### Converting back to pure Kotlin/Java
 
 You can always convert a collection from here to a `kotlin.collections.Collection` or its subtypes.
 There are always a safe way(`asKotlin()`), but there also are unsafe ways(`Collection.kotlin`) for your taste.
+
+## Importing
+
+The main package for the api is `io.github.spacedvoid.connection`.
+Although you can import everything one by one, since there are a lot of extension methods here,
+just star-importing the package might be preferable.
+
+The IDE might require additional configurations to preserve the star imports.
+In IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
+Make sure to uncheck `With Subpackages`, which contains implementation or unsafe features that you might not want to use.
