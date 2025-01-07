@@ -45,10 +45,6 @@ fun ConnectionGeneration.collect() {
 		kinds(*ConnectionKind.all)
 	}
 
-	collectionNamed("SortedNavigableSet") {
-		kinds(*ConnectionKind.all)
-	}
-
 	collectionNamed("NavigableSet") {
 		kinds(*ConnectionKind.all)
 	}
@@ -58,10 +54,6 @@ fun ConnectionGeneration.collect() {
 	}
 
 	mapNamed("SequencedMap") {
-		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
-	}
-
-	mapNamed("SortedNavigableMap") {
 		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
 	}
 

@@ -9,24 +9,24 @@ Contains the base interfaces of collections and operations.
 
 Most collection interfaces from the Java Collections Framework are supported:
 
-| Java collection                 | Kotlin collection               | Corresponding Connection type |
-|---------------------------------|---------------------------------|-------------------------------|
-| [java.util.Collection]          | [kotlin.collections.Collection] | [Collection]                  |
-| [java.util.SequencedCollection] | -                               | [SequencedCollection]         |
-| [java.util.List]                | [kotlin.collections.List]       | [List]                        |
-| [java.util.Set]                 | [kotlin.collections.Set]        | [Set]                         |
-| [java.util.SequencedSet]        | -                               | [SequencedSet]                |
-| [java.util.SortedSet]           | -                               | [SortedNavigableSet]          |
-| [java.util.NavigableSet]        | -                               | [NavigableSet]                |
-| [java.util.Map]                 | [kotlin.collections.Map]        | [Map]                         |
-| [java.util.SequencedMap]        | -                               | [SequencedMap]                |
-| [java.util.SortedMap]           | -                               | [SortedNavigableMap]          |
-| [java.util.NavigableMap]        | -                               | [NavigableMap]                |
+| Java collection                 | Kotlin collection               | Corresponding Connection type                  |
+|---------------------------------|---------------------------------|------------------------------------------------|
+| [java.util.Collection]          | [kotlin.collections.Collection] | [Collection]                                   |
+| [java.util.SequencedCollection] | -                               | [SequencedCollection]                          |
+| [java.util.List]                | [kotlin.collections.List]       | [List]                                         |
+| [java.util.Set]                 | [kotlin.collections.Set]        | [Set]                                          |
+| [java.util.SequencedSet]        | -                               | [SequencedSet]                                 |
+| [java.util.NavigableSet]        | -                               | [NavigableSet]                                 |
+| [java.util.Map]                 | [kotlin.collections.Map]        | [Map]                                          |
+| [java.util.SequencedMap]        | -                               | [SequencedMap]                                 |
+| [java.util.NavigableMap]        | -                               | [NavigableMap]                                 |
 
 Some exceptions include decorator types, such as [java.util.concurrent.ConcurrentMap]:
 
 | Java collection                      | Obtainable by(example)                     | Obtainable by in Connection(example)                                      |
 |--------------------------------------|--------------------------------------------|---------------------------------------------------------------------------|
+| [java.util.SortedSet]                | [java.util.TreeSet]                        | -                                                                         |
+| [java.util.SortedMap]                | [java.util.TreeMap]                        | -                                                                         |
 | Stacks*                              | [java.util.Collections.asLifoQueue]        | -                                                                         |
 | [java.util.Queue]*                   | [java.util.LinkedList]                     | -                                                                         |
 | [java.util.Deque]*                   | [java.util.ArrayDeque]                     | -                                                                         |
@@ -38,11 +38,6 @@ Some exceptions include decorator types, such as [java.util.concurrent.Concurren
 | [java.util.EnumMap]*                 | [java.util.EnumMap]                        | -                                                                         |
 
 (*: Planned for support.)
-
-SortedNavigable-collections are not different with their corresponding Navigable-collections.
-However, since Sorted-collections do not directly support operations from Navigable-collections,
-default implementations use a workaround which might cause additional blocking and concurrency issues.
-If you can select the collection type, **always** use Navigable-collections.
 
 ## Collection kinds
 

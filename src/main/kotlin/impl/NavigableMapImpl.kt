@@ -1,19 +1,12 @@
 package io.github.spacedvoid.connection.impl
 
-import io.github.spacedvoid.connection.MapView
-import io.github.spacedvoid.connection.MutableNavigableMap
-import io.github.spacedvoid.connection.NavigableMap
-import io.github.spacedvoid.connection.NavigableMapView
-import io.github.spacedvoid.connection.NavigableSet
-import io.github.spacedvoid.connection.NavigableSetView
-import io.github.spacedvoid.connection.RemoveOnlyNavigableSet
-import io.github.spacedvoid.connection.RemoveOnlySequencedCollection
-import io.github.spacedvoid.connection.RemoveOnlySequencedSet
-import io.github.spacedvoid.connection.SequencedCollection
-import io.github.spacedvoid.connection.SequencedSet
+import io.github.spacedvoid.connection.*
+import io.github.spacedvoid.connection.utils.naturalOrdering
 import java.util.SortedSet
 
-open class NavigableMapViewImpl<K, V>(private val kotlin: java.util.NavigableMap<K, V>): SortedNavigableMapViewImpl<K, V>(kotlin), NavigableMapView<K, V> {
+open class NavigableMapViewImpl<K, V>(private val kotlin: java.util.NavigableMap<K, V>): SequencedMapViewImpl<K, V>(kotlin), NavigableMapView<K, V> {
+	override val comparator: Comparator<in K> = this.kotlin.comparator() ?: naturalOrdering()
+
 	override fun reversed(): NavigableMapView<K, V> = NavigableMapViewImpl(this.kotlin.reversed())
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMapView<K, V> =

@@ -1,8 +1,11 @@
 package io.github.spacedvoid.connection.impl
 
 import io.github.spacedvoid.connection.*
+import io.github.spacedvoid.connection.utils.naturalOrdering
 
-open class NavigableSetViewImpl<T>(private val kotlin: java.util.NavigableSet<T>): SortedNavigableSetViewImpl<T>(kotlin), NavigableSetView<T> {
+open class NavigableSetViewImpl<T>(private val kotlin: java.util.NavigableSet<T>): SequencedSetViewImpl<T>(kotlin), NavigableSetView<T> {
+	override val comparator: Comparator<in T> = this.kotlin.comparator() ?: naturalOrdering()
+
 	override fun reversed(): NavigableSetView<T> = NavigableSetViewImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T> =
