@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package io.github.spacedvoid.connection.gen
 
 import com.google.devtools.ksp.processing.CodeGenerator
@@ -27,7 +33,18 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 		internal val out = BufferedWriter(OutputStreamWriter(
 			this@GeneratingFiles.generator.createNewFile(Dependencies(false), packageName, name, extension),
 			StandardCharsets.UTF_8
-		)).also { it.write("// Auto-generated file. The declaration order might change without notice.\n\n") }
+		)).also {
+			it.write("""
+				/*
+				 * This Source Code Form is subject to the terms of the Mozilla Public
+				 * License, v. 2.0. If a copy of the MPL was not distributed with this
+				 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+				 */
+				
+				// Auto-generated file. The declaration order might change without notice.
+				
+			""".trimIndent())
+		}
 
 		/**
 		 * Alternative for [Writer.write].

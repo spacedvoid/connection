@@ -1,14 +1,16 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package io.github.spacedvoid.connection.impl
 
+import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.Collection
-import io.github.spacedvoid.connection.CollectionView
 import io.github.spacedvoid.connection.Map
-import io.github.spacedvoid.connection.MapView
 import io.github.spacedvoid.connection.MutableMap
-import io.github.spacedvoid.connection.RemoveOnlyCollection
-import io.github.spacedvoid.connection.RemoveOnlySet
 import io.github.spacedvoid.connection.Set
-import io.github.spacedvoid.connection.SetView
 import kotlin.collections.Map as KotlinMap
 import kotlin.collections.MutableMap as KotlinMutableMap
 

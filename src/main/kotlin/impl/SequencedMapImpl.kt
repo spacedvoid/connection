@@ -1,15 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package io.github.spacedvoid.connection.impl
 
-import io.github.spacedvoid.connection.MapView
-import io.github.spacedvoid.connection.MutableSequencedMap
-import io.github.spacedvoid.connection.RemoveOnlySequencedCollection
-import io.github.spacedvoid.connection.RemoveOnlySequencedSet
-import io.github.spacedvoid.connection.SequencedCollection
-import io.github.spacedvoid.connection.SequencedCollectionView
-import io.github.spacedvoid.connection.SequencedMap
-import io.github.spacedvoid.connection.SequencedMapView
-import io.github.spacedvoid.connection.SequencedSet
-import io.github.spacedvoid.connection.SequencedSetView
+import io.github.spacedvoid.connection.*
 
 open class SequencedMapViewImpl<K, V>(private val kotlin: java.util.SequencedMap<K, V>): MapViewImpl<K, V>(kotlin), SequencedMapView<K, V> {
 	override fun reversed(): SequencedMapView<K, V> = SequencedMapViewImpl(this.kotlin.reversed())

@@ -1,10 +1,14 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package io.github.spacedvoid.connection.impl
 
-import io.github.spacedvoid.connection.CollectionView
+import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
-import io.github.spacedvoid.connection.RemoveOnlySet
 import io.github.spacedvoid.connection.Set
-import io.github.spacedvoid.connection.SetView
 import kotlin.collections.MutableSet as KotlinMutableSet
 import kotlin.collections.Set as KotlinSet
 

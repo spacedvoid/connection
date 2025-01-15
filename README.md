@@ -39,3 +39,7 @@ just star-importing the package might be preferable.
 The IDE might require additional configurations to preserve the star imports.
 In IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
 Make sure to uncheck `With Subpackages`, which contains implementation or unsafe features that you might not want to use.
+
+## License
+
+The source code is licensed with [MPL-2.0](LICENSE), *compatible* with secondary licenses.
