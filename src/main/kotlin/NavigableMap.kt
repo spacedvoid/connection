@@ -57,7 +57,7 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 		when {
 			inclusive -> this.kotlin.ceilingEntry(key)
 			else -> this.kotlin.higherEntry(key)
-		}.let { it.key to it.value }
+		}?.let { it.key to it.value }
 
 	/**
 	 * Returns the entry lower than the given [key], or `null` if there is no such entry.
@@ -66,7 +66,7 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 		when {
 			inclusive -> this.kotlin.floorEntry(key)
 			else -> this.kotlin.lowerEntry(key)
-		}.let { it.key to it.value }
+		}?.let { it.key to it.value }
 
 	/**
 	 * Returns the key of the entry higher than the given [key], or `null` if there is no such entry.
