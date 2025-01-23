@@ -60,4 +60,5 @@ class Adapters: Configurable {
  * `null` properties will be replaced with default values, which might cause compilation errors.
  */
 @ConnectionDSL
-class Adapter @DslInternal internal constructor(var kotlin: String? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false): Configurable
+@ConsistentCopyVisibility
+data class Adapter @DslInternal internal constructor(var kotlin: String? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false): Configurable

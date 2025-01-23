@@ -216,6 +216,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 	private operator fun <T> T.plus(list: List<T>): List<T> = mutableListOf(this).apply { addAll(list) }
 }
 
+@OptIn(DslInternal::class)
 val ConnectionGeneration.ConnectionType.typeArgs: String
 	get() = when(this.typeArgCount) {
 		1 -> "<T>"

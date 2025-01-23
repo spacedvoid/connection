@@ -16,7 +16,7 @@ annotation class ConnectionDSL
 /**
  * Marker annotation to prevent usage of DSL-internal elements from the DSL.
  */
-@RequiresOptIn
+@RequiresOptIn("This element is internal to the DSL.")
 annotation class DslInternal
 
 /**
@@ -36,7 +36,7 @@ interface Configurable {
 operator fun <T: Configurable> T?.invoke(configuration: T.() -> Unit) = this?.configuration()
 
 /**
- * Represents that this object can be represented as a type(class or interface).
+ * Represents that this object represents a type(class or interface).
  */
 @ConnectionDSL
 interface Named: Configurable {
@@ -66,7 +66,7 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 	 * Kinds are defined by [kinds].
 	 */
 	@ConnectionDSL
-	inner class ConnectionType @DslInternal internal constructor(val name: String, val typeArgCount: Int): Configurable {
+	inner class ConnectionType @DslInternal internal constructor(val name: String, @property:DslInternal internal val typeArgCount: Int): Configurable {
 		/**
 		 * Represents a Connection with a type and [kind][ConnectionKind], such as `MutableList`.
 		 */
@@ -83,8 +83,8 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 			/**
 			 * The default implementation of this typekind.
 			 *
-			 * Unless the name is customized, it will always be [name]`Impl`.
-			 * Once customized, it will always be the customized name.
+			 * Unless the value is customized, it will always be [name]`Impl`.
+			 * Once set, it will always be the customized name.
 			 */
 			val impl: Named = object: Named {
 				override var name: String = this@ConnectionTypeKind.name + "Impl"
@@ -107,6 +107,7 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 		/**
 		 * Contains all kinds that this type family has.
 		 */
+		@DslInternal
 		val kinds: EnumMap<ConnectionKind, ConnectionTypeKind> = EnumMap(ConnectionKind::class.java)
 		/**
 		 * The conversions for this type.
@@ -137,6 +138,7 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 	 * Contains all connections specified by [collectionNamed] and [mapNamed].
 	 * Mapped by their [names][ConnectionType.name], since no two types should have the same name.
 	 */
+	@DslInternal
 	val connections: MutableMap<String, ConnectionType> = mutableMapOf()
 
 	/**
