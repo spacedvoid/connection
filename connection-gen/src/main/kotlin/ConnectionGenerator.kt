@@ -50,11 +50,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		// View
 		type.conversions.view?.let {
 			val (from, view) = conversionTarget(type, ConnectionKind.VIEW, it.to) ?: return@let
-			sequenceOf(from.qualifiedName, view.qualifiedName, view.impl.qualifiedName)
-				.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
-				.mapNotNull { it.containingFile }
-				.toList()
-				.let { generatingFiles.view.attach(it) }
+			attachSources(resolver, generatingFiles.view, from.qualifiedName, view.qualifiedName, view.impl.qualifiedName)
 			generatingFiles.generateView(
 				it.name ?: "asView",
 				it.docs ?: """
@@ -71,11 +67,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		// RemoveOnly
 		type.conversions.removeOnly?.let {
 			val (from, removeOnly) = conversionTarget(type, ConnectionKind.REMOVE_ONLY, it.to) ?: return@let
-			sequenceOf(from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName)
-				.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
-				.mapNotNull { it.containingFile }
-				.toList()
-				.let { generatingFiles.removeOnly.attach(it) }
+			attachSources(resolver, generatingFiles.removeOnly, from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName)
 			generatingFiles.generateRemoveOnly(
 				it.name ?: "asRemoveOnly",
 				it.docs ?: """
@@ -90,7 +82,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			)
 		}
 		// Adapters
-		type.kinds.values.forEach { kind ->
+		type.kinds.values.forEach { kind: ConnectionTypeKind ->
 			val kindClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
 			val kotlin = kindClass.getAllProperties()
 				.find { it.simpleName.asString() == "kotlin" }
@@ -103,11 +95,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			// CollectionAsConnection
 			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach next@{
 				if(it == null) return@next
-				sequenceOf(kind.qualifiedName, kind.impl.qualifiedName)
-					.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
-					.mapNotNull { it.containingFile }
-					.toList()
-					.let { generatingFiles.colAsCon.attach(it) }
+				attachSources(resolver, generatingFiles.colAsCon, kind.qualifiedName, kind.impl.qualifiedName)
 				generatingFiles.generateColAsCon(
 					it.name ?: when(kind.kind) {
 						ConnectionKind.VIEW -> "asViewConnection"
@@ -144,6 +132,16 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			}
 		}
 	}
+
+	/**
+	 * [Attaches][GeneratingFiles.GeneratingFile.attach] the classes with the given [qualified names][qualfiedNames] to the [file].
+	 */
+	private fun attachSources(resolver: Resolver, file: GeneratingFiles.GeneratingFile, vararg qualfiedNames: String) =
+		qualfiedNames.asSequence()
+			.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+			.mapNotNull { it.containingFile }
+			.toList()
+			.let { file.attach(it) }
 
 	/**
 	 * Returns the desired conversion as `(from, to)`, or `null` if no conversions should be generated.
@@ -210,13 +208,13 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 	 */
 	private fun alreadyGenerated(apiClass: KSClassDeclaration, kotlin: String): Boolean {
 		val sourceTypes = this.generatedAsKotlin.computeIfAbsent(kotlin) { mutableSetOf() }
-		return apiClass.getAllSuperTypes().any { it.declaration in sourceTypes }.also { if(it) sourceTypes += apiClass }
+		return apiClass.getAllSuperTypes().any { it.declaration in sourceTypes }.also { if(!it) sourceTypes += apiClass }
 	}
 
 	private operator fun <T> T.plus(list: List<T>): List<T> = mutableListOf(this).apply { addAll(list) }
 }
 
-@OptIn(DslInternal::class)
+@DslInternal
 val ConnectionGeneration.ConnectionType.typeArgs: String
 	get() = when(this.typeArgCount) {
 		1 -> "<T>"

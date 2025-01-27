@@ -43,6 +43,7 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 				
 				// Auto-generated file. The declaration order might change without notice.
 				
+				
 			""".trimIndent())
 		}
 

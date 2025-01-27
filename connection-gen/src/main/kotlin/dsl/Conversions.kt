@@ -15,10 +15,14 @@ package io.github.spacedvoid.connection.gen.dsl
 class Conversions: Configurable {
 	/**
 	 * Conversions that mask remove-only Connections to prevent downcasting.
+	 *
+	 * The behavior of the generator when assigning another conversion(other than `null`) is not defined.
 	 */
 	var removeOnly: Conversion? = Conversion()
 	/**
 	 * Conversions that mask view Connections to prevent downcasting.
+	 *
+	 * The behavior of the generator when assigning another conversion(other than `null`) is not defined.
 	 */
 	var view: Conversion? = Conversion()
 }

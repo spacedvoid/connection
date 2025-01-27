@@ -24,6 +24,7 @@ class Adapters: Configurable {
 		 * and the [name][Adapter.name] will be determined based on the kind of the Connection.
 		 *
 		 * Assign `null` to not generate the default adapter.
+		 * The behavior of the generator when assigning another adapter is not defined.
 		 */
 		var default: Adapter? = Adapter()
 
