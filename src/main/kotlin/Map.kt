@@ -127,9 +127,8 @@ interface MutableMap<K, V>: MapView<K, V> {
 	 * For all entries in the given [map],
 	 * copies the entry to this map or replaces the value of the entry in this map associated with the key by the entry's value.
 	 */
-	@Suppress("UNCHECKED_CAST")
 	fun putAll(map: Map<out K, out V>) =
-		this.kotlin.putAll((map as Map<K, V>).kotlin)
+		this.kotlin.putAll(map.asKotlin())
 
 	/**
 	 * Removes the entry associated with the given [key] and returns the value, or returns `null` if no entries have the [key].

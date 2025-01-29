@@ -137,9 +137,8 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	@Suppress("UNCHECKED_CAST")
 	fun removeAll(collection: Collection<out T>): Boolean =
-		this.kotlin.removeAll((collection as Collection<T>).kotlin.toSet())
+		this.kotlin.removeAll(collection.asKotlin().toSet())
 
 	/**
 	 * Removes all elements from this collection which are not contained in the given [collection].
@@ -147,9 +146,8 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	@Suppress("UNCHECKED_CAST")
 	fun retainAll(collection: Collection<out T>): Boolean =
-		this.kotlin.retainAll((collection as Collection<T>).kotlin.toSet())
+		this.kotlin.retainAll(collection.asKotlin().toSet())
 
 	/**
 	 * Removes all elements in this collection.
@@ -175,7 +173,6 @@ interface MutableCollection<T>: RemoveOnlyCollection<T> {
 	 * Adds all elements from the given [collection] to this collection.
 	 * Returns `true` if the addition changed this collection, `false` otherwise.
 	 */
-	@Suppress("UNCHECKED_CAST")
 	fun addAll(collection: Collection<out T>): Boolean =
-		this.kotlin.addAll((collection as Collection<T>).kotlin)
+		this.kotlin.addAll(collection.asKotlin())
 }

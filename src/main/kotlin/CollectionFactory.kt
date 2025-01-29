@@ -14,7 +14,7 @@ import kotlin.collections.sortedSetOf as kotlinSortedSetOf
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> listOf(vararg elements: T): List<T> = (arrayListOf(*elements) as kotlin.collections.List<T>).asConnection()
+fun <T> listOf(vararg elements: T): List<T> = arrayListOf(*elements).asConnection()
 
 /**
  * Creates a [MutableList] with the given [elements].
@@ -26,7 +26,7 @@ fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*element
 /**
  * Creates a [Set] with the given [elements].
  */
-fun <T> setOf(vararg elements: T): Set<T> = (hashSetOf(*elements) as kotlin.collections.Set<T>).asConnection()
+fun <T> setOf(vararg elements: T): Set<T> = hashSetOf(*elements).asConnection()
 
 /**
  * Creates a [MutableSet] with the given [elements].
@@ -74,7 +74,7 @@ fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T):
 /**
  * Creates a [Map] with the given [entries].
  */
-fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> = (hashMapOf(*entries) as kotlin.collections.Map<K, V>).asConnection()
+fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> = hashMapOf(*entries).asConnection()
 
 /**
  * Creates a [MutableMap] with the given [entries].

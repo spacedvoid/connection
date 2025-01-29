@@ -16,7 +16,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * The iteration order is defined by the specification.
 	 */
 	override fun iterator(): Iterator<T> =
-		this.kotlin.iterator()
+		super.iterator()
 
 	/**
 	 * Returns a reverse-ordered collection of this collection.
@@ -54,7 +54,7 @@ interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T>{
  */
 interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOnlyCollection<T> {
 	override fun iterator(): MutableIterator<T> =
-		this.kotlin.iterator()
+		super<RemoveOnlyCollection>.iterator()
 
 	override fun reversed(): RemoveOnlySequencedCollection<T>
 
