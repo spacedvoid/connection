@@ -40,6 +40,16 @@ The IDE might require additional configurations to preserve the star imports.
 In IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
 Make sure to uncheck `With Subpackages`, which contains implementation or unsafe features that you might not want to use.
 
+## Upcoming features (or just a todo list)
+
+- [ ] Implementations using `java.lang.reflect.Proxy`
+- [ ] Simpler ways to express intervals for `subList` and `subSet`
+- [ ] `equals` and `hashCode` implementations
+- [ ] `Spliterator` support
+- [ ] Special collections, such as stack, queue, and deque
+- [ ] Operator and utility methods
+- [ ] Base type for lists that have non-`int` indexes
+
 ## License
 
 The source code is licensed with [MPL-2.0](LICENSE), *compatible* with secondary licenses.
