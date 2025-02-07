@@ -28,6 +28,9 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 *
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 *
+	 * @implNote
+	 * Overrides should return the same type with the declaring class.
 	 */
 	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
 
@@ -37,6 +40,9 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 *
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 *
+	 * @implNote
+	 * Overrides should return the same type with the declaring class.
 	 */
 	fun headSet(before: T, inclusive: Boolean): NavigableSetView<T>
 
@@ -46,6 +52,9 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 *
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 *
+	 * @implNote
+	 * Overrides should return the same type with the declaring class.
 	 */
 	fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T>
 

@@ -22,6 +22,9 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * Returns a reverse-ordered collection of this collection.
 	 *
 	 * Operations on the returned collection delegates to this collection.
+	 *
+	 * @implNote
+	 * Overrides should return the same type with the declaring class.
 	 */
 	fun reversed(): SequencedCollectionView<T>
 

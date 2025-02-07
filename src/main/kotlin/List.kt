@@ -31,6 +31,9 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 *
 	 * The behavior of the returned list when this list is *structurally modified*(that is, changing the size of this list)
 	 * by operations on this list is not defined.
+	 *
+	 * @implNote
+	 * Overrides should return the same type with the declaring class.
 	 */
 	fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
 
