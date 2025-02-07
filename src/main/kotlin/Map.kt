@@ -127,7 +127,7 @@ interface MutableMap<K, V>: MapView<K, V> {
 	 * For all entries in the given [map],
 	 * copies the entry to this map or replaces the value of the entry in this map associated with the key by the entry's value.
 	 */
-	fun putAll(map: Map<out K, out V>) =
+	fun putAll(map: MapView<out K, out V>) =
 		this.kotlin.putAll(map.asKotlin())
 
 	/**

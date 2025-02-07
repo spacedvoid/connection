@@ -115,7 +115,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 * Adds all elements from the given [collection] to the end of this list by their encounter order,
 	 * and returns `true`.
 	 */
-	override fun addAll(collection: Collection<out T>): Boolean =
+	override fun addAll(collection: CollectionView<out T>): Boolean =
 		super.addAll(collection)
 
 	/**
