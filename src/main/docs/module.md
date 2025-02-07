@@ -7,7 +7,7 @@ Contains the base interfaces of collections and operations.
 
 ## Collection types
 
-Most collection interfaces from the Java Collections Framework are supported:
+Most collection interfaces work similar from the Java Collections Framework:
 
 | Java collection                 | Kotlin collection               | Corresponding Connection type                  |
 |---------------------------------|---------------------------------|------------------------------------------------|
@@ -178,15 +178,6 @@ The following extensions change both the type and kind:
 
 These conversions are copies, where operations on the resulting collection does not affect the original collection.
 
-## Specifications and thread safety
-
-As mentioned in the previous(Adapters are user-dependent) section, most of the specifications work well only if the adapter methods are used properly.
-Other specifications, such as thread safety, are defined based on the originating Kotlin collection.
-For example, thread safety is guaranteed when using `CopyOnWriteArrayList().asMutableConnection()`, but not with `ArrayList().asMutableConnection()`.
-
-A simple way to determine such properties is to know that Connection is a mere wrapper for Kotlin collections;
-if the property comes from the Kotlin collection, it is also guaranteed in Connection as well, unless the specification from Connection says about it.
-
 # Package io.github.spacedvoid.connection.impl
 
 Contains basic implementations for each collection types in [io.github.spacedvoid.connection].
@@ -195,4 +186,4 @@ implementors may freely use the implementations in here (by inheritance or deleg
 
 # Package io.github.spacedvoid.connection.utils
 
-Contains some utilities for the API.
+Contains some utilities for the API and implementations.
