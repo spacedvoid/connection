@@ -9,8 +9,6 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.Set
-import kotlin.collections.MutableSet as KotlinMutableSet
-import kotlin.collections.Set as KotlinSet
 
 open class SetViewImpl<T>(private val kotlin: KotlinSet<T>): CollectionViewImpl<T>(kotlin), SetView<T> {
 	override val CollectionView<T>.kotlin: KotlinSet<T>

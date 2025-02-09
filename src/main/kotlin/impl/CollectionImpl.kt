@@ -9,8 +9,6 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.Collection
 import io.github.spacedvoid.connection.MutableCollection
-import kotlin.collections.Collection as KotlinCollection
-import kotlin.collections.MutableCollection as KotlinMutableCollection
 
 open class CollectionViewImpl<T>(private val kotlin: KotlinCollection<T>): CollectionView<T> {
 	override val CollectionView<T>.kotlin: KotlinCollection<T>

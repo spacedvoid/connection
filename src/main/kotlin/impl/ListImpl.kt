@@ -9,8 +9,6 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.List
 import io.github.spacedvoid.connection.MutableList
-import kotlin.collections.List as KotlinList
-import kotlin.collections.MutableList as KotlinMutableList
 
 @Suppress("UNCHECKED_CAST")
 open class ListViewImpl<T>(private val kotlin: KotlinList<T>): SequencedCollectionViewImpl<T>(kotlin as java.util.SequencedCollection<T>), ListView<T> {
