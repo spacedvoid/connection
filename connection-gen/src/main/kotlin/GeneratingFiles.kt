@@ -120,65 +120,6 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 	}
 
 	/**
-	 * File that contains operators.
-	 */
-	val operators: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "Operator").also {
-		//<editor-fold defaultState="collapsed" desc="// Default file contents">
-		it += """
-			package io.github.spacedvoid.connection
-			
-			/**
-			 * Shortcut for `!isEmpty()`.
-			 */
-			fun CollectionView<*>.isNotEmpty() = !isEmpty()
-			
-			/**
-			 * Shortcut for [MutableCollection.add].
-			 */
-			operator fun <T> MutableCollection<T>.plusAssign(element: T) {
-				add(element)
-			}
-			
-			/**
-			 * Shortcut for [MutableCollection.addAll].
-			 */
-			operator fun <T> MutableCollection<T>.plusAssign(elements: Iterable<T>) {
-				addAll(elements.toList().asConnection())
-			}
-			
-			/**
-			 * Returns a new list that repeats the contents of this list [n] times in their order.
-			 */
-			@Suppress("UNCHECKED_CAST")
-			operator fun <T> List<T>.times(n: Int): List<T> {
-				val result = arrayOfNulls<Any>(size() * n) as Array<T>
-				val array = toGenericArray()
-				for(i in 0..<n) array.copyInto(result, i * n)
-				return listOf(*result)
-			}
-			
-			/**
-			 * Shortcut for [MutableMap.put].
-			 */
-			operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
-				put(key, value)
-			}
-			
-			/**
-			 * Shortcut for [MapView.containsKey].
-			 */
-			operator fun <K> MapView<K, *>.contains(key: K): Boolean = containsKey(key)
-			
-			/**
-			 * Shortcut for `this.entries.forEach`.
-			 */
-			fun <K, V> Map<K, V>.forEach(action: (K, V) -> Unit) = this.entries.forEach { (k, v) -> action(k, v) }
-			
-		""".trimIndent()
-		//</editor-fold>
-	}
-
-	/**
 	 * Represents whether the output streams are closed.
 	 */
 	var closed: Boolean = false
