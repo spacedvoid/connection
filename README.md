@@ -27,6 +27,10 @@ The IDE might require additional configurations to preserve the star imports.
 In IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
 Make sure to uncheck `With Subpackages`, which contain implementations or unsafe features that you might not want to use.
 
+If the Kotlin's collections are used even if the star import was added, you might need to manually add imports for such types.
+This is because star imports have lower priority than default imports(https://youtrack.jetbrains.com/issue/KT-4374).
+See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavior.
+
 ## Upcoming features (or just a todo list)
 
 - [ ] Implementations using `java.lang.reflect.Proxy`
