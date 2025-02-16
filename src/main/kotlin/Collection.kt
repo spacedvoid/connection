@@ -57,9 +57,8 @@ interface CollectionView<T>: Iterable<T> {
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	@Suppress("UNCHECKED_CAST")
 	fun containsAll(collection: CollectionView<out T>): Boolean =
-		this.kotlin.containsAll((collection as Collection<T>).kotlin)
+		this.kotlin.containsAll(collection.asKotlin())
 
 	/**
 	 * Returns a direct Kotlin representation of this collection.
