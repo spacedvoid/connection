@@ -6,19 +6,49 @@
 
 package io.github.spacedvoid.connection
 
+/**
+ * Alias for [kotlin.collections.Collection].
+ */
 typealias KotlinCollection<T> = kotlin.collections.Collection<T>
+/**
+ * Alias for [kotlin.collections.MutableCollection].
+ */
 typealias KotlinMutableCollection<T> = kotlin.collections.MutableCollection<T>
 
+/**
+ * Alias for [kotlin.collections.List].
+ */
 typealias KotlinList<T> = kotlin.collections.List<T>
+/**
+ * Alias for [kotlin.collections.MutableList].
+ */
 typealias KotlinMutableList<T> = kotlin.collections.MutableList<T>
 
+/**
+ * Alias for [kotlin.collections.Set].
+ */
 typealias KotlinSet<T> = kotlin.collections.Set<T>
+/**
+ * Alias for [kotlin.collections.MutableSet].
+ */
 typealias KotlinMutableSet<T> = kotlin.collections.MutableSet<T>
 
+/**
+ * Alias for [kotlin.collections.Map].
+ */
 typealias KotlinMap<K, V> = kotlin.collections.Map<K, V>
+/**
+ * Alias for [kotlin.collections.MutableMap].
+ */
 typealias KotlinMutableMap<K, V> = kotlin.collections.MutableMap<K, V>
 
+/**
+ * Alias for [kotlin.collections.Map.Entry].
+ */
 typealias KotlinMapEntry<K, V> = kotlin.collections.Map.Entry<K, V>
+/**
+ * Alias for [kotlin.collections.MutableMap.MutableEntry].
+ */
 typealias KotlinMutableMapEntry<K, V> = kotlin.collections.MutableMap.MutableEntry<K, V>
 
 /**

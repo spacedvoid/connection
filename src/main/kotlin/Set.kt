@@ -9,6 +9,8 @@ package io.github.spacedvoid.connection
 /**
  * A [CollectionView] that only stores one instance per element.
  *
+ * This is equivalent to a mathematical set, where no two objects stored in this set are [equal][Any.equals] to each other.
+ *
  * The behavior of the set when mutable elements are used, when their mutation affects the result of [Any.equals], is undefined.
  *
  * All operations that check whether an element matches an instance is determined via [Any.equals].

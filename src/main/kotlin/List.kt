@@ -8,7 +8,12 @@ package io.github.spacedvoid.connection
 
 /**
  * A [SequencedCollectionView] that supports element retrieval by indexes.
- * The index ranges from `0` to `size - 1`, inclusive.
+ * The index ranges from `0` to [size]` - 1`, inclusive.
+ *
+ * @apiNote
+ * Although there are no specification-level restrictions for the maximum size of the list,
+ * this API restricts the retrieval of elements outside the non-negative integer index.
+ * Element addition, removal, modification, or access operations outside such index may throw any type of exceptions.
  */
 interface ListView<T>: SequencedCollectionView<T> {
 	/**
