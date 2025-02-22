@@ -57,6 +57,21 @@ interface ListView<T>: SequencedCollectionView<T> {
 		this.kotlin.lastIndexOf(element)
 
 	/**
+	 * Returns whether the given object is equal to this list.
+	 *
+	 * The given object is equal to this list if the object is a [ListView],
+	 * and the elements of the given list equals to the elements in this list, regarding the order.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns a hash code for this list.
+	 *
+	 * The hash is computed based on the contained objects' hash codes, regarding the order.
+	 */
+	override fun hashCode(): Int
+
+	/**
 	 * @inheritDoc
 	 *
 	 * @apiNote

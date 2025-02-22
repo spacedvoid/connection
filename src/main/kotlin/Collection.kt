@@ -61,6 +61,26 @@ interface CollectionView<T>: Iterable<T> {
 		this.kotlin.containsAll(collection.asKotlin())
 
 	/**
+	 * Returns whether the given object is equal to this collection.
+	 *
+	 * @implNote
+	 * The specification of this method is very vague, simply because [ListView] and [SetView] have conflicting overrides.
+	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
+	 * such cases should have careful implementations to obey the [general contracts][Any.equals] of this method.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this collection.
+	 *
+	 * @implNote
+	 * The specification of this method is very vague, simply because [ListView] and [SetView] have conflicting overrides.
+	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
+	 * such cases should have careful implementations to obey the [general contracts][Any.hashCode] of this method.
+	 */
+	override fun hashCode(): Int
+
+	/**
 	 * Returns a direct Kotlin representation of this collection.
 	 *
 	 * @apiNote

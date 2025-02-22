@@ -14,6 +14,22 @@ package io.github.spacedvoid.connection
  * All operations that check whether an element matches an instance is determined via [Any.equals].
  */
 interface SetView<T>: CollectionView<T> {
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is a [SetView],
+	 * this set contains all elements from the given set,
+	 * and the given set contains all elements from this set.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * The hash code is computed based on the contained objects' hash codes.
+	 */
+	override fun hashCode(): Int
+
 	override val CollectionView<T>.kotlin: kotlin.collections.Set<T>
 }
 
