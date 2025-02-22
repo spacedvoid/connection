@@ -6,6 +6,15 @@
 
 package io.github.spacedvoid.connection
 
+import kotlin.collections.distinct
+import kotlin.collections.distinctBy
+import kotlin.collections.flatMap
+import kotlin.collections.flatMapIndexed
+import kotlin.collections.groupBy
+import kotlin.collections.map
+import kotlin.collections.mapIndexed
+import kotlin.collections.mapNotNull
+
 /**
  * Alias for [kotlin.collections.Collection].
  */
@@ -73,3 +82,48 @@ fun <T> Iterable<T>.toKotlinMutableSet(): KotlinMutableSet<T> = toMutableSet()
  * Alias for [kotlin.collections.toMap].
  */
 fun <K, V> Iterable<Pair<K, V>>.toKotlinMap(): KotlinMap<K, V> = toMap()
+
+/**
+ * Alias for [kotlin.collections.map].
+ */
+fun <T, R> Iterable<T>.kotlinMap(transform: (T) -> R): KotlinList<R> = map(transform)
+
+/**
+ * Alias for [kotlin.collections.mapIndexed].
+ */
+fun <T, R> Iterable<T>.kotlinMapIndexed(transform: (index: Int, T) -> R): KotlinList<R> = mapIndexed(transform)
+
+/**
+ * Alias for [kotlin.collections.mapNotNull].
+ */
+fun <T, R> Iterable<T>.kotlinMapNotNull(transform: (T) -> R?): KotlinList<R> = mapNotNull(transform)
+
+/**
+ * Alias for [kotlin.collections.flatMap].
+ */
+fun <T, R> Iterable<T>.kotlinFlatMap(transform: (T) -> Iterable<R>): KotlinList<R> = flatMap(transform)
+
+/**
+ * Alias for [kotlin.collections.flatMapIndexed].
+ */
+fun <T, R> Iterable<T>.kotlinFlatMapIndexed(transform: (index: Int, T) -> Iterable<R>): KotlinList<R> = flatMapIndexed(transform)
+
+/**
+ * Alias for [kotlin.collections.groupBy].
+ */
+fun <T, K> Iterable<T>.kotlinGroupBy(keySelector: (T) -> K): KotlinMap<K, KotlinList<T>> = groupBy(keySelector)
+
+/**
+ * Alias for [kotlin.collections.groupBy].
+ */
+fun <T, K, V> Iterable<T>.kotlinGroupBy(keySelector: (T) -> K, valueTransform: (T) -> V): KotlinMap<K, KotlinList<V>> = groupBy(keySelector, valueTransform)
+
+/**
+ * Alias for [kotlin.collections.distinct].
+ */
+fun <T> Iterable<T>.kotlinDistinct(): KotlinList<T> = distinct()
+
+/**
+ * Alias for [kotlin.collections.distinctBy].
+ */
+fun <T, K> Iterable<T>.kotlinDistinctBy(selector: (T) -> K): KotlinList<T> = distinctBy(selector)
