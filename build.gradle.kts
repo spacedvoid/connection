@@ -45,11 +45,16 @@ tasks.dokkaHtml {
     dokkaSourceSets {
         configureEach {
             documentedVisibilities = setOf(DokkaConfiguration.Visibility.PUBLIC, DokkaConfiguration.Visibility.PROTECTED)
-            reportUndocumented = false
+            reportUndocumented = true
             skipDeprecated = true
             suppressGeneratedFiles = false
             jdkVersion = 21
             platform = Platform.jvm
+
+            perPackageOption {
+                matchingRegex = "io.github.spacedvoid.connection.impl"
+                reportUndocumented = false
+            }
 
             sourceLink {
                 localDirectory = file("src/main/kotlin")
