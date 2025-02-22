@@ -35,7 +35,7 @@ See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavio
 
 - [ ] Implementations using `java.lang.reflect.Proxy`
 - [ ] Simpler ways to express intervals for `subList` and `subSet`
-- [ ] `equals` and `hashCode` implementations
+- [x] `equals` and `hashCode` implementations
 - [ ] `Spliterator` support
 - [ ] Special collections, such as stack, queue, and deque
 - [ ] Operator and utility methods

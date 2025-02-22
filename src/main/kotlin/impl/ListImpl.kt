@@ -16,6 +16,14 @@ open class ListViewImpl<T>(private val kotlin: KotlinList<T>): SequencedCollecti
 
 	override fun subList(startInclusive: Int, endExclusive: Int): ListView<T> = ListViewImpl(this.kotlin.subList(startInclusive, endExclusive))
 
+	override fun equals(other: Any?): Boolean {
+		if(other !is ListView<*>) return false
+		other as ListView<T>
+		return this.kotlin == other.kotlin
+	}
+
+	override fun hashCode(): Int = this.kotlin.hashCode()
+
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: KotlinList<T>
 		get() = this@ListViewImpl.kotlin

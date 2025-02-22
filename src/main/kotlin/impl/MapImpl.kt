@@ -19,6 +19,15 @@ open class MapViewImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapView<K, V>
 
 	override val entries: SetView<out KotlinMapEntry<K, V>> = SetViewImpl(this.kotlin.entries)
 
+	@Suppress("UNCHECKED_CAST")
+	override fun equals(other: Any?): Boolean {
+		if(other !is MapView<*, *>) return false
+		other as MapView<K, V>
+		return this.kotlin == with(other) { other.kotlin }
+	}
+
+	override fun hashCode(): Int = this.kotlin.hashCode()
+
 	override val MapView<K, V>.kotlin: KotlinMap<K, V>
 		get() = this@MapViewImpl.kotlin
 

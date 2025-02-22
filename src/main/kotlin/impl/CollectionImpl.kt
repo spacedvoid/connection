@@ -13,6 +13,15 @@ import io.github.spacedvoid.connection.MutableCollection
 open class CollectionViewImpl<T>(private val kotlin: KotlinCollection<T>): CollectionView<T> {
 	override val CollectionView<T>.kotlin: KotlinCollection<T>
 		get() = this@CollectionViewImpl.kotlin
+
+	@Suppress("UNCHECKED_CAST")
+	override fun equals(other: Any?): Boolean {
+		if(other !is CollectionView<*>) return false
+		other as CollectionView<T>
+		return this.kotlin == with(other) { other.kotlin }
+	}
+
+	override fun hashCode(): Int = this.kotlin.hashCode()
 }
 
 open class CollectionImpl<T>(kotlin: KotlinCollection<T>): CollectionViewImpl<T>(kotlin), Collection<T>

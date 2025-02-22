@@ -75,6 +75,22 @@ interface MapView<K, V> {
 	val entries: SetView<out kotlin.collections.Map.Entry<K, V>>
 
 	/**
+	 * Returns whether the given object is equal to this map.
+	 *
+	 * The given object is equal to this map if the object is a [MapView],
+	 * and all entries in this map are equal to the entries in the given map, in terms of both keys and values.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this map.
+	 *
+	 * The hash code is computed based on the hash codes from the entries in this map,
+	 * which are then based on the hash codes of the key and value.
+	 */
+	override fun hashCode(): Int
+
+	/**
 	 * Returns a direct Kotlin representation of this map.
 	 *
 	 * @apiNote

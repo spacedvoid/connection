@@ -13,6 +13,15 @@ import io.github.spacedvoid.connection.Set
 open class SetViewImpl<T>(private val kotlin: KotlinSet<T>): CollectionViewImpl<T>(kotlin), SetView<T> {
 	override val CollectionView<T>.kotlin: KotlinSet<T>
 		get() = this@SetViewImpl.kotlin
+
+	@Suppress("UNCHECKED_CAST")
+	override fun equals(other: Any?): Boolean {
+		if(other !is SetView<*>) return false
+		other as SetView<T>
+		return this.kotlin == with(other) { other.kotlin }
+	}
+
+	override fun hashCode(): Int = this.kotlin.hashCode()
 }
 
 open class SetImpl<T>(kotlin: KotlinSet<T>): SetViewImpl<T>(kotlin), Set<T>
