@@ -44,3 +44,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Documentations are released via .jar, no need to include the whole files here
+/docs

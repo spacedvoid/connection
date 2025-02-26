@@ -25,13 +25,28 @@ tasks.test {
     useJUnitPlatform()
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 kotlin {
     jvmToolchain(21)
+}
+
+val dokkaOutputDir = file("docs")
+
+tasks {
+    val sourcesJar by registering(Jar::class) {
+        archiveClassifier = "sources"
+        from(sourceSets["main"].allSource)
+    }
+
+    val dokkaHtmlJar by registering(Jar::class) {
+        dependsOn(dokkaHtml)
+        archiveClassifier = "javadoc"
+        from(dokkaOutputDir)
+    }
+
+    artifacts {
+        archives(sourcesJar)
+        archives(dokkaHtmlJar)
+    }
 }
 
 tasks.compileKotlin {
@@ -39,7 +54,7 @@ tasks.compileKotlin {
 }
 
 tasks.dokkaHtml {
-    outputDirectory = file("docs")
+    outputDirectory = dokkaOutputDir
     failOnWarning = true
 
     dokkaSourceSets {
@@ -52,7 +67,7 @@ tasks.dokkaHtml {
             platform = Platform.jvm
 
             perPackageOption {
-                matchingRegex = "io.github.spacedvoid.connection.impl"
+                matchingRegex = "io\\.github\\.spacedvoid\\.connection\\.impl"
                 reportUndocumented = false
             }
 
