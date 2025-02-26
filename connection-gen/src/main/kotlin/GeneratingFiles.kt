@@ -31,7 +31,12 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 		 * Whether it is closed can be determined with [closed].
 		 */
 		internal val out = BufferedWriter(OutputStreamWriter(
-			this@GeneratingFiles.generator.createNewFile(Dependencies(false), packageName, name, extension),
+			this@GeneratingFiles.generator.createNewFile(
+				Dependencies(false),
+				packageName.replaceFirst(Regex("io\\.github\\.spacedvoid\\.connection\\.?"), ""),
+				name,
+				extension
+			),
 			StandardCharsets.UTF_8
 		)).also {
 			it.write("""
