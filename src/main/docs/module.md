@@ -50,8 +50,11 @@ Collections in this package are separated into 4 kinds, based on their propertie
 | Remove-only     | Yes(limited) | Unknown(probably yes)             | View        |
 | Mutable         | Yes          | Unknown(probably no)              | Remove-only |
 
-Remove-only collections, by their name, support only element removal operations, such as [RemoveOnlyCollection.remove].
-They are normally obtained by map entry collections, such as [MutableMap.keys].
+All kinds of the same type are called a *type family*.
+For example, [ListView], [List], and [MutableList] is a family of [List].
+
+Remove-only collections support only element removal operations between mutation operations, such as [RemoveOnlyCollection.remove].
+They are usually obtained by map entry collections, such as [MutableMap.keys].
 
 This list of kinds will be enough for all sorts of collections from throwing [UnsupportedOperationException].
 Therefore, there are no *optional operations* in Connection.
@@ -61,11 +64,11 @@ For example, there are no remove-only lists or maps.
 Because of the properties above, the inheritance tree isolates immutable collections from mutable(remove-only) collections;
 immutable collections cannot be assigned to a mutable collection kind, and vice versa.
 
-## From Kotlin, to Kotlin (or: Adapters)
+## Adapters
 
-Adapters are extension methods that convert between Kotlin collections and Connections.
+Adapters are extension methods that convert between Kotlin collections and Connection.
 
-Adapters that convert Kotlin collections to Connections are:
+Adapters that convert Kotlin collections to Connection are:
 
 | Target kind | Extension method         |
 |-------------|--------------------------|
@@ -137,10 +140,10 @@ For more information, refer to the documentation.
 
 The following extensions convert collections between kinds, maintaining the same type:
 
-| From → To                            | Extension method |
-|--------------------------------------|------------------|
-| View (or its subkinds) → View        | [asView]         |
-| View (or its subkinds) → Remove-only | [asRemoveOnly]   |
+| From → To          | Extension method |
+|--------------------|------------------|
+| View → View        | [asView]         |
+| View → Remove-only | [asRemoveOnly]   |
 
 These conversions are delegations, where operations on the resulting collection delegates to the original collection.
 
@@ -155,12 +158,14 @@ val typeSafe: ListView<String> = collection.asView()
 (typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
+[snapshot] is a special case; it copies the elements to an immutable collection, with the same type.
+
 The following extensions change both the type and kind:
 
-| From → To                          | Extension method            |
-|------------------------------------|-----------------------------|
-| View (or its subkinds) → Mutable   | `toMutable<CollectionType>` |
-| View (or its subkinds) → Immutable | `to<CollectionType>`        |
+| From → To        | Extension method            |
+|------------------|-----------------------------|
+| View → Mutable   | `toMutable<CollectionType>` |
+| View → Immutable | `to<CollectionType>`        |
 
 <details>
 <summary>Full list of type conversions</summary>
