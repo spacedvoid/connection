@@ -93,6 +93,8 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 				private var customName = false
 			}
 
+			var kotlin: String = "kotlin.collections.${when(this.kind) { ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable" else -> ""}}${this@ConnectionType.name}"
+
 			/**
 			 * The adapters for this typekind.
 			 */

@@ -8,6 +8,9 @@ package io.github.spacedvoid.connection.gen
 
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
+import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.IMMUTABLE
+import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.MUTABLE
+import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.VIEW
 
 /**
  * The main DSL for the Connection Generator.
@@ -18,25 +21,25 @@ fun ConnectionGeneration.collect() {
 	}
 
 	collectionNamed("SequencedCollection") {
-		allKinds()
+		allKinds {
+			kotlin = "java.util.SequencedCollection"
+		}
 	}
 
 	collectionNamed("List") {
 		standardKinds()
-		kind(ConnectionKind.VIEW) {
-			adapters {
-				asKotlin {
-					create(to = "java.util.SequencedCollection", name = "asSequencedKotlin") {
-						unchecked = true
-						docs = """
-							/**
-							 * Returns a Kotlin collection that delegates to this collection.
-							 *
-							 * @apiNote
-							 * This extension exists since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
-							 */
-						""".trimIndent()
-					}
+		kind(VIEW) {
+			adapters.asKotlin {
+				create(to = "java.util.SequencedCollection", name = "asSequencedKotlin") {
+					unchecked = true
+					docs = """
+						/**
+						 * Returns a Kotlin collection that delegates to this collection.
+						 *
+						 * @apiNote
+						 * This extension exists since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
+						 */
+					""".trimIndent()
 				}
 			}
 		}
@@ -47,11 +50,15 @@ fun ConnectionGeneration.collect() {
 	}
 
 	collectionNamed("SequencedSet") {
-		allKinds()
+		allKinds {
+			kotlin = "java.util.SequencedSet"
+		}
 	}
 
 	collectionNamed("NavigableSet") {
-		allKinds()
+		allKinds {
+			kotlin = "java.util.NavigableSet"
+		}
 	}
 
 	mapNamed("Map") {
@@ -59,18 +66,24 @@ fun ConnectionGeneration.collect() {
 	}
 
 	mapNamed("SequencedMap") {
-		standardKinds()
+		standardKinds {
+			kotlin = "java.util.SequencedMap"
+		}
 	}
 
 	mapNamed("NavigableMap") {
-		standardKinds()
+		standardKinds {
+			kotlin = "java.util.NavigableMap"
+		}
 	}
 }
 
-private fun ConnectionGeneration.ConnectionType.allKinds() = kinds(*allConnectionKinds)
+private fun ConnectionGeneration.ConnectionType.allKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
+	kinds(*allConnectionKinds, configuration = configuration)
 
-private fun ConnectionGeneration.ConnectionType.standardKinds() = kinds(*standardKinds)
+private fun ConnectionGeneration.ConnectionType.standardKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
+	kinds(*standardKinds, configuration = configuration)
 
 private val allConnectionKinds = ConnectionKind.entries.toTypedArray()
 
-private val standardKinds = arrayOf(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
+private val standardKinds = arrayOf(VIEW, IMMUTABLE, MUTABLE)
