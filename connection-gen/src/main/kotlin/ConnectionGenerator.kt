@@ -60,15 +60,6 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			generatingFiles.generateRemoveOnly(it.name ?: "asRemoveOnly", it.docs ?: defaultRemoveOnlyDoc, type.typeArgs, from.name, removeOnly.name, removeOnly.impl.name)
 		}
 		type.kinds.values.forEach { kind: ConnectionTypeKind ->
-			val kindClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
-			val kotlin = kindClass.getAllProperties()
-				.find { it.simpleName.asString() == "kotlin" }
-				?.type
-				?.resolve()
-				?.declaration
-				?.qualifiedName
-				?.asString()
-				?: throw IllegalArgumentException("Kotlin property of class ${kind.qualifiedName} cannot be resolved")
 			// Adapters
 			// CollectionAsConnection
 			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach next@{
@@ -83,7 +74,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 					},
 					it.docs ?: defaultColAsConDocs(kind.kind),
 					type.typeArgs,
-					it.kotlin ?: kotlin,
+					it.kotlin ?: kind.kotlin,
 					kind.name,
 					kind.impl.name
 				)
@@ -92,10 +83,10 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			(kind.adapters.asKotlin.default + kind.adapters.asKotlin.extra).forEach next@{
 				if(it == null) return@next
 				val apiClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
-				if(alreadyGenerated(apiClass, it.kotlin ?: kotlin) && it === kind.adapters.asKotlin.default) return@next
+				if(alreadyGenerated(apiClass, it.kotlin ?: kind.kotlin) && it === kind.adapters.asKotlin.default) return@next
 				val implClass = resolver.getClassDeclarationByName(kind.impl.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.impl.qualifiedName} does not exist")
 				generatingFiles.conAsCol.attach(listOfNotNull(apiClass.containingFile, implClass.containingFile))
-				generatingFiles.generateConAsCol(it.name ?: "asKotlin", it.docs ?: defaultConAsColDocs, type.typeArgs, it.kotlin ?: kotlin, kind.name, it.unchecked)
+				generatingFiles.generateConAsCol(it.name ?: "asKotlin", it.docs ?: defaultConAsColDocs, type.typeArgs, it.kotlin ?: kind.kotlin, kind.name, it.unchecked)
 			}
 		}
 	}
