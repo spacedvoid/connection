@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -91,6 +93,7 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 
 	override val keys: NavigableSetView<out K>
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: java.util.NavigableMap<K, V>
 }
 

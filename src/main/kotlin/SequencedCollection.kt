@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -42,6 +44,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	fun last(): T =
 		this.kotlin.last
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: java.util.SequencedCollection<T>
 }
 

@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -88,6 +90,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 * Implementations might require `@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")`.
 	 */
 	// On the JVM, kotlin.collections.List = java.util.List, which inherits from java.util.SequencedCollection
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: kotlin.collections.List<T>
 }
@@ -101,6 +104,7 @@ interface List<T>: ListView<T>, SequencedCollection<T> {
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T>
 
 	// Force override, iterator() cannot resolve type as kotlin.collections.List<T>
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: kotlin.collections.List<T>
 }
@@ -181,6 +185,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	fun removeAt(index: Int): T =
 		this.kotlin.removeAt(index)
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: kotlin.collections.MutableList<T>
 }

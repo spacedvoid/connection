@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 import java.util.function.Consumer
@@ -104,6 +106,7 @@ interface CollectionView<T>: Iterable<T> {
 	 * Even though the receiver will always be `this`,
 	 * always return the current class's Kotlin representation instead.
 	 */
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	val CollectionView<T>.kotlin: kotlin.collections.Collection<T>
 
 	//<editor-fold defaultState="collapsed" desc="// Hidden overrides, deprecated since these become problematic when generating documentation">
@@ -174,6 +177,7 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	fun clear() =
 		this.kotlin.clear()
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: kotlin.collections.MutableCollection<T>
 }
 

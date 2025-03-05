@@ -32,6 +32,7 @@ interface SetView<T>: CollectionView<T> {
 	 */
 	override fun hashCode(): Int
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: kotlin.collections.Set<T>
 }
 
@@ -44,6 +45,7 @@ interface Set<T>: Collection<T>, SetView<T>
  * A [SetView] that additionally supports element removal operations.
  */
 interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T> {
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: kotlin.collections.MutableSet<T>
 }
 

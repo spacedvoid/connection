@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -114,6 +116,7 @@ interface MapView<K, V> {
 	 * Even though the receiver will always be `this`,
 	 * always return the current class's Kotlin representation instead.
 	 */
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	val MapView<K, V>.kotlin: kotlin.collections.Map<K, V>
 }
 
@@ -164,5 +167,6 @@ interface MutableMap<K, V>: MapView<K, V> {
 
 	override val entries: RemoveOnlySet<kotlin.collections.MutableMap.MutableEntry<K, V>>
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: kotlin.collections.MutableMap<K, V>
 }

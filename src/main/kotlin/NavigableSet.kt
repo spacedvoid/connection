@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -70,6 +72,7 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	fun lower(than: T, inclusive: Boolean): T? =
 		if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: java.util.NavigableSet<T>
 }
 
