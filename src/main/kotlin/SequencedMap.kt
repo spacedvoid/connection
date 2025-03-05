@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -52,6 +54,7 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 
 	override val entries: SequencedSetView<out kotlin.collections.Map.Entry<K, V>>
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: java.util.SequencedMap<K, V>
 }
 

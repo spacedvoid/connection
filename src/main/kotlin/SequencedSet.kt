@@ -12,6 +12,7 @@ package io.github.spacedvoid.connection
 interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
 	override fun reversed(): SequencedSetView<T>
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: java.util.SequencedSet<T>
 }
 

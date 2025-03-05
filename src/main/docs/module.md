@@ -118,24 +118,6 @@ val connection = arrayListOf("a", "b", "c").asConnection()
 
 Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward, one can safely apply [asConnection] to the collection.
 
-### The unsafe way
-
-[CollectionView.kotlin] is a direct representation of the collection as a Kotlin collection.
-However, use of this property is considered **unsafe**.
-The result is **not** statically bound;
-even if a collection is represented as [Collection], the returned collection by this property might be a [List].
-
-While the defining or overriding class can use this by simply writing `this.kotlin`,
-to use this from outside such class, one may *opt-in* as the following:
-
-```kotlin
-with(collection) {
-    println(this.kotlin)
-}
-```
-
-For more information, refer to the documentation.
-
 ## Conversions
 
 The following extensions convert collections between kinds, maintaining the same type:
