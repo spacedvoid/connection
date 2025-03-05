@@ -14,15 +14,15 @@ import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
  */
 fun ConnectionGeneration.collect() {
 	collectionNamed("Collection") {
-		kinds(*ConnectionKind.all)
+		allKinds()
 	}
 
 	collectionNamed("SequencedCollection") {
-		kinds(*ConnectionKind.all)
+		allKinds()
 	}
 
 	collectionNamed("List") {
-		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
+		standardKinds()
 		kind(ConnectionKind.VIEW) {
 			adapters {
 				asKotlin {
@@ -43,26 +43,34 @@ fun ConnectionGeneration.collect() {
 	}
 
 	collectionNamed("Set") {
-		kinds(*ConnectionKind.all)
+		allKinds()
 	}
 
 	collectionNamed("SequencedSet") {
-		kinds(*ConnectionKind.all)
+		allKinds()
 	}
 
 	collectionNamed("NavigableSet") {
-		kinds(*ConnectionKind.all)
+		allKinds()
 	}
 
 	mapNamed("Map") {
-		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
+		standardKinds()
 	}
 
 	mapNamed("SequencedMap") {
-		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
+		standardKinds()
 	}
 
 	mapNamed("NavigableMap") {
-		kinds(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)
+		standardKinds()
 	}
 }
+
+private fun ConnectionGeneration.ConnectionType.allKinds() = kinds(*allConnectionKinds)
+
+private fun ConnectionGeneration.ConnectionType.standardKinds() = kinds(*standardKinds)
+
+private val allConnectionKinds = ConnectionKind.entries.toTypedArray()
+
+private val standardKinds = arrayOf(ConnectionKind.VIEW, ConnectionKind.IMMUTABLE, ConnectionKind.MUTABLE)

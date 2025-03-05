@@ -51,37 +51,14 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		type.conversions.view?.let {
 			val (from, view) = conversionTarget(type, ConnectionKind.VIEW, it.to) ?: return@let
 			attachSources(resolver, generatingFiles.view, from.qualifiedName, view.qualifiedName, view.impl.qualifiedName)
-			generatingFiles.generateView(
-				it.name ?: "asView",
-				it.docs ?: """
-					/**
-					 * Returns a collection view, converted from this collection.
-					 */
-				""".trimIndent(),
-				type.typeArgs,
-				from.name,
-				view.name,
-				view.impl.name
-			)
+			generatingFiles.generateView(it.name ?: "asView", it.docs ?: defaultViewDoc, type.typeArgs, from.name, view.name, view.impl.name)
 		}
 		// RemoveOnly
 		type.conversions.removeOnly?.let {
 			val (from, removeOnly) = conversionTarget(type, ConnectionKind.REMOVE_ONLY, it.to) ?: return@let
 			attachSources(resolver, generatingFiles.removeOnly, from.qualifiedName, removeOnly.qualifiedName, removeOnly.impl.qualifiedName)
-			generatingFiles.generateRemoveOnly(
-				it.name ?: "asRemoveOnly",
-				it.docs ?: """
-					/**
-					 * Returns a remove-only collection, converted from this collection.
-					 */
-				""".trimIndent(),
-				type.typeArgs,
-				from.name,
-				removeOnly.name,
-				removeOnly.impl.name
-			)
+			generatingFiles.generateRemoveOnly(it.name ?: "asRemoveOnly", it.docs ?: defaultRemoveOnlyDoc, type.typeArgs, from.name, removeOnly.name, removeOnly.impl.name)
 		}
-		// Adapters
 		type.kinds.values.forEach { kind: ConnectionTypeKind ->
 			val kindClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
 			val kotlin = kindClass.getAllProperties()
@@ -92,6 +69,7 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				?.qualifiedName
 				?.asString()
 				?: throw IllegalArgumentException("Kotlin property of class ${kind.qualifiedName} cannot be resolved")
+			// Adapters
 			// CollectionAsConnection
 			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach next@{
 				if(it == null) return@next
@@ -117,27 +95,16 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 				if(alreadyGenerated(apiClass, it.kotlin ?: kotlin) && it === kind.adapters.asKotlin.default) return@next
 				val implClass = resolver.getClassDeclarationByName(kind.impl.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.impl.qualifiedName} does not exist")
 				generatingFiles.conAsCol.attach(listOfNotNull(apiClass.containingFile, implClass.containingFile))
-				generatingFiles.generateConAsCol(
-					it.name ?: "asKotlin",
-					it.docs ?: """
-						/**
-						 * Returns a Kotlin collection that delegates to this collection.
-						 */
-					""".trimIndent(),
-					type.typeArgs,
-					it.kotlin ?: kotlin,
-					kind.name,
-					it.unchecked
-				)
+				generatingFiles.generateConAsCol(it.name ?: "asKotlin", it.docs ?: defaultConAsColDocs, type.typeArgs, it.kotlin ?: kotlin, kind.name, it.unchecked)
 			}
 		}
 	}
 
 	/**
-	 * [Attaches][GeneratingFiles.GeneratingFile.attach] the classes with the given [qualified names][qualfiedNames] to the [file].
+	 * [Attaches][GeneratingFiles.GeneratingFile.attach] the classes with the given [qualified names][qualifiedNames] to the [file].
 	 */
-	private fun attachSources(resolver: Resolver, file: GeneratingFiles.GeneratingFile, vararg qualfiedNames: String) =
-		qualfiedNames.asSequence()
+	private fun attachSources(resolver: Resolver, file: GeneratingFiles.GeneratingFile, vararg qualifiedNames: String) =
+		qualifiedNames.asSequence()
 			.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
 			.mapNotNull { it.containingFile }
 			.toList()
@@ -161,6 +128,24 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		}
 		return from to view
 	}
+
+	private val defaultViewDoc = """
+		/**
+		 * Returns a collection view, converted from this collection.
+		 */
+	""".trimIndent()
+
+	private val defaultRemoveOnlyDoc = """
+		/**
+		 * Returns a remove-only collection, converted from this collection.
+		 */
+	""".trimIndent()
+
+	private val defaultConAsColDocs = """
+		/**
+		 * Returns a Kotlin collection that delegates to this collection.
+		 */
+	""".trimIndent()
 
 	/**
 	 * Default documentation for `asConnection` adapters.
