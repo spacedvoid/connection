@@ -31,11 +31,6 @@ interface Configurable {
 }
 
 /**
- * Allows nullable objects to be configured if they are non-null.
- */
-operator fun <T: Configurable> T?.invoke(configuration: T.() -> Unit) = this?.configuration()
-
-/**
  * Represents that this object represents a type(class or interface).
  */
 @ConnectionDSL
@@ -115,13 +110,12 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 		val conversions: Conversions = Conversions()
 
 		/**
-		 * Defines the [kinds] that this family has.
-		 *
-		 * To configure each kind, use [kind].
+		 * Defines the [kinds] that this family has, and configures each kind.
+		 * Previous configurations with the [kind] will be preserved.
 		 */
-		fun kinds(vararg kinds: ConnectionKind) {
+		fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}) {
 			kinds.forEach {
-				this@ConnectionType.kinds.putIfAbsent(it, ConnectionTypeKind(it))
+				this@ConnectionType.kinds.computeIfAbsent(it) { ConnectionTypeKind(it) }.apply(configuration)
 			}
 		}
 
