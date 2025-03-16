@@ -65,18 +65,17 @@ interface CollectionView<T>: Iterable<T> {
 	/**
 	 * Returns whether the given object is equal to this collection.
 	 *
-	 * @implNote
-	 * The specification of this method is very vague, simply because [ListView] and [SetView] have conflicting overrides.
+	 * This specification is very vague, simply because [ListView] and [SetView] have conflicting overrides.
 	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
 	 * such cases should have careful implementations to obey the [general contracts][Any.equals] of this method.
+	 * For element-wise equality, use [containsAll].
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns the hash code for this collection.
 	 *
-	 * @implNote
-	 * The specification of this method is very vague, simply because [ListView] and [SetView] have conflicting overrides.
+	 * This specification is very vague, simply because [ListView] and [SetView] have conflicting overrides.
 	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
 	 * such cases should have careful implementations to obey the [general contracts][Any.hashCode] of this method.
 	 */
@@ -85,23 +84,8 @@ interface CollectionView<T>: Iterable<T> {
 	/**
 	 * Returns a direct Kotlin representation of this collection.
 	 *
-	 * @apiNote
 	 * This extension property is not intended for external use; use [asKotlin] instead.
-	 * In contexts that inherit or override this property, this extension can be called as
 	 *
-	 * ```kotlin
-	 * this.kotlin
-	 * ```
-	 *
-	 * In other rare cases where the use of this property is required, use
-	 *
-	 * ```kotlin
-	 * with(connection) {
-	 *     println(this.kotlin)
-	 * }
-	 * ```
-	 *
-	 * @implNote
 	 * The implementation ***must not*** use the given receiver.
 	 * Even though the receiver will always be `this`,
 	 * always return the current class's Kotlin representation instead.
@@ -146,7 +130,6 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 * Removes all elements from this collection which matches the given [predicate].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
-	 * @apiNote
 	 * This method should be used in place of [MutableIterable.removeAll],
 	 * since the implementation may use a better strategy.
 	 */

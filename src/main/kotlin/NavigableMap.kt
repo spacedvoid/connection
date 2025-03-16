@@ -31,9 +31,6 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 	 *
 	 * Operations on the returned map is delegated to this map.
 	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMapView<K, V>
 
@@ -43,9 +40,6 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 	 *
 	 * Operations on the returned map is delegated to this map.
 	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun headMap(before: K, inclusive: Boolean): NavigableMapView<K, V>
 
@@ -55,9 +49,6 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 	 *
 	 * Operations on the returned map is delegated to this map.
 	 * Adding entries to the returned map throws [IllegalArgumentException] if the key is outside the range.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun tailMap(after: K, inclusive: Boolean): NavigableMapView<K, V>
 

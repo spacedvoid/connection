@@ -21,7 +21,7 @@ Most collection interfaces work similar from the Java Collections Framework:
 | [java.util.SequencedMap]        | -                               | [SequencedMap]                                 |
 | [java.util.NavigableMap]        | -                               | [NavigableMap]                                 |
 
-Below are unsupported types because of various reasons, such as replaceable by another type.
+Below are unsupported types because of various reasons, such as replaceable by another type:
 
 | Java collection                      | Obtainable by(example)                     | Obtainable by in Connection(example)                                             |
 |--------------------------------------|--------------------------------------------|----------------------------------------------------------------------------------|
@@ -61,7 +61,7 @@ Therefore, there are no *optional operations* in Connection.
 However, not all collection types support all kinds.
 For example, there are no remove-only lists or maps.
 
-Because of the properties above, the inheritance tree isolates immutable collections from mutable(remove-only) collections;
+Because of the properties above, the inheritance tree isolates immutable collections from mutable (and remove-only) collections;
 immutable collections cannot be assigned to a mutable collection kind, and vice versa.
 
 ## Adapters

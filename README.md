@@ -64,6 +64,7 @@ See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavio
 - [ ] Special collections, such as stack, queue, and deque
 - [ ] Operator and utility methods
 - [ ] Completely migrate away from `kotlin.collections`, making this independent with the Java Collections Framework
+- [ ] Avoid `null`-returning methods, making them distinguishable with `null` elements
 
 ## License
 
