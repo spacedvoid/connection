@@ -16,9 +16,6 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 	 * Returns a reverse-ordered map of this map.
 	 *
 	 * Operations on the returned map delegates to this map.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun reversed(): SequencedMapView<K, V>
 

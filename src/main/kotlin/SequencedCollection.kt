@@ -24,9 +24,6 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * Returns a reverse-ordered collection of this collection.
 	 *
 	 * Operations on the returned collection delegates to this collection.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun reversed(): SequencedCollectionView<T>
 
@@ -82,7 +79,6 @@ interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOn
 /**
  * A [RemoveOnlySequencedCollection] that additionally supports element addition operations.
  *
- * @apiNote
  * This class does not define `addFirst` and `addLast` operations;
  * most subtypes of this collection(namely [MutableNavigableSet]) manages the iteration order by other criteria.
  */

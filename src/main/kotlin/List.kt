@@ -12,7 +12,6 @@ package io.github.spacedvoid.connection
  * A [SequencedCollectionView] that supports element retrieval by indexes.
  * The index ranges from `0` to [size]` - 1`, inclusive.
  *
- * @apiNote
  * Although there are no specification-level restrictions for the maximum size of the list,
  * this API restricts the retrieval of elements outside the non-negative integer index.
  * Element addition, removal, modification, or access operations outside such index may throw any type of exceptions.
@@ -38,9 +37,6 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 *
 	 * The behavior of the returned list when this list is *structurally modified*(that is, changing the size of this list)
 	 * by operations on this list is not defined.
-	 *
-	 * @implNote
-	 * Overrides should return the same type with the declaring class.
 	 */
 	fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
 
@@ -78,17 +74,6 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 */
 	override fun hashCode(): Int
 
-	/**
-	 * @inheritDoc
-	 *
-	 * @apiNote
-	 * @inheritDoc
-	 *
-	 * @implNote
-	 * @inheritDoc
-	 *
-	 * Implementations might require `@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")`.
-	 */
 	// On the JVM, kotlin.collections.List = java.util.List, which inherits from java.util.SequencedCollection
 	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
@@ -148,7 +133,6 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	/**
 	 * Adds the given [element] to the beginning of this list.
 	 *
-	 * @apiNote
 	 * This method is equivalent with `add(0, element)`.
 	 */
 	fun addFirst(element: T) =
@@ -157,7 +141,6 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	/**
 	 * Adds the [element] to the end of this list.
 	 *
-	 * @apiNote
 	 * This method is equivalent with [add].
 	 */
 	fun addLast(element: T) =

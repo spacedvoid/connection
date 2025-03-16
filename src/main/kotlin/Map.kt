@@ -70,7 +70,6 @@ interface MapView<K, V> {
 	/**
 	 * Returns a collection that reflects the entries that this map contains.
 	 *
-	 * @apiNote
 	 * Although this uses [kotlin.collections.Map.Entry] for compatibility,
 	 * it must not be casted to [kotlin.collections.MutableMap.MutableEntry].
 	 */
@@ -95,23 +94,8 @@ interface MapView<K, V> {
 	/**
 	 * Returns a direct Kotlin representation of this map.
 	 *
-	 * @apiNote
 	 * This extension property is not intended for external use; use [asKotlin] instead.
-	 * In contexts that inherit or override this property, this extension can be called as
 	 *
-	 * ```kotlin
-	 * this.kotlin
-	 * ```
-	 *
-	 * In other rare cases where the use of this property is required, use
-	 *
-	 * ```kotlin
-	 * with(connection) {
-	 *     println(this.kotlin)
-	 * }
-	 * ```
-	 *
-	 * @implNote
 	 * The implementation ***must not*** use the given receiver.
 	 * Even though the receiver will always be `this`,
 	 * always return the current class's Kotlin representation instead.
