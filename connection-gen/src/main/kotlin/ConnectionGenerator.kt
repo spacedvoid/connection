@@ -64,29 +64,19 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			// CollectionAsConnection
 			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach next@{
 				if(it == null) return@next
+				val kotlin = it.kotlin ?: kind.kotlin ?: throw IllegalArgumentException("`kotlin` not set for ColAsCon adapter in $it")
 				attachSources(resolver, generatingFiles.colAsCon, kind.qualifiedName, kind.impl.qualifiedName)
-				generatingFiles.generateColAsCon(
-					it.name ?: when(kind.kind) {
-						ConnectionKind.VIEW -> "asViewConnection"
-						ConnectionKind.IMMUTABLE -> "asConnection"
-						ConnectionKind.REMOVE_ONLY -> "asRemoveOnlyConnection"
-						ConnectionKind.MUTABLE -> "asMutableConnection"
-					},
-					it.docs ?: defaultColAsConDocs(kind.kind),
-					type.typeArgs,
-					it.kotlin ?: kind.kotlin,
-					kind.name,
-					kind.impl.name
-				)
+				generatingFiles.generateColAsCon(it.name ?: defaultColAsConName(kind), it.docs ?: defaultColAsConDocs(kind.kind), type.typeArgs, kotlin, kind.name, kind.impl.name)
 			}
 			// ConnectionAsCollection
 			(kind.adapters.asKotlin.default + kind.adapters.asKotlin.extra).forEach next@{
 				if(it == null) return@next
+				val kotlin = it.kotlin ?: kind.kotlin ?: throw IllegalArgumentException("`kotlin` not set for ConAsCol adapter in $it")
 				val apiClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
-				if(alreadyGenerated(apiClass, it.kotlin ?: kind.kotlin) && it === kind.adapters.asKotlin.default) return@next
+				if(alreadyGenerated(apiClass, kotlin) && it === kind.adapters.asKotlin.default) return@next
 				val implClass = resolver.getClassDeclarationByName(kind.impl.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.impl.qualifiedName} does not exist")
 				generatingFiles.conAsCol.attach(listOfNotNull(apiClass.containingFile, implClass.containingFile))
-				generatingFiles.generateConAsCol(it.name ?: "asKotlin", it.docs ?: defaultConAsColDocs, type.typeArgs, it.kotlin ?: kind.kotlin, kind.name, it.unchecked)
+				generatingFiles.generateConAsCol(it.name ?: "asKotlin", it.docs ?: defaultConAsColDocs, type.typeArgs, kotlin, kind.name, it.unchecked)
 			}
 		}
 	}
@@ -174,6 +164,13 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 			 * Some operations might throw [UnsupportedOperationException].
 			 */
 		""".trimIndent()
+	}
+
+	private fun defaultColAsConName(kind: ConnectionTypeKind) = when(kind.kind) {
+		ConnectionKind.VIEW -> "asViewConnection"
+		ConnectionKind.IMMUTABLE -> "asConnection"
+		ConnectionKind.REMOVE_ONLY -> "asRemoveOnlyConnection"
+		ConnectionKind.MUTABLE -> "asMutableConnection"
 	}
 
 	private val generatedAsKotlin = mutableMapOf<String, MutableSet<KSClassDeclaration>>()
