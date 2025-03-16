@@ -93,7 +93,14 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 				private var customName = false
 			}
 
-			var kotlin: String = "kotlin.collections.${when(this.kind) { ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable" else -> ""}}${this@ConnectionType.name}"
+			/**
+			 * The Kotlin equivalent of this collection.
+			 * Used for the default value of [Adapter.kotlin].
+			 *
+			 * Setting this to `null` will not generate any [default adapters][Adapters.AdapterCollection.default],
+			 * and any [extra][Adapters.AdapterCollection.extra] adapters without the [Adapter.kotlin] being specified will cause an [IllegalArgumentException].
+			 */
+			var kotlin: String? = "kotlin.collections.${when(this.kind) { ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable" else -> ""}}${this@ConnectionType.name}"
 
 			/**
 			 * The adapters for this typekind.
