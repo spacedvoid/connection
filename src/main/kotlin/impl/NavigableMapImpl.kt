@@ -26,6 +26,7 @@ open class NavigableMapViewImpl<K, V>(private val kotlin: java.util.NavigableMap
 
 	override val keys: NavigableSetView<out K> = NavigableSetViewImpl(this.kotlin.keySet())
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: java.util.NavigableMap<K, V>
 		get() = this@NavigableMapViewImpl.kotlin
 }

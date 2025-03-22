@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection.impl
 
 import io.github.spacedvoid.connection.*
@@ -28,6 +30,7 @@ open class MapViewImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapView<K, V>
 
 	override fun hashCode(): Int = this.kotlin.hashCode()
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: KotlinMap<K, V>
 		get() = this@MapViewImpl.kotlin
 
@@ -40,6 +43,7 @@ open class MapImpl<K, V>(private val kotlin: KotlinMap<K, V>): MapViewImpl<K, V>
 
 	override val entries: Set<out KotlinMapEntry<K, V>> = SetImpl(this.kotlin.entries)
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: KotlinMap<K, V>
 		get() = this@MapImpl.kotlin
 
@@ -52,6 +56,7 @@ open class MutableMapImpl<K, V>(private val kotlin: KotlinMutableMap<K, V>): Map
 
 	override val entries: RemoveOnlySet<KotlinMutableMapEntry<K, V>> = RemoveOnlySetImpl(this.kotlin.entries)
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: KotlinMutableMap<K, V>
 		get() = this@MutableMapImpl.kotlin
 }

@@ -133,7 +133,7 @@ fun <K: Comparable<K>, V> MapView<K, V>.toMutableNavigableMap(): MutableNavigabl
  */
 fun <K, V> MapView<K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf(comparator, *toArray())
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "DEPRECATION")
 internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
 	val iterator = this.kotlin.iterator()
 	return Array<Any?>(size()) { iterator.next() } as Array<T>

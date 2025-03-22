@@ -17,6 +17,7 @@ open class SequencedMapViewImpl<K, V>(private val kotlin: java.util.SequencedMap
 
 	override val entries: SequencedSetView<out Map.Entry<K, V>> = SequencedSetViewImpl(this.kotlin.sequencedEntrySet())
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val MapView<K, V>.kotlin: java.util.SequencedMap<K, V>
 		get() = this@SequencedMapViewImpl.kotlin
 }

@@ -23,6 +23,7 @@ open class NavigableSetViewImpl<T>(private val kotlin: java.util.NavigableSet<T>
 	override fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T> =
 		NavigableSetViewImpl(this.kotlin.tailSet(after, inclusive))
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: java.util.NavigableSet<T>
 		get() = this@NavigableSetViewImpl.kotlin
 }
