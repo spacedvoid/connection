@@ -11,6 +11,7 @@ import io.github.spacedvoid.connection.*
 open class SequencedSetViewImpl<T>(private val kotlin: java.util.SequencedSet<T>): SetViewImpl<T>(kotlin), SequencedSetView<T> {
 	override fun reversed(): SequencedSetView<T> = SequencedSetViewImpl(this.kotlin.reversed())
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	override val CollectionView<T>.kotlin: java.util.SequencedSet<T>
 		get() = this@SequencedSetViewImpl.kotlin
 }

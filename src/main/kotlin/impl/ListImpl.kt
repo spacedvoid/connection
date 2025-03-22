@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.spacedvoid.connection.impl
 
 import io.github.spacedvoid.connection.*
@@ -24,6 +26,7 @@ open class ListViewImpl<T>(private val kotlin: KotlinList<T>): SequencedCollecti
 
 	override fun hashCode(): Int = this.kotlin.hashCode()
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: KotlinList<T>
 		get() = this@ListViewImpl.kotlin
@@ -40,6 +43,7 @@ open class MutableListImpl<T>(private val kotlin: KotlinMutableList<T>): ListVie
 
 	override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T> = MutableListImpl(this.kotlin.subList(startInclusive, endExclusive))
 
+	@Deprecated("This property is error-prone, and not safe to use. Replace it with API calls such as `asKotlin` instead.")
 	@Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE")
 	override val CollectionView<T>.kotlin: KotlinMutableList<T>
 		get() = this@MutableListImpl.kotlin

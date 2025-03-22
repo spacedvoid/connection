@@ -86,6 +86,8 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 	 */
 	val colAsCon: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "CollectionAsConnection").also {
 		it += """
+			@file:Suppress("DEPRECATION")
+			
 			package io.github.spacedvoid.connection
 			
 			import io.github.spacedvoid.connection.impl.*
@@ -97,7 +99,11 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 	 * File that contains Connection to Kotlin collection adapters.
 	 */
 	val conAsCol: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "ConnectionAsCollection").also {
-		it += "package io.github.spacedvoid.connection\n"
+		it += """
+			@file:Suppress("DEPRECATION")
+			
+			package io.github.spacedvoid.connection
+		"""
 	}
 
 	/**
@@ -105,6 +111,8 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 	 */
 	val removeOnly: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "RemoveOnly").also {
 		it += """
+			@file:Suppress("DEPRECATION")
+			
 			package io.github.spacedvoid.connection
 			
 			import io.github.spacedvoid.connection.impl.*
@@ -117,6 +125,8 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 	 */
 	val view: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "View").also {
 		it += """
+			@file:Suppress("DEPRECATION")
+			
 			package io.github.spacedvoid.connection
 			
 			import io.github.spacedvoid.connection.impl.*
