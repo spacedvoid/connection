@@ -22,23 +22,24 @@ This library uses the [Tip & Tail Model](https://openjdk.org/jeps/14) experiment
 As specified in the [description](https://openjdk.org/jeps/14#Backport-as-little-as-possible) of the model, 
 the specific rules of the model are modified, listed below.
 
-The `main` branch is for new features, bug fixes, and all other changes.
-This is the *Tip* branch; no releases come from this branch.
-
-For every new major or minor version release, a new branch is created from the tip branch with the format `v<version>`.
-These branches are the *Tail* branches; all releases must come from tail branches.
 Releases must have an associated commit tagged with the release version number, containing content equal to the release.
-All releases must be unique; to improve searching specific versions, there must be no duplicate release tags with the same version.
+All release versions must be unique; to improve searching specific versions, there must be no duplicate release tags with the same version.
+
+The `main` branch is for new features, bug fixes, and all other changes.
+This is the *Tip* branch.
+
+After a major or minor version release, a new branch may be created from the tip branch with the format `v<version>`.
+These branches are the *Tail* branches.
+A tail branch must start with the commit with the corresponding version tag:
+for example, if commit `abc123` is tagged with `v1.2.0`, the corresponding tail branch must be created as `git branch v1.2.0 abc123`.
 
 Changing the contents of a tail branch is restricted.
 New features, API/implementation changes, minor bug fixes that change the API/implementation behavior are prohibited.
 Only critical bug fixes that impact security or API usage(such as infinite loops or specification violations) are allowed.
 Therefore, releases from a tail branch must not increment the major or minor version number.
 
-Development releases(also known as pre-releases) are not in part of these rules.
-As development releases are not really meant for production usages, 
-they can also be released on the tip branch, without creating the associated tail branch.
-However, the tag rule still applies; a non-duplicate tag named with the version number must be associated with a commit.
+Releases can come from any branches, but for simplicity, most releases will come from the tip branch.
+Tail branches will only be created if necessary.
 
 ## Importing
 
@@ -57,14 +58,19 @@ See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavio
 
 ## Upcoming features (or just a todo list)
 
-- [ ] Implementations using `java.lang.reflect.Proxy`
-- [ ] Simpler ways to express intervals for `subList` and `subSet`
-- [x] `equals` and `hashCode` implementations
-- [ ] `Spliterator` support
-- [ ] Special collections, such as stack, queue, and deque
-- [ ] Operator and utility methods
-- [ ] Completely migrate away from `kotlin.collections`, making this independent with the Java Collections Framework
-- [ ] Avoid `null`-returning methods, making them distinguishable with `null` elements
+- `v0.2.0`:
+  - [ ] Change `null`-returning methods, making them distinguishable with `null` elements
+
+- Not scheduled
+  - [ ] Special collections, such as stack, queue, and deque
+  - [ ] Implementations using `java.lang.reflect.Proxy`
+  - [ ] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
+  - [ ] Operator and utility methods
+  - [ ] Simpler ways to express intervals for `subList` and `subSet`
+  - [ ] `Spliterator` support
+
+- Completed:
+  - [x] `equals` and `hashCode` implementations(`v0.1.0`)
 
 ## License
 
