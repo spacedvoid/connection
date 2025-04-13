@@ -1,10 +1,10 @@
-import org.jetbrains.dokka.DokkaConfiguration
-import org.jetbrains.dokka.Platform
+import org.jetbrains.dokka.gradle.engine.parameters.KotlinPlatform
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.net.URI
 
 plugins {
     kotlin("jvm") version "2.0.21"
-    id("org.jetbrains.dokka") version "1.9.20"
+    id("org.jetbrains.dokka") version "2.0.0"
     id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
@@ -37,15 +37,15 @@ tasks {
         from(sourceSets["main"].allSource)
     }
 
-    val dokkaHtmlJar by registering(Jar::class) {
-        dependsOn(dokkaHtml)
+    val dokkaJar by registering(Jar::class) {
+        dependsOn(dokkaGenerate)
         archiveClassifier = "javadoc"
         from(dokkaOutputDir)
     }
 
     artifacts {
         archives(sourcesJar)
-        archives(dokkaHtmlJar)
+        archives(dokkaJar)
     }
 }
 
@@ -53,33 +53,40 @@ tasks.compileKotlin {
     compilerOptions.freeCompilerArgs += "-Xjvm-default=all-compatibility"
 }
 
-tasks.dokkaHtml {
-    outputDirectory = dokkaOutputDir
-    failOnWarning = true
+tasks.clean {
+    delete(dokkaOutputDir)
+}
 
-    dokkaSourceSets {
-        configureEach {
-            documentedVisibilities = setOf(DokkaConfiguration.Visibility.PUBLIC, DokkaConfiguration.Visibility.PROTECTED)
-            reportUndocumented = true
-            skipDeprecated = true
-            suppressGeneratedFiles = false
-            jdkVersion = 21
-            platform = Platform.jvm
+dokka {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities = setOf(VisibilityModifier.Public, VisibilityModifier.Protected)
+        reportUndocumented = true
+        skipDeprecated = true
+        suppressGeneratedFiles = false
+        jdkVersion = 21
+        analysisPlatform = KotlinPlatform.JVM
+    }
 
-            perPackageOption {
-                matchingRegex = "io\\.github\\.spacedvoid\\.connection\\.impl"
-                reportUndocumented = false
-            }
+    dokkaSourceSets.main {
+        includes += file("src/main/docs/module.md")
 
-            sourceLink {
-                localDirectory = file("src/main/kotlin")
-                remoteUrl = URI("https://github.com/spacedvoid/connection/tree/main/src/main/kotlin").toURL()
-            }
+        perPackageOption {
+            matchingRegex = "io\\.github\\.spacedvoid\\.connection\\.impl"
+            reportUndocumented = false
         }
 
-        named("main") {
-            includes += file("src/main/docs/module.md")
+        sourceLink {
+            localDirectory = file("src/main/kotlin")
+            remoteUrl = URI("https://github.com/spacedvoid/connection/tree/main/src/main/kotlin")
         }
+    }
+
+    dokkaPublications.configureEach {
+        failOnWarning = true
+    }
+
+    dokkaPublications.html {
+        outputDirectory = dokkaOutputDir
     }
 }
 
