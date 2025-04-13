@@ -3,9 +3,9 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.20"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
+    id("com.google.devtools.ksp") version "2.1.20-2.0.0"
 }
 
 group = "io.github.spacedvoid"
