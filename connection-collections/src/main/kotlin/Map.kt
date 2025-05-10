@@ -14,12 +14,12 @@ package io.github.spacedvoid.connection
  * These 'elements' can be obtained by [entries].
  * Entries are unique by their keys; two entries in a map cannot have the same key.
  *
+ * Whether a key matches another key is determined via [Any.equals].
+ *
  * The mutability of this map is not defined.
  * This map might be mutable, and might also be self-mutating.
  *
- * Whether a key matches another key is determined via [Any.equals].
- *
- * Thread-safety is not defined, unless the underlying map ensures such.
+ * Thread-safety is not defined, unless the implementation ensures such.
  * As such, the behavior of operations when involved in a data race is not defined.
  *
  * Operations are not optional, and must not throw [UnsupportedOperationException].
@@ -86,7 +86,7 @@ interface MapView<K, V> {
 }
 
 /**
- * An immutable [MapView].
+ * An immutable map.
  */
 interface Map<K, V>: MapView<K, V> {
 	override val keys: Set<out K>
@@ -97,7 +97,7 @@ interface Map<K, V>: MapView<K, V> {
 }
 
 /**
- * A [MapView] that additionally supports entry addition, removal, and mutation operations.
+ * A mutable map.
  */
 interface MutableMap<K, V>: MapView<K, V> {
 	/**

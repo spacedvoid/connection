@@ -7,29 +7,52 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [SetView] that additionally defines the iteration order.
+ * A set view that additionally defines the iteration order.
  */
 interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
 	override fun reversed(): SequencedSetView<T>
 }
 
 /**
- * An immutable [SequencedSetView].
+ * An immutable sequenced set.
  */
 interface SequencedSet<T>: SequencedCollection<T>, Set<T>, SequencedSetView<T> {
 	override fun reversed(): SequencedSet<T>
 }
 
 /**
- * A [SequencedSetView] that additionally supports element removal operations.
+ * A mutable sequenced set that only supports element removal operations.
  */
 interface RemoveOnlySequencedSet<T>: RemoveOnlySequencedCollection<T>, RemoveOnlySet<T>, SequencedSetView<T> {
 	override fun reversed(): RemoveOnlySequencedSet<T>
 }
 
 /**
- * A [RemoveOnlySequencedSet] that additionally supports element addition operations.
+ * A mutable sequenced set.
  */
 interface MutableSequencedSet<T>: MutableSequencedCollection<T>, MutableSet<T>, RemoveOnlySequencedSet<T> {
 	override fun reversed(): MutableSequencedSet<T>
+
+	/**
+	 * Adds the given [element] to this set.
+	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 *
+	 * When an element which already matches an instance in this set is added,
+	 * the contained instance is not replaced, and this set remains unchanged.
+	 *
+	 * The addition is not strictly determined; it may add to the first, last, or any position.
+	 */
+	override fun add(element: T): Boolean
+
+	/**
+	 * Adds all elements from the given [set] to this set.
+	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 *
+	 * When an element which already matches an instance in this set is added,
+	 * the contained instance is not replaced, and this set remains unchanged.
+	 *
+	 * The additions are not strictly determined;
+	 * it may add to the first, last, or any position, even for consecutive elements in the given [collection].
+	 */
+	override fun addAll(collection: CollectionView<out T>): Boolean
 }

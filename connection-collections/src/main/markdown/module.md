@@ -68,3 +68,24 @@ For example, there are no remove-only lists or maps.
 
 Because of the properties above, the inheritance tree isolates immutable collections from mutable (and remove-only) collections;
 immutable collections cannot be assigned to a mutable collection kind, and vice versa.
+
+### Introduction to sequenced collections
+
+Java 21 added sequenced collections, which are intermediate collection types in the Java Collections Framework.
+However, their documentation is not pretty helpful:
+most of the methods derived from their supertypes do not have overrides, not documenting interactions with sequenced collections.
+Therefore, we try to redefine the properties of sequenced collections, while maintaining interoperability with Java.
+
+First, sequenced collections have a defined *iteration order*, which are also *consistent*.
+*Consistent* indicates that two iterations, with no modifications in between, return the elements in the same order.
+So, the defined iteration order will be the *encounter order* for any operations that iterate through a sequenced collection.
+And that is also the last and only property of a sequenced collection.
+
+Therefore, it is simple to know why [MutableSequencedCollection] does not provide an `addFirst` method:
+the iteration order is defined only for the outgoing elements from the collection,
+so incoming elements are irrelevant of the iteration order, making them unavailable for positional additions.
+To be easy, one can understand that element additions (mostly) do not define the iteration order.
+
+However, because these positional addition methods do have real-life usages,
+we are currently designing a proper intermediate collection type that allows such positional additions.
+(Currently, only positional deletions, such as [MutableSequencedCollection.removeFirst], are supported.)

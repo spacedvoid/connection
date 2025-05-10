@@ -7,7 +7,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [SequencedSetView] that defines the iteration order of the elements based on a [Comparator].
+ * A sequenced set view that defines the iteration order of the elements based on a [Comparator].
  *
  * The [comparator] must satisfy `comparator.compare(a, b) == 0` if and only if `a.equals(b)`,
  * which is also called as *consistent with equals*.
@@ -61,7 +61,7 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 }
 
 /**
- * An immutable [NavigableSetView].
+ * An immutable navigable set.
  */
 interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
 	override fun reversed(): NavigableSet<T>
@@ -74,7 +74,7 @@ interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
 }
 
 /**
- * A [NavigableSetView] that additionally supports element removal operations.
+ * A mutable navigable set that only supports element removal operations.
  */
 interface RemoveOnlyNavigableSet<T>: RemoveOnlySequencedSet<T>, NavigableSetView<T> {
 	override fun reversed(): RemoveOnlyNavigableSet<T>
@@ -87,7 +87,7 @@ interface RemoveOnlyNavigableSet<T>: RemoveOnlySequencedSet<T>, NavigableSetView
 }
 
 /**
- * A [RemoveOnlyNavigableSet] that additionally supports element addition operations.
+ * A mutable navigable set.
  */
 interface MutableNavigableSet<T>: MutableSequencedSet<T>, RemoveOnlyNavigableSet<T> {
 	override fun reversed(): MutableNavigableSet<T>
@@ -97,4 +97,16 @@ interface MutableNavigableSet<T>: MutableSequencedSet<T>, RemoveOnlyNavigableSet
 	override fun headSet(before: T, inclusive: Boolean): MutableNavigableSet<T>
 
 	override fun tailSet(after: T, inclusive: Boolean): MutableNavigableSet<T>
+
+	/**
+	 * Adds the given [element] to this collection.
+	 * Returns `true` if the addition changed this collection, `false` otherwise.
+	 */
+	override fun add(element: T): Boolean
+
+	/**
+	 * Adds all elements from the given [collection] to this collection.
+	 * Returns `true` if the addition changed this collection, `false` otherwise.
+	 */
+	override fun addAll(collection: CollectionView<out T>): Boolean
 }

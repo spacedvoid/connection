@@ -7,7 +7,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [SequencedMapView] that defines the iteration order of the entries based on a [Comparator].
+ * A sequenced map view that defines the iteration order of the entries based on a [Comparator].
  * The entries are sorted with the [comparator] based on their keys.
  *
  * The [comparator] must satisfy `comparator.compare(a, b) == 0` if and only if `a.equals(b)`,
@@ -74,7 +74,7 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 }
 
 /**
- * An immutable [NavigableMapView].
+ * An immutable navigable map.
  */
 interface NavigableMap<K, V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 	override fun reversed(): NavigableMap<K, V>
@@ -89,7 +89,7 @@ interface NavigableMap<K, V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 }
 
 /**
- * A [NavigableMapView] that additionally supports entry addition, removal, and mutation operations.
+ * A mutable navigable map.
  */
 interface MutableNavigableMap<K, V>: MutableSequencedMap<K, V>, NavigableMapView<K, V> {
 	override fun reversed(): MutableNavigableMap<K, V>
