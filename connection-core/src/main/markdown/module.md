@@ -16,4 +16,4 @@ Since Kotlin's collection kinds are narrower than Connection, most methods depen
 
 # Package io.github.spacedvoid.connection.utils
 
-Contains some utilities for the API and implementations.
+Contains some utilities for the implementations.

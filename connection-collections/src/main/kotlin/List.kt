@@ -7,7 +7,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [SequencedCollectionView] that supports element retrieval by indexes.
+ * A sequenced collection view that supports element retrieval by indexes.
  * The index ranges from `0` to [size]` - 1`, inclusive.
  *
  * Although there are no specification-level restrictions for the maximum size of the list,
@@ -70,7 +70,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 }
 
 /**
- * An immutable [ListView].
+ * An immutable list.
  */
 interface List<T>: ListView<T>, SequencedCollection<T> {
 	override fun iterator(): ListIterator<T>
@@ -81,7 +81,7 @@ interface List<T>: ListView<T>, SequencedCollection<T> {
 }
 
 /**
- * A [ListView] that additionally supports element addition and removal operations.
+ * A mutable list.
  */
 interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	/**

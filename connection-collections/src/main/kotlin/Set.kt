@@ -7,7 +7,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [CollectionView] that only stores one instance per element.
+ * A collection view that only stores one instance per element.
  *
  * This is equivalent to a mathematical set, where no two objects stored in this set are [equal][Any.equals] to each other.
  *
@@ -34,19 +34,37 @@ interface SetView<T>: CollectionView<T> {
 }
 
 /**
- * An immutable [SetView].
+ * An immutable set.
  */
 interface Set<T>: Collection<T>, SetView<T>
 
 /**
- * A [SetView] that additionally supports element removal operations.
+ * A mutable set that only supports element removal operations.
  */
 interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T>
 
 /**
- * A [RemoveOnlySet] that additionally supports element addition operations.
+ * A mutable set.
  *
  * When an element which already matches an instance in the set is added,
  * the contained instance is not replaced, and the set remains unchanged.
  */
-interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T>
+interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T> {
+	/**
+	 * Adds the given [element] to this set.
+	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 *
+	 * When an element which already matches an instance in this set is added,
+	 * the contained instance is not replaced, and this set remains unchanged.
+	 */
+	override fun add(element: T): Boolean
+
+	/**
+	 * Adds all elements from the given [set] to this set.
+	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 *
+	 * When an element which already matches an instance in this set is added,
+	 * the contained instance is not replaced, and this set remains unchanged.
+	 */
+	override fun addAll(collection: CollectionView<out T>): Boolean
+}

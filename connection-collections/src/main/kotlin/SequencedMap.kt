@@ -7,7 +7,7 @@
 package io.github.spacedvoid.connection
 
 /**
- * A [MapView] that additionally defines the iteration order of the entries.
+ * A map view that additionally defines the iteration order of the entries.
  */
 interface SequencedMapView<K, V>: MapView<K, V> {
 	/**
@@ -47,7 +47,7 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 }
 
 /**
- * An immutable [SequencedMapView].
+ * An immutable sequenced map.
  */
 interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): SequencedMap<K, V>
@@ -60,7 +60,9 @@ interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
 }
 
 /**
- * A [SequencedMapView] that additionally supports entry addition, removal, and mutation operations.
+ * A mutable sequenced map.
+ *
+ * Note that entry additions, mutations, or deletions might not depend on or affect the iteration order.
  */
 interface MutableSequencedMap<K, V>: MutableMap<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): MutableSequencedMap<K, V>

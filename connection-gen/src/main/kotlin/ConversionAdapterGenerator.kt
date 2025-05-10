@@ -6,6 +6,7 @@ import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import io.github.spacedvoid.connection.gen.ConversionAdapterGenerator.generatePerType
 import io.github.spacedvoid.connection.gen.dsl.Adapter
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration.ConnectionType.ConnectionTypeKind
@@ -60,6 +61,9 @@ object ConversionAdapterGenerator {
 		}
 	}
 
+	/**
+	 * Collection of [GeneratingFiles.GeneratingFile] to maintain between iterations of [generatePerType].
+	 */
 	private class ConversionsAndAdapters(generator: GeneratingFiles): AutoCloseable {
 		val view: GeneratingFiles.GeneratingFile = generator.GeneratingFile("io.github.spacedvoid.connection", "View")
 
@@ -82,6 +86,11 @@ object ConversionAdapterGenerator {
 			""".trimIndent()
 		}
 
+		/**
+		 * Closes all streams.
+		 *
+		 * Has no effect when the streams are already closed.
+		 */
 		override fun close() {
 			this.view.close()
 			this.removeOnly.close()
@@ -124,9 +133,6 @@ object ConversionAdapterGenerator {
 		 */
 	""".trimIndent()
 
-	/**
-	 * Default documentation for `asConnection` adapters.
-	 */
 	private fun defaultColAsConDocs(kind: ConnectionKind): String = when(kind) {
 		ConnectionKind.VIEW -> """
 			/**

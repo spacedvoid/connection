@@ -45,7 +45,7 @@ For example, in the following snippet:
 ```kotlin
 val kotlinCollection = hashMapOf<String, Any>().keys
 val right = kotlinCollection.asRemoveOnlyConnection()
-// val wrong = kotlinCollection.asConnection() 
+// val wrong = kotlinCollection.asMutableConnection() 
 ```
 
 When adding elements to `wrong`, [UnsupportedOperationException] might be thrown,
@@ -83,7 +83,7 @@ val typeSafe: ListView<String> = collection.asView()
 (typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
-[snapshot] is a special case; it copies the elements to an immutable collection, with the same type.
+[snapshot] is a special case; it copies the elements to an immutable collection, maintaining the type.
 
 The following extensions change both the type and kind:
 

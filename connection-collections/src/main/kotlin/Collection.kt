@@ -15,7 +15,7 @@ import java.util.function.Consumer
  * The mutability of this collection is not defined.
  * This collection might be mutable, and might also be self-mutating.
  *
- * Thread-safety is not defined, unless the underlying collection ensures such.
+ * Thread-safety is not defined, unless the implementation ensures such.
  * As such, the behavior of operations when involved in a data race is not defined.
  *
  * The [iterator] may, but is not required to, throw [ConcurrentModificationException]
@@ -100,8 +100,6 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 * Returns `true` if an element was removed, `false` otherwise.
 	 *
 	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
-	 *
-	 * The removal is not strictly determined; it may remove the first, last, or any occurrence.
 	 */
 	fun remove(element: T): Boolean
 
@@ -137,7 +135,7 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 }
 
 /**
- * A mutable collection that additionally supports element addition operations.
+ * A mutable collection.
  */
 interface MutableCollection<T>: RemoveOnlyCollection<T> {
 	/**

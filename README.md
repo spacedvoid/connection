@@ -56,21 +56,39 @@ you might need to manually add imports for such types.
 This is because [star imports have lower priority than default imports](https://youtrack.jetbrains.com/issue/KT-4374).
 See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavior.
 
+## Building
+
+Run:
+
+```
+gradlew assemble
+```
+
+This will create multiple `.jar` files.
+`connection-api` contains only the API, while `connection-core` will also contain the implementations.
+`connection-javadoc` is a Dokka-based documentation.
+
+Below will generate the Dokka documentation under `docs/`:
+
+```
+gradlew :dokkaGenerate
+```
+
 ## Upcoming features (or just a todo list)
 
 - `v0.2.0`:
-  - [ ] Change `null`-returning methods, making them distinguishable with `null` elements
+  - [ ] `equals` and `hashCode` implementations
+  - [ ] Allow `null` elements, disambiguating between `null` return values, but document `null`-hostile behaviors
 
 - Not scheduled
   - [ ] Special collections, such as stack, queue, and deque
-  - [ ] Implementations using `java.lang.reflect.Proxy`
-  - [ ] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
   - [ ] Operator and utility methods
   - [ ] Simpler ways to express intervals for `subList` and `subSet`
   - [ ] `Spliterator` support
+  - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
 
 - Completed:
-  - [x] `equals` and `hashCode` implementations(`v0.1.0`)
+  - [x] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
 
 ## License
 
