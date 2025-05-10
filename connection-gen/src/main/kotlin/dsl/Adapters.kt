@@ -32,14 +32,12 @@ class Adapters: Configurable {
 		 * Contains any other custom adapters created by the DSL.
 		 */
 		@DslInternal
-		internal val extra: MutableList<Adapter> = mutableListOf()
+		val extra: MutableList<Adapter> = mutableListOf()
 
 		/**
 		 * Creates a new adapter, different from the [default] adapter.
-		 * Its [name][Adapter.name] and [target type][Adapter.kotlin] must not be `null`,
-		 * or a compilation error might happen.
 		 */
-		fun create(name: String, to: String, configuration: Adapter.() -> Unit = {}): Adapter =
+		fun create(name: String, to: KotlinType, configuration: Adapter.() -> Unit = {}): Adapter =
 			Adapter(to, name).apply {
 				configuration()
 				this@AdapterCollection.extra += this
@@ -61,5 +59,4 @@ class Adapters: Configurable {
  * `null` properties will be replaced with default values, which might cause compilation errors.
  */
 @ConnectionDSL
-@ConsistentCopyVisibility
-data class Adapter @DslInternal internal constructor(var kotlin: String? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false): Configurable
+data class Adapter @DslInternal constructor(var kotlin: KotlinType? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false): Configurable

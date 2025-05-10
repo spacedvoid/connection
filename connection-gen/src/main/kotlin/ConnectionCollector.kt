@@ -11,6 +11,7 @@ import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.IMMUTABLE
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.MUTABLE
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.VIEW
+import io.github.spacedvoid.connection.gen.dsl.KotlinType
 
 /**
  * The main DSL for the Connection Generator.
@@ -22,7 +23,9 @@ fun ConnectionGeneration.collect() {
 
 	collectionNamed("SequencedCollection") {
 		allKinds {
-			kotlin = "java.util.SequencedCollection"
+			kotlinType<java.util.SequencedCollection<*>> {
+				name = this@collectionNamed.name
+			}
 		}
 	}
 
@@ -30,7 +33,7 @@ fun ConnectionGeneration.collect() {
 		standardKinds()
 		kind(VIEW) {
 			adapters.asKotlin {
-				create(to = "java.util.SequencedCollection", name = "asSequencedKotlin") {
+				create(to = collectionNamed("SequencedCollection").kind(VIEW).kotlin!!, name = "asSequencedKotlin") {
 					unchecked = true
 					docs = """
 						/**
@@ -51,13 +54,17 @@ fun ConnectionGeneration.collect() {
 
 	collectionNamed("SequencedSet") {
 		allKinds {
-			kotlin = "java.util.SequencedSet"
+			kotlinType<java.util.SequencedSet<*>> {
+				name = this@collectionNamed.name
+			}
 		}
 	}
 
 	collectionNamed("NavigableSet") {
 		allKinds {
-			kotlin = "java.util.NavigableSet"
+			kotlinType<java.util.NavigableSet<*>> {
+				name = this@collectionNamed.name
+			}
 		}
 	}
 
@@ -67,15 +74,23 @@ fun ConnectionGeneration.collect() {
 
 	mapNamed("SequencedMap") {
 		standardKinds {
-			kotlin = "java.util.SequencedMap"
+			kotlinType<java.util.SequencedMap<*, *>> {
+				name = this@mapNamed.name
+			}
 		}
 	}
 
 	mapNamed("NavigableMap") {
 		standardKinds {
-			kotlin = "java.util.NavigableMap"
+			kotlinType<java.util.NavigableMap<*, *>> {
+				name = this@mapNamed.name
+			}
 		}
 	}
+}
+
+private inline fun <reified T: Any> ConnectionGeneration.ConnectionType.ConnectionTypeKind.kotlinType(configuration: KotlinType.() -> Unit = {}) {
+	kotlin = KotlinType(T::class.simpleName!!, T::class.java.packageName).apply(configuration)
 }
 
 private fun ConnectionGeneration.ConnectionType.allKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =

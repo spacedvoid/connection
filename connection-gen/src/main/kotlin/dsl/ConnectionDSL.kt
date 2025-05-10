@@ -53,20 +53,48 @@ val Named.qualifiedName: String
 	get() = "${this.inPackage}.${this.name}"
 
 /**
+ * Class used for Kotlin representations of Connections.
+ */
+class KotlinType(override var name: String, override var inPackage: String): Named {
+	/**
+	 * Alike [ConnectionGeneration.ConnectionType.ConnectionTypeKind.impl],
+	 * unless the value is customized, it will always be `io.github.spacedvoid.connection.impl.kotlin.Kotlin`[name]`Impl`.
+	 * Once set, it will always be the customized name.
+	 */
+	var impl: Named = ConfigurableNamed("io.github.spacedvoid.connection.impl.kotlin") { "Kotlin${this.name}Impl" }
+}
+
+/**
+ * Class to allow customizable name.
+ *
+ * The [name] will be the provided [defaultName] until a custom name is set.
+ */
+private class ConfigurableNamed(override var inPackage: String, private val defaultName: () -> String): Named {
+	override var name: String = this.defaultName()
+		get() = if(this.customName) field else this.defaultName()
+		set(value) {
+			this.customName = true
+			field = value
+		}
+
+	private var customName = false
+}
+
+/**
  * The context object for the Connection Generator DSL.
  */
-class ConnectionGeneration @DslInternal internal constructor(): Configurable {
+class ConnectionGeneration @DslInternal constructor(): Configurable {
 	/**
 	 * Represents a Connection type family, such as `List` or `Map`.
 	 * Kinds are defined by [kinds].
 	 */
 	@ConnectionDSL
-	inner class ConnectionType @DslInternal internal constructor(val name: String, @property:DslInternal internal val typeArgCount: Int): Configurable {
+	inner class ConnectionType @DslInternal constructor(val name: String, @property:DslInternal val typeArgCount: Int): Configurable {
 		/**
 		 * Represents a Connection with a type and [kind][ConnectionKind], such as `MutableList`.
 		 */
 		@ConnectionDSL
-		inner class ConnectionTypeKind @DslInternal internal constructor(val kind: ConnectionKind): Configurable, Named {
+		inner class ConnectionTypeKind @DslInternal constructor(val kind: ConnectionKind): Configurable, Named {
 			override var name: String = when(this.kind) {
 				ConnectionKind.VIEW -> "${this@ConnectionType.name}View"
 				ConnectionKind.IMMUTABLE -> this@ConnectionType.name
@@ -78,20 +106,10 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 			/**
 			 * The default implementation of this typekind.
 			 *
-			 * Unless the value is customized, it will always be [name]`Impl`.
+			 * Unless the value is customized, it will always be `io.github.spacedvoid.connection.impl.`[name]`Impl`.
 			 * Once set, it will always be the customized name.
 			 */
-			val impl: Named = object: Named {
-				override var name: String = this@ConnectionTypeKind.name + "Impl"
-					get() = if(this.customName) field else this@ConnectionTypeKind.name + "Impl"
-					set(value) {
-						this.customName = true
-						field = value
-					}
-				override var inPackage: String = "io.github.spacedvoid.connection.impl"
-
-				private var customName = false
-			}
+			var impl: Named = ConfigurableNamed("io.github.spacedvoid.connection.impl") { this.name + "Impl" }
 
 			/**
 			 * The Kotlin equivalent of this collection.
@@ -99,13 +117,27 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 			 *
 			 * Setting this to `null` will not generate any [default adapters][Adapters.AdapterCollection.default],
 			 * and any [extra][Adapters.AdapterCollection.extra] adapters without the [Adapter.kotlin] being specified will cause an [IllegalArgumentException].
+			 *
+			 * By default, it will be `kotlin.collections.`[name], additionally prepending `Mutable` to the [name][Named.name] if the [kind] is a mutable kind.
+			 * The [KotlinType.impl] will be `io.github.spacedvoid.connection.impl.kotlin.`[name]`Impl`.
 			 */
-			var kotlin: String? = "kotlin.collections.${when(this.kind) { ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable" else -> ""}}${this@ConnectionType.name}"
+			var kotlin: KotlinType? = KotlinType("${
+				when(this.kind) {
+					ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable"
+					else -> ""
+				}
+			}${this@ConnectionType.name}", "kotlin.collections")
 
 			/**
 			 * The adapters for this typekind.
 			 */
 			val adapters = Adapters()
+
+			/**
+			 * Allows access to the [type][ConnectionType] of this typekind.
+			 */
+			@DslInternal
+			val type: ConnectionType = this@ConnectionType
 		}
 
 		/**
@@ -119,21 +151,18 @@ class ConnectionGeneration @DslInternal internal constructor(): Configurable {
 		val conversions: Conversions = Conversions()
 
 		/**
-		 * Defines the [kinds] that this family has, and configures each kind.
-		 * Previous configurations with the [kind] will be preserved.
-		 */
-		fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}) {
-			kinds.forEach {
-				this@ConnectionType.kinds.computeIfAbsent(it) { ConnectionTypeKind(it) }.apply(configuration)
-			}
-		}
-
-		/**
 		 * Defines a [kind] that this family has, and configures it.
 		 * Previous configurations with the [kind] will be preserved.
 		 */
-		fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}) {
-			this@ConnectionType.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
+		fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}): ConnectionTypeKind =
+			this.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
+
+		/**
+		 * Defines a [kind] that this family has, and configures it.
+		 * Previous configurations with the [kinds] will be preserved.
+		 */
+		fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit) {
+			kinds.forEach { kind(it, configuration) }
 		}
 	}
 

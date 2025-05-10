@@ -6,8 +6,10 @@
 
 package io.github.spacedvoid.connection.gen
 
+import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
@@ -15,27 +17,26 @@ import java.io.Writer
 import java.nio.charset.StandardCharsets
 
 /**
- * Contains output streams for source files that are being generated.
+ * Creates output streams for source files that are being generated.
  */
-class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
+class GeneratingFiles(private val generator: CodeGenerator) {
 	/**
 	 * A single file that is being generated.
 	 */
-	inner class GeneratingFile(val packageName: String, val name: String, val extension: String = "kt") {
-		init {
-			this@GeneratingFiles.files += this
-		}
+	inner class GeneratingFile(val packageName: String, val name: String, val extension: String = "kt"): AutoCloseable {
+		var closed = false
+			private set
 
 		/**
 		 * The output stream for the file.
 		 * Whether it is closed can be determined with [closed].
 		 */
-		internal val out = BufferedWriter(OutputStreamWriter(
+		private val out = BufferedWriter(OutputStreamWriter(
 			this@GeneratingFiles.generator.createNewFile(
 				Dependencies(false),
-				packageName.replaceFirst(Regex("io\\.github\\.spacedvoid\\.connection\\.?"), ""),
-				name,
-				extension
+				this.packageName.replaceFirst(Regex("io\\.github\\.spacedvoid\\.connection\\.?"), ""),
+				this.name,
+				this.extension
 			),
 			StandardCharsets.UTF_8
 		)).also {
@@ -48,8 +49,20 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 				
 				// Auto-generated file. The declaration order might change without notice.
 				
+				package $packageName
 				
 			""".trimIndent())
+		}
+
+		/**
+		 * Closes the output stream.
+		 *
+		 * Has no effect when the stream is already closed.
+		 */
+		override fun close() {
+			if(this.closed) return
+			this.out.close()
+			this.closed = true
 		}
 
 		/**
@@ -75,132 +88,14 @@ class GeneratingFiles(private val generator: CodeGenerator): AutoCloseable {
 		 */
 		fun attach(files: List<KSFile>) = this@GeneratingFiles.generator.associate(files, this.packageName, this.name, this.extension)
 	}
-
-	/**
-	 * Contains all files created with [GeneratingFile].
-	 */
-	private val files: MutableList<GeneratingFile> = mutableListOf()
-
-	/**
-	 * File that contains Kotlin collection to Connection adapters.
-	 */
-	val colAsCon: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "CollectionAsConnection").also {
-		it += """
-			@file:Suppress("DEPRECATION")
-			
-			package io.github.spacedvoid.connection
-			
-			import io.github.spacedvoid.connection.impl.*
-			
-		""".trimIndent()
-	}
-
-	/**
-	 * File that contains Connection to Kotlin collection adapters.
-	 */
-	val conAsCol: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "ConnectionAsCollection").also {
-		it += """
-			@file:Suppress("DEPRECATION")
-			
-			package io.github.spacedvoid.connection
-		"""
-	}
-
-	/**
-	 * File that contains remove-only conversions.
-	 */
-	val removeOnly: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "RemoveOnly").also {
-		it += """
-			@file:Suppress("DEPRECATION")
-			
-			package io.github.spacedvoid.connection
-			
-			import io.github.spacedvoid.connection.impl.*
-			
-		""".trimIndent()
-	}
-
-	/**
-	 * File that contains view conversions.
-	 */
-	val view: GeneratingFile = GeneratingFile("io.github.spacedvoid.connection", "View").also {
-		it += """
-			@file:Suppress("DEPRECATION")
-			
-			package io.github.spacedvoid.connection
-			
-			import io.github.spacedvoid.connection.impl.*
-			
-		""".trimIndent()
-	}
-
-	/**
-	 * Represents whether the output streams are closed.
-	 */
-	var closed: Boolean = false
-		private set
-
-	/**
-	 * Closes all output streams.
-	 * Closing after the streams are already closed will throw an [IllegalStateException].
-	 */
-	override fun close() {
-		check(!this.closed) { "Closed" }
-		this.closed = true
-		this.files.forEach { it.out.close() }
-	}
 }
 
 /**
- * Shortcut for generating Kotlin collection to Connection adapters.
+ * [Attaches][GeneratingFiles.GeneratingFile.attach] the classes with the given [qualified names][qualifiedNames] to the [file][GeneratingFiles.GeneratingFile].
  */
-fun GeneratingFiles.generateColAsCon(name: String, docs: String, typeParams: String, kotlin: String, connection: String, impl: String) {
-	check(!this.closed)
-	this.colAsCon.let { out ->
-		out += "\n"
-		out += docs
-		out += "\nfun $typeParams $kotlin$typeParams.$name(): $connection$typeParams = $impl(this)\n"
-	}
-}
-
-/**
- * Shortcut for generating Connection to Kotlin collection adapters.
- *
- * [unchecked] controls whether the collection object needs unchecked casting.
- * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
- */
-fun GeneratingFiles.generateConAsCol(name: String, docs: String, typeParams: String, kotlin: String, connection: String, unchecked: Boolean) {
-	check(!this.closed)
-	this.conAsCol.let { out ->
-		out += "\n"
-		out += docs
-		if(unchecked) out += "\n@Suppress(\"UNCHECKED_CAST\")"
-		out += "\nfun $typeParams $connection$typeParams.$name(): $kotlin$typeParams = object: $kotlin$typeParams by this.kotlin "
-		if(unchecked) out += "as $kotlin$typeParams "
-		out += "{}\n"
-	}
-}
-
-/**
- * Shortcut for generating view conversions.
- */
-fun GeneratingFiles.generateView(name: String, docs: String, typeParams: String, from: String, to: String, impl: String) {
-	check(!this.closed)
-	this.view.let { out ->
-		out += "\n"
-		out += docs
-		out += "\nfun $typeParams $from$typeParams.$name(): $to$typeParams = $impl(this.kotlin)\n"
-	}
-}
-
-/**
- * Shortcut for generating remove-only conversions.
- */
-fun GeneratingFiles.generateRemoveOnly(name: String, docs: String, typeParams: String, from: String, to: String, impl: String) {
-	check(!this.closed)
-	this.removeOnly.let { out ->
-		out += "\n"
-		out += docs
-		out += "\nfun $typeParams $from$typeParams.$name(): $to$typeParams = $impl(this.kotlin)\n"
-	}
-}
+fun GeneratingFiles.GeneratingFile.attachSources(resolver: Resolver, vararg qualifiedNames: String) =
+	qualifiedNames.asSequence()
+		.map { resolver.getClassDeclarationByName(it) ?: throw IllegalArgumentException("Class $it does not exist") }
+		.mapNotNull { it.containingFile }
+		.toList()
+		.let { attach(it) }

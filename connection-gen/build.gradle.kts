@@ -1,21 +1,22 @@
 plugins {
-    kotlin("jvm") version "2.1.20"
-    id("com.google.devtools.ksp") version "2.1.20-2.0.0"
+	kotlin("jvm")
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    implementation("com.google.devtools.ksp:symbol-processing-api:2.1.20-2.0.0")
-    testImplementation(kotlin("test"))
+	implementation(project(":connection-collections"))
+	implementation(project(":connection-core"))
+	implementation("com.google.devtools.ksp:symbol-processing-api:2.1.20-2.0.0")
+	implementation(kotlin("reflect"))
 }
 
 tasks.test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 kotlin {
-    jvmToolchain(21)
+	jvmToolchain(21)
 }
