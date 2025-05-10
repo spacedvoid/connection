@@ -10,6 +10,9 @@ package io.github.spacedvoid.connection.gen.dsl
 
 /**
  * Represents *conversions*, which convert Connections between their types and kinds.
+ *
+ * This class only allow conversions that maintain types.
+ * Conversions that also change types should be manually created.
  */
 @ConnectionDSL
 class Conversions: Configurable {
@@ -32,5 +35,4 @@ class Conversions: Configurable {
  * `null` properties will be replaced with default values, which might cause compilation errors.
  */
 @ConnectionDSL
-@ConsistentCopyVisibility
-data class Conversion @DslInternal internal constructor(var to: ConnectionGeneration.ConnectionType? = null, var name: String? = null, var docs: String? = null): Configurable
+data class Conversion @DslInternal constructor(var name: String? = null, var docs: String? = null): Configurable

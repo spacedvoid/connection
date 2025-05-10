@@ -5,3 +5,6 @@ plugins {
 rootProject.name = "connection"
 
 include("connection-gen")
+include("connection-api")
+include("connection-core")
+include("connection-collections")
