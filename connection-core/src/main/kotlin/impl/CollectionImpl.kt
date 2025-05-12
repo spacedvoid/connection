@@ -25,7 +25,6 @@ open class CollectionViewImpl<T>(open val kotlin: kotlin.collections.Collection<
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
 	override fun hashCode(): Int = super.hashCode()
-
 }
 
 open class CollectionImpl<T>(kotlin: kotlin.collections.Collection<T>): CollectionViewImpl<T>(kotlin), Collection<T>
@@ -42,7 +41,6 @@ open class RemoveOnlyCollectionImpl<T>(override val kotlin: kotlin.collections.M
 	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(collection.toSet())
 
 	override fun clear() = this.kotlin.clear()
-
 }
 
 open class MutableCollectionImpl<T>(override val kotlin: kotlin.collections.MutableCollection<T>): RemoveOnlyCollectionImpl<T>(kotlin), MutableCollection<T> {

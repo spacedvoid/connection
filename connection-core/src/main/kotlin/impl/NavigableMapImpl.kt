@@ -11,7 +11,7 @@ import io.github.spacedvoid.connection.impl.kotlin.KotlinMapImpl
 import io.github.spacedvoid.connection.utils.naturalOrdering
 import java.util.SortedSet
 
-open class NavigableMapViewImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): SequencedMapViewImpl<K, V>(kotlin), NavigableMapView<K, V> {
+open class NavigableMapViewImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMapView<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): NavigableMapView<K, V> = NavigableMapViewImpl(this.kotlin.reversed())
 
 	override val comparator: Comparator<in K> = this.kotlin.comparator() ?: naturalOrdering()
@@ -46,10 +46,9 @@ open class NavigableMapViewImpl<K, V>(override val kotlin: java.util.NavigableMa
 	override val values: SequencedCollectionView<out V> = SequencedCollectionViewImpl(this.kotlin.sequencedValues())
 
 	override val entries: SequencedSetView<out Map.Entry<K, V>> = SequencedSetViewImpl(this.kotlin.sequencedEntrySet())
-
 }
 
-open class NavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMapViewImpl<K, V>(kotlin), NavigableMap<K, V> {
+open class NavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMap<K, V>, NavigableMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): NavigableMap<K, V> = NavigableMapImpl(this.kotlin.reversed())
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMap<K, V> =
@@ -68,7 +67,7 @@ open class NavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K,
 	override val entries: SequencedSet<out Map.Entry<K, V>> = SequencedSetImpl(this.kotlin.sequencedEntrySet())
 }
 
-open class MutableNavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMapViewImpl<K, V>(kotlin), MutableNavigableMap<K, V> {
+open class MutableNavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): MutableNavigableMap<K, V>, NavigableMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): MutableNavigableMap<K, V> = MutableNavigableMapImpl(this.kotlin.reversed())
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableMap<K, V> =

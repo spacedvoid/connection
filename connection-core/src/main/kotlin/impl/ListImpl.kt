@@ -15,7 +15,7 @@ import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 
 open class ListViewImpl<T>(
 	@property:Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE") override val kotlin: kotlin.collections.List<T>
-): SequencedCollectionViewImpl<T>(kotlin as java.util.SequencedCollection<T>), ListView<T> {
+): ListView<T>, SequencedCollectionViewImpl<T>(kotlin as java.util.SequencedCollection<T>) {
 	override fun iterator(): ListIterator<T> = this.kotlin.listIterator()
 
 	override fun reversed(): ListView<T> = ListViewImpl((this.kotlin as java.util.List<T>).reversed())
@@ -28,15 +28,42 @@ open class ListViewImpl<T>(
 
 	override fun lastIndexOf(element: T): Int = this.kotlin.lastIndexOf(element)
 
+	/**
+	 * Returns whether the given object is equal to this list.
+	 *
+	 * The given object is equal to this list if the object is a [ListView],
+	 * and the elements of the given list equals to the elements in this list, regarding the order.
+	 *
+	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractList.equals].
+	 */
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is ListView<*>) return false
+		val thisIterator = iterator()
+		val otherIterator = other.iterator()
+		while(thisIterator.hasNext() && otherIterator.hasNext()) {
+			if(thisIterator.next() != otherIterator.next()) return false
+		}
+		return !(thisIterator.hasNext() || otherIterator.hasNext())
+	}
+
+	/**
+	 * Returns a hash code for this list.
+	 *
+	 * The hash is computed based on the contained objects' hash codes, regarding the order.
+	 *
+	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractList.hashCode]
+	 */
+	override fun hashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }
 }
 
-open class ListImpl<T>(override val kotlin: kotlin.collections.List<T>): ListViewImpl<T>(kotlin), List<T> {
+open class ListImpl<T>(override val kotlin: kotlin.collections.List<T>): List<T>, ListViewImpl<T>(kotlin) {
 	override fun reversed(): List<T> = ListImpl((this.kotlin as java.util.List<T>).reversed())
 
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T> = ListImpl(this.kotlin.subList(startInclusive, endExclusive))
 }
 
-open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableList<T>): ListViewImpl<T>(kotlin), MutableList<T> {
+open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableList<T>): MutableList<T>, ListViewImpl<T>(kotlin) {
 	override fun iterator(): MutableListIterator<T> = this.kotlin.listIterator()
 
 	override fun reversed(): MutableList<T> = MutableListImpl((this.kotlin as java.util.List<T>).reversed())
@@ -70,5 +97,4 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(collection.toSet())
 
 	override fun clear() = this.kotlin.clear()
-
 }

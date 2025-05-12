@@ -10,13 +10,35 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.Set
 
-open class SetViewImpl<T>(override val kotlin: kotlin.collections.Set<T>): CollectionViewImpl<T>(kotlin), SetView<T> {
+open class SetViewImpl<T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is a [SetView],
+	 * this set contains all elements from the given set,
+	 * and the given set contains all elements from this set.
+	 *
+	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractSet.equals].
+	 */
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is SetView<*>) return false
+		@Suppress("UNCHECKED_CAST")
+		return size() == other.size() && containsAll(other as SetView<T>)
+	}
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * The hash code is computed based on the contained objects' hash codes.
+	 *
+	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractSet.hashCode].
+	 */
+	override fun hashCode(): Int = sumOf { it.hashCode() }
 }
 
-open class SetImpl<T>(kotlin: kotlin.collections.Set<T>): SetViewImpl<T>(kotlin), Set<T>
+open class SetImpl<T>(kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>(kotlin)
 
-open class RemoveOnlySetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): RemoveOnlyCollectionImpl<T>(kotlin), RemoveOnlySet<T> {
-}
+open class RemoveOnlySetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): RemoveOnlySet<T>, RemoveOnlyCollectionImpl<T>(kotlin)
 
-open class MutableSetImpl<T>(kotlin: kotlin.collections.MutableSet<T>): MutableCollectionImpl<T>(kotlin), MutableSet<T> {
-}
+open class MutableSetImpl<T>(kotlin: kotlin.collections.MutableSet<T>): MutableSet<T>, MutableCollectionImpl<T>(kotlin)

@@ -77,7 +77,6 @@ gradlew :dokkaGenerate
 ## Upcoming features (or just a todo list)
 
 - `v0.2.0`:
-  - [ ] `equals` and `hashCode` implementations
   - [ ] Allow `null` elements, disambiguating between `null` return values, but document `null`-hostile behaviors
 
 - Not scheduled
@@ -88,6 +87,7 @@ gradlew :dokkaGenerate
   - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
 
 - Completed:
+  - [x] `equals` and `hashCode` implementations
   - [x] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
 
 ## License

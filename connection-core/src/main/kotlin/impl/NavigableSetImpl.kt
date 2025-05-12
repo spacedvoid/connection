@@ -10,7 +10,7 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 import io.github.spacedvoid.connection.utils.naturalOrdering
 
-open class NavigableSetViewImpl<T>(override val kotlin: java.util.NavigableSet<T>): SequencedSetViewImpl<T>(kotlin), NavigableSetView<T> {
+open class NavigableSetViewImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSetView<T>, SequencedSetViewImpl<T>(kotlin) {
 	override fun reversed(): NavigableSetView<T> = NavigableSetViewImpl(this.kotlin.reversed())
 
 	override val comparator: Comparator<in T> = this.kotlin.comparator() ?: naturalOrdering()
@@ -27,10 +27,9 @@ open class NavigableSetViewImpl<T>(override val kotlin: java.util.NavigableSet<T
 	override fun higher(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
 
 	override fun lower(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
-
 }
 
-open class NavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSetViewImpl<T>(kotlin), NavigableSet<T> {
+open class NavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSet<T>, NavigableSetViewImpl<T>(kotlin) {
 	override fun reversed(): NavigableSet<T> = NavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T> =
@@ -43,7 +42,7 @@ open class NavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): 
 		NavigableSetImpl(this.kotlin.tailSet(after, inclusive))
 }
 
-open class RemoveOnlyNavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSetViewImpl<T>(kotlin), RemoveOnlyNavigableSet<T> {
+open class RemoveOnlyNavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): RemoveOnlyNavigableSet<T>, NavigableSetViewImpl<T>(kotlin) {
 	override fun iterator(): MutableIterator<T> = this.kotlin.iterator()
 
 	override fun reversed(): RemoveOnlyNavigableSet<T> = RemoveOnlyNavigableSetImpl(this.kotlin.reversed())
@@ -72,7 +71,7 @@ open class RemoveOnlyNavigableSetImpl<T>(override val kotlin: java.util.Navigabl
 	override fun clear() = this.kotlin.clear()
 }
 
-open class MutableNavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): RemoveOnlyNavigableSetImpl<T>(kotlin), MutableNavigableSet<T> {
+open class MutableNavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): MutableNavigableSet<T>, RemoveOnlyNavigableSetImpl<T>(kotlin) {
 	override fun reversed(): MutableNavigableSet<T> = MutableNavigableSetImpl(this.kotlin.reversed())
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableSet<T> =

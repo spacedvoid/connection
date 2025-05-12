@@ -9,7 +9,7 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.kotlin.KotlinMapImpl
 
-open class SequencedMapViewImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): MapViewImpl<K, V>(kotlin), SequencedMapView<K, V> {
+open class SequencedMapViewImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): SequencedMapView<K, V>, MapViewImpl<K, V>(kotlin) {
 	override fun reversed(): SequencedMapView<K, V> = SequencedMapViewImpl(this.kotlin.reversed())
 
 	override fun first(): Pair<K, V>? = this.kotlin.firstEntry()?.let { it.key to it.value }
@@ -25,10 +25,9 @@ open class SequencedMapViewImpl<K, V>(override val kotlin: java.util.SequencedMa
 	override val values: SequencedCollectionView<out V> = SequencedCollectionViewImpl(this.kotlin.sequencedValues())
 
 	override val entries: SequencedSetView<out Map.Entry<K, V>> = SequencedSetViewImpl(this.kotlin.sequencedEntrySet())
-
 }
 
-open class SequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): SequencedMapViewImpl<K, V>(kotlin), SequencedMap<K, V> {
+open class SequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): SequencedMap<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): SequencedMap<K, V> = SequencedMapImpl(this.kotlin.reversed())
 
 	override val keys: SequencedSet<out K> = SequencedSetImpl(this.kotlin.sequencedKeySet())
@@ -38,7 +37,7 @@ open class SequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K,
 	override val entries: SequencedSet<out Map.Entry<K, V>> = SequencedSetImpl(this.kotlin.sequencedEntrySet())
 }
 
-open class MutableSequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): SequencedMapViewImpl<K, V>(kotlin), MutableSequencedMap<K, V> {
+open class MutableSequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): MutableSequencedMap<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): MutableSequencedMap<K, V> = MutableSequencedMapImpl(this.kotlin.reversed())
 
 	override fun removeFirst(): Pair<K, V>? = this.kotlin.pollFirstEntry()?.let { it.key to it.value }
