@@ -27,10 +27,9 @@ open class MapViewImpl<K, V>(open val kotlin: kotlin.collections.Map<K, V>): Map
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
 	override fun hashCode(): Int = super.hashCode()
-
 }
 
-open class MapImpl<K, V>(override val kotlin: kotlin.collections.Map<K, V>): MapViewImpl<K, V>(kotlin), Map<K, V> {
+open class MapImpl<K, V>(override val kotlin: kotlin.collections.Map<K, V>): Map<K, V>, MapViewImpl<K, V>(kotlin) {
 	override val keys: Set<out K> = SetImpl(this.kotlin.keys)
 
 	override val values: Collection<out V> = CollectionImpl(this.kotlin.values)
@@ -38,7 +37,7 @@ open class MapImpl<K, V>(override val kotlin: kotlin.collections.Map<K, V>): Map
 	override val entries: Set<out kotlin.collections.Map.Entry<K, V>> = SetImpl(this.kotlin.entries)
 }
 
-open class MutableMapImpl<K, V>(override val kotlin: kotlin.collections.MutableMap<K, V>): MapViewImpl<K, V>(kotlin), MutableMap<K, V> {
+open class MutableMapImpl<K, V>(override val kotlin: kotlin.collections.MutableMap<K, V>): MutableMap<K, V>, MapViewImpl<K, V>(kotlin) {
 	override fun put(key: K, value: V): V? = this.kotlin.put(key, value)
 
 	override fun putAll(map: MapView<out K, out V>) = this.kotlin.putAll(KotlinMapImpl(map))
@@ -52,5 +51,4 @@ open class MutableMapImpl<K, V>(override val kotlin: kotlin.collections.MutableM
 	override val values: RemoveOnlyCollection<V> = RemoveOnlyCollectionImpl(this.kotlin.values)
 
 	override val entries: RemoveOnlySet<kotlin.collections.MutableMap.MutableEntry<K, V>> = RemoveOnlySetImpl(this.kotlin.entries)
-
 }
