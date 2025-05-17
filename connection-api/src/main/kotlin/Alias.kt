@@ -59,67 +59,81 @@ typealias KotlinMutableMapEntry<K, V> = kotlin.collections.MutableMap.MutableEnt
 /**
  * Alias for [toList].
  */
+@Deprecated("Useless alias.", ReplaceWith("toList()", "kotlin.collections.toList"))
 fun <T> Iterable<T>.toKotlinList(): KotlinList<T> = toList()
 /**
  * Alias for [toMutableList].
  */
+@Deprecated("Useless alias.", ReplaceWith("toMutableList()", "kotlin.collections.toMutableList"))
 fun <T> Iterable<T>.toKotlinMutableList(): KotlinMutableList<T> = toMutableList()
 
 /**
  * Alias for [toSet].
  */
+@Deprecated("Useless alias.", ReplaceWith("toSet()", "kotlin.collections.toSet"))
 fun <T> Iterable<T>.toKotlinSet(): KotlinSet<T> = toSet()
 /**
  * Alias for [toMutableSet].
  */
+@Deprecated("Useless alias.", ReplaceWith("toMutableSet()", "kotlin.collections.toMutableSet"))
 fun <T> Iterable<T>.toKotlinMutableSet(): KotlinMutableSet<T> = toMutableSet()
 
 /**
  * Alias for [toMap].
  */
+@Deprecated("Useless alias.", ReplaceWith("toMap()", "kotlin.collections.toMap"))
 fun <K, V> Iterable<Pair<K, V>>.toKotlinMap(): KotlinMap<K, V> = toMap()
 
 /**
  * Alias for [kotlin.collections.map].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("map(transform)", "kotlin.collections.map"))
 fun <T, R> Iterable<T>.kotlinMap(transform: (T) -> R): KotlinList<R> = map(transform)
 
 /**
  * Alias for [mapIndexed].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("mapIndexed(transform)", "kotlin.collections.mapIndexed"))
 fun <T, R> Iterable<T>.kotlinMapIndexed(transform: (index: Int, T) -> R): KotlinList<R> = mapIndexed(transform)
 
 /**
  * Alias for [mapNotNull].
  */
-fun <T, R> Iterable<T>.kotlinMapNotNull(transform: (T) -> R?): KotlinList<R> = mapNotNull(transform)
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("mapNotNull(transform)", "kotlin.collections.mapNotNull"))
+fun <T, R: Any> Iterable<T>.kotlinMapNotNull(transform: (T) -> R?): KotlinList<R> = mapNotNull(transform)
 
 /**
  * Alias for [flatMap].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("flatMap(transform)", "kotlin.collections.flatMap"))
 fun <T, R> Iterable<T>.kotlinFlatMap(transform: (T) -> Iterable<R>): KotlinList<R> = flatMap(transform)
 
 /**
  * Alias for [flatMapIndexed].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("flatMapIndexed(transform)", "kotlin.collections.flatMapIndexed"))
 fun <T, R> Iterable<T>.kotlinFlatMapIndexed(transform: (index: Int, T) -> Iterable<R>): KotlinList<R> = flatMapIndexed(transform)
 
 /**
  * Alias for [groupBy].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("groupBy(keySelector)", "kotlin.collections.groupBy"))
 fun <T, K> Iterable<T>.kotlinGroupBy(keySelector: (T) -> K): KotlinMap<K, KotlinList<T>> = groupBy(keySelector)
 
 /**
  * Alias for [groupBy].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("groupBy(keySelector, valueTransform)", "kotlin.collections.groupBy"))
 fun <T, K, V> Iterable<T>.kotlinGroupBy(keySelector: (T) -> K, valueTransform: (T) -> V): KotlinMap<K, KotlinList<V>> = groupBy(keySelector, valueTransform)
 
 /**
  * Alias for [distinct].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("distinct()", "kotlin.collections.distinct"))
 fun <T> Iterable<T>.kotlinDistinct(): KotlinList<T> = distinct()
 
 /**
  * Alias for [distinctBy].
  */
+@Deprecated("Useless alias, will be removed when operation for Connection is added.", ReplaceWith("distinctBy(selector)", "kotlin.collections.distinctBy"))
 fun <T, K> Iterable<T>.kotlinDistinctBy(selector: (T) -> K): KotlinList<T> = distinctBy(selector)
