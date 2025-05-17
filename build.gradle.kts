@@ -28,25 +28,28 @@ kotlin {
 
 tasks {
 	val apiJar by registering(Jar::class) {
+		group = "Build"
+		description = "Assembles only the API binary jar."
+
 		archiveAppendix = "api"
 		from(project(":connection-api").sourceSets["main"].output)
 		from(project(":connection-collections").sourceSets["main"].output)
 	}
 
 	val coreJar by registering(Jar::class) {
+		group = "Build"
+		description = "Assembles the core binary jar."
+
 		archiveAppendix = "core"
 		from(project(":connection-api").sourceSets["main"].output)
 		from(project(":connection-collections").sourceSets["main"].output)
 		from(project(":connection-core").sourceSets["main"].output)
 	}
 
-	val assembleBin = register("assembleBin") {
-		group = "Build"
-		description = "Assembles only the binary outputs of this project."
-		dependsOn(apiJar, coreJar)
-	}
-
 	val apiSourcesJar by registering(Jar::class) {
+		group = "Build"
+		description = "Assembles only the API source jar."
+
 		archiveAppendix = "api"
 		archiveClassifier = "sources"
 		from(project(":connection-api").sourceSets["main"].allSource)
@@ -54,6 +57,9 @@ tasks {
 	}
 
 	val coreSourcesJar by registering(Jar::class) {
+		group = "Build"
+		description = "Assembles only the core source jar."
+
 		archiveAppendix = "core"
 		archiveClassifier = "sources"
 		from(project(":connection-api").sourceSets["main"].allSource)
@@ -61,29 +67,33 @@ tasks {
 		from(project(":connection-core").sourceSets["main"].allSource)
 	}
 
-	val assembleSource = register("assembleSource") {
-		group = "Build"
-		description = "Assembles only the source outputs of this project."
-		dependsOn(apiSourcesJar, coreSourcesJar)
-	}
-
 	val dokkaJar by registering(Jar::class) {
+		group = "Build"
+		description = "Assembles only the Dokka documentation jar."
+
 		dependsOn(dokkaGenerate)
+		mustRunAfter(dokkaGenerate)
 		archiveClassifier = "javadoc"
 		from(dokkaOutputDir)
 	}
 
-	val assembleDoc = register("assembleDoc") {
-		group = "Build"
-		description = "Assembles only the documentation outputs of this project."
-		dependsOn(dokkaJar)
-	}
-
-	assemble {
-		dependsOn(assembleBin, assembleSource, assembleDoc)
+	artifacts {
+		archives(apiJar)
+		archives(coreJar)
+		archives(apiSourcesJar)
+		archives(coreSourcesJar)
+		archives(dokkaJar)
 	}
 }
 
 tasks.clean {
 	delete(dokkaOutputDir)
+}
+
+tasks.jar {
+	enabled = false
+}
+
+tasks.javadoc {
+	enabled = false
 }
