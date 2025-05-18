@@ -19,6 +19,8 @@ open class CollectionViewImpl<T>(open val kotlin: kotlin.collections.Collection<
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
 	override fun hashCode(): Int = super.hashCode()
+
+	override fun toString(): String = "${this::class.qualifiedName}{elements=[${joinToString()}]}"
 }
 
 open class CollectionImpl<T>(kotlin: kotlin.collections.Collection<T>): CollectionViewImpl<T>(kotlin), Collection<T>
