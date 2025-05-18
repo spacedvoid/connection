@@ -24,6 +24,19 @@ open class KotlinListImpl<T>(private val connection: ListView<T>): KotlinCollect
 	override fun indexOf(element: T): Int = this.connection.indexOf(element)
 
 	override fun lastIndexOf(element: T): Int = this.connection.lastIndexOf(element)
+
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is List<*>) return false
+		val thisIterator = iterator()
+		val otherIterator = other.iterator()
+		while(thisIterator.hasNext() && otherIterator.hasNext()) {
+			if(thisIterator.next() != otherIterator.next()) return false
+		}
+		return !(thisIterator.hasNext() || otherIterator.hasNext())
+	}
+
+	override fun hashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }
 }
 
 open class KotlinMutableListImpl<T>(private val connection: MutableList<T>): KotlinListImpl<T>(connection), kotlin.collections.MutableList<T> {

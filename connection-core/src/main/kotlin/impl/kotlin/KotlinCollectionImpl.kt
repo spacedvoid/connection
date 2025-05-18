@@ -22,6 +22,8 @@ open class KotlinCollectionImpl<T>(private val connection: CollectionView<T>): C
 	override fun contains(element: T): Boolean = this.connection.contains(element)
 
 	override fun containsAll(elements: Collection<T>): Boolean = this.connection.containsAll(SetViewImpl(elements.toSet()))
+
+	override fun toString(): String = "${this::class.qualifiedName}{elements=[${joinToString()}]}"
 }
 
 open class KotlinMutableCollectionImpl<T>(private val connection: RemoveOnlyCollection<T>): KotlinCollectionImpl<T>(connection), kotlin.collections.MutableCollection<T> {

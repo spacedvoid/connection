@@ -33,6 +33,8 @@ open class MapViewImpl<K, V>(open val kotlin: kotlin.collections.Map<K, V>): Map
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
 	override fun hashCode(): Int = super.hashCode()
+
+	override fun toString(): String = "${this::class.qualifiedName}{entries=[${this.entries.joinToString { "{${it.key}=${it.value}}" }}]}"
 }
 
 open class MapImpl<K, V>(override val kotlin: kotlin.collections.Map<K, V>): Map<K, V>, MapViewImpl<K, V>(kotlin) {
