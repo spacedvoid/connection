@@ -8,6 +8,9 @@
 
 package io.github.spacedvoid.connection
 
+import io.github.spacedvoid.connection.utils.naturalOrdering
+import io.github.spacedvoid.connection.utils.reverseOrdering
+
 /**
  * Returns an array that contains all elements copied from the collection.
  *
@@ -51,13 +54,19 @@ fun <T> CollectionView<T>.toSequencedSet(): SequencedSet<T> = if(this is Sequenc
 
 /**
  * Returns a [NavigableSet] converted from this collection, using the [natural order][naturalOrder].
+ *
+ * If this set uses a different comparator than the natural order, this set is copied into a new set.
  */
-fun <T: Comparable<T>> CollectionView<T>.toNavigableSet(): NavigableSet<T> = if(this is NavigableSet<T>) this else navigableSetOf(*toGenericArray())
+fun <T: Comparable<T>> CollectionView<T>.toNavigableSet(): NavigableSet<T> =
+	if(this is NavigableSet<T> && this.comparator isApparently naturalOrder<T>()) this else navigableSetOf(*toGenericArray())
 
 /**
  * Returns a [NavigableSet] converted from this collection, using the [comparator].
+ *
+ * If this set uses a different comparator than the given one, this set is copied into a new set.
  */
-fun <T> CollectionView<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T> = if(this is NavigableSet<T>) this else navigableSetOf(comparator, *toGenericArray())
+fun <T> CollectionView<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T> =
+	if(this is NavigableSet<T> && this.comparator isApparently comparator) this else navigableSetOf(comparator, *toGenericArray())
 
 /**
  * Returns a [SequencedMap] converted from this map.
@@ -68,13 +77,19 @@ fun <K, V> MapView<K, V>.toSequencedMap(): SequencedMap<K, V> = if(this is Seque
 
 /**
  * Returns a [NavigableMap] converted from this map, using the [natural order][naturalOrder].
+ *
+ * If this map uses a different comparator than the natural order, this map is copied into a new map.
  */
-fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> = if(this is NavigableMap<K, V>) this else navigableMapOf(*toArray())
+fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> =
+	if(this is NavigableMap<K, V> && this.comparator isApparently naturalOrder<K>()) this else navigableMapOf(*toArray())
 
 /**
  * Returns a [NavigableMap] converted from this map, using the [comparator].
+ *
+ * If this map uses a different comparator than the given one, this map is copied into a new map.
  */
-fun <K, V> MapView<K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> = if(this is NavigableMap<K, V>) this else navigableMapOf(comparator, *toArray())
+fun <K, V> MapView<K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> =
+	if(this is NavigableMap<K, V> && this.comparator isApparently comparator) this else navigableMapOf(comparator, *toArray())
 
 /**
  * Returns a new [MutableList] copied from the collection.
@@ -135,8 +150,23 @@ fun <K: Comparable<K>, V> MapView<K, V>.toMutableNavigableMap(): MutableNavigabl
  */
 fun <K, V> MapView<K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf(comparator, *toArray())
 
-@Suppress("UNCHECKED_CAST", "DEPRECATION", "KotlinConstantConditions")
+@Suppress("UNCHECKED_CAST", "KotlinConstantConditions")
 internal fun <T> CollectionView<T>.toGenericArray(): Array<T> {
 	val iterator = this.iterator()
 	return Array<Any?>(size()) { iterator.next() } as Array<T>
 }
+
+private val naturalOrderings: kotlin.collections.Set<Comparator<*>> = kotlin.collections.setOf(
+	java.util.Comparator.naturalOrder<Comparable<Any>>(),
+	naturalOrder<Comparable<Any>>(),
+	naturalOrdering<Any>()
+)
+
+private val reverseOrderings: kotlin.collections.Set<Comparator<*>> = kotlin.collections.setOf(
+	java.util.Comparator.reverseOrder<Comparable<Any>>(),
+	reverseOrder<Comparable<Any>>(),
+	reverseOrdering<Any>()
+)
+
+private infix fun Comparator<*>.isApparently(other: Comparator<*>): Boolean =
+	(this in naturalOrderings && other in naturalOrderings) || (this in reverseOrderings && other in reverseOrderings) || this == other

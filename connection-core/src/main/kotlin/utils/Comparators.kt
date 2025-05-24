@@ -12,11 +12,30 @@ package io.github.spacedvoid.connection.utils
 @Suppress("UNCHECKED_CAST")
 fun <T> naturalOrdering(): Comparator<T> = NaturalOrdering as Comparator<T>
 
-private object NaturalOrdering : Comparator<Any?> {
+/**
+ * Returns a reverse-ordered [Comparator] that casts the objects to [Comparable] and invokes [Comparable.compareTo].
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T> reverseOrdering(): Comparator<T> = ReverseOrdering as Comparator<T>
+
+private object NaturalOrdering: Comparator<Any?> {
 	@Suppress("UNCHECKED_CAST")
 	override fun compare(o1: Any?, o2: Any?): Int {
 		if(o1 == null || o2 == null) throw NullPointerException()
 		if(o1 !is Comparable<*> || o2 !is Comparable<*>) throw TypeCastException("Non-comparable objects: $o1 and $o2")
 		return (o1 as Comparable<Any>).compareTo(o2)
 	}
+
+	override fun reversed(): Comparator<Any?> = ReverseOrdering
+}
+
+private object ReverseOrdering: Comparator<Any?> {
+	@Suppress("UNCHECKED_CAST")
+	override fun compare(o1: Any?, o2: Any?): Int {
+		if(o1 == null || o2 == null) throw NullPointerException()
+		if(o1 !is Comparable<*> || o2 !is Comparable<*>) throw TypeCastException("Non-comparable objects: $o1 and $o2")
+		return (o2 as Comparable<Any>).compareTo(o1)
+	}
+
+	override fun reversed(): Comparator<Any?> = NaturalOrdering
 }
