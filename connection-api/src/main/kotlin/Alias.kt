@@ -6,6 +6,14 @@
 
 package io.github.spacedvoid.connection
 
+import kotlin.collections.distinct
+import kotlin.collections.distinctBy
+import kotlin.collections.flatMap
+import kotlin.collections.flatMapIndexed
+import kotlin.collections.groupBy
+import kotlin.collections.map
+import kotlin.collections.mapIndexed
+import kotlin.collections.mapNotNull
 import kotlin.collections.toList
 import kotlin.collections.toMutableList
 import kotlin.collections.toMutableSet
@@ -14,46 +22,56 @@ import kotlin.collections.toSet
 /**
  * Alias for [kotlin.collections.Collection].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.Collection"))
 typealias KotlinCollection<T> = kotlin.collections.Collection<T>
 /**
  * Alias for [kotlin.collections.MutableCollection].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.MutableCollection"))
 typealias KotlinMutableCollection<T> = kotlin.collections.MutableCollection<T>
 
 /**
  * Alias for [kotlin.collections.List].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.List"))
 typealias KotlinList<T> = kotlin.collections.List<T>
 /**
  * Alias for [kotlin.collections.MutableList].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.MutableList"))
 typealias KotlinMutableList<T> = kotlin.collections.MutableList<T>
 
 /**
  * Alias for [kotlin.collections.Set].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.Set"))
 typealias KotlinSet<T> = kotlin.collections.Set<T>
 /**
  * Alias for [kotlin.collections.MutableSet].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.MutableSet"))
 typealias KotlinMutableSet<T> = kotlin.collections.MutableSet<T>
 
 /**
  * Alias for [kotlin.collections.Map].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.Map"))
 typealias KotlinMap<K, V> = kotlin.collections.Map<K, V>
 /**
  * Alias for [kotlin.collections.MutableMap].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.MutableMap"))
 typealias KotlinMutableMap<K, V> = kotlin.collections.MutableMap<K, V>
 
 /**
  * Alias for [kotlin.collections.Map.Entry].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.Map.Entry"))
 typealias KotlinMapEntry<K, V> = kotlin.collections.Map.Entry<K, V>
 /**
  * Alias for [kotlin.collections.MutableMap.MutableEntry].
  */
+@Deprecated("Useless alias.", ReplaceWith("kotlin.collections.MutableMap.MutableEntry"))
 typealias KotlinMutableMapEntry<K, V> = kotlin.collections.MutableMap.MutableEntry<K, V>
 
 /**
