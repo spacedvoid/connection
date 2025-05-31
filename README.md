@@ -61,7 +61,7 @@ See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavio
 Run:
 
 ```
-gradlew assemble
+gradlew build
 ```
 
 This will create multiple `.jar` files.
@@ -73,6 +73,9 @@ Below will generate the Dokka documentation under `docs/`:
 ```
 gradlew :dokkaGenerate
 ```
+
+Generating documentations of submodules separately is disabled since `gradlew dokkaGenerate` would try to do so,
+causing one submodule to overwrite another (sub)module's already generated documentations.
 
 ## Upcoming features (or just a todo list)
 

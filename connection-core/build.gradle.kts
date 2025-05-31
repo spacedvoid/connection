@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-	compileOnly(project(":connection-collections"))
+	api(project(":connection-collections"))
 	testImplementation(kotlin("test"))
 }
 
@@ -36,4 +36,16 @@ dokka {
 			remoteUrl = URI("https://github.com/spacedvoid/connection/tree/manual-impl/connection-core/src/main/kotlin")
 		}
 	}
+}
+
+tasks.dokkaGenerate {
+	enabled = false
+}
+
+tasks.dokkaGeneratePublicationHtml {
+	enabled = false
+}
+
+tasks.logLinkDokkaGeneratePublicationHtml {
+	enabled = false
 }
