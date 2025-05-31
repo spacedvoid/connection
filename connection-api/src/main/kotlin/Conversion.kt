@@ -18,9 +18,7 @@ import io.github.spacedvoid.connection.utils.reverseOrdering
  */
 inline fun <reified T> CollectionView<T>.toTypedArray(): Array<T> {
 	val iterator = iterator()
-	return Array(size()) {
-		iterator.next()
-	}
+	return Array(size()) { iterator.next() }
 }
 
 /**
@@ -30,7 +28,9 @@ inline fun <reified T> CollectionView<T>.toTypedArray(): Array<T> {
  */
 fun <K, V> MapView<K, V>.toArray(): Array<Pair<K, V>> {
 	val iterator = this.entries.iterator()
-	return Array(this.size()) { iterator.next().let { it.key to it.value } }
+	return Array(size()) {
+		iterator.next().let { it.key to it.value }
+	}
 }
 
 /**

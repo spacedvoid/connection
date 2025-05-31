@@ -28,6 +28,18 @@ dokka {
     }
 }
 
+tasks.dokkaGenerate {
+    enabled = false
+}
+
+tasks.dokkaGeneratePublicationHtml {
+    enabled = false
+}
+
+tasks.logLinkDokkaGeneratePublicationHtml {
+    enabled = false
+}
+
 private operator fun <T: Any> ListProperty<T>.plusAssign(element: T) {
     add(element)
 }

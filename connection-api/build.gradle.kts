@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-	compileOnly(project(":connection-collections"))
-	compileOnly(project(":connection-core"))
+	api(project(":connection-collections"))
+	implementation(project(":connection-core"))
 	compileOnly(project(":connection-gen"))
 	ksp(project(":connection-gen"))
 }
@@ -30,4 +30,16 @@ dokka {
 			remoteUrl = URI("https://github.com/spacedvoid/connection/tree/manual-impl/connection-api/src/main/kotlin")
 		}
 	}
+}
+
+tasks.dokkaGenerate {
+	enabled = false
+}
+
+tasks.dokkaGeneratePublicationHtml {
+	enabled = false
+}
+
+tasks.logLinkDokkaGeneratePublicationHtml {
+	enabled = false
 }
