@@ -158,5 +158,5 @@ fun <T, V> Iterable<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap 
 internal fun <T> Iterable<T>.toViewConnection(): CollectionView<T> = when(this) {
 	is CollectionView<T> -> this
 	is kotlin.collections.Collection<T> -> asViewConnection()
-	else -> toMutableList().asConnection()
+	else -> toMutableList()
 }
