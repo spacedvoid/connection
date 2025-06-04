@@ -12,28 +12,6 @@ import io.github.spacedvoid.connection.utils.naturalOrdering
 import io.github.spacedvoid.connection.utils.reverseOrdering
 
 /**
- * Returns an array that contains all elements copied from the collection.
- *
- * The order is defined as the encounter order.
- */
-inline fun <reified T> CollectionView<T>.toTypedArray(): Array<T> {
-	val iterator = iterator()
-	return Array(size()) { iterator.next() }
-}
-
-/**
- * Returns an array that contains all entries copied from the map.
- *
- * The order is defined as the encounter order.
- */
-fun <K, V> MapView<K, V>.toArray(): Array<Pair<K, V>> {
-	val iterator = this.entries.iterator()
-	return Array(size()) {
-		iterator.next().let { it.key to it.value }
-	}
-}
-
-/**
  * Returns a [List] converted from this collection.
  *
  * The iteration order is defined as the encounter order.

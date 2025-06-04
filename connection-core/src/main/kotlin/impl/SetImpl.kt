@@ -41,4 +41,4 @@ open class SetImpl<T>(kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>
 
 open class RemoveOnlySetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): RemoveOnlySet<T>, RemoveOnlyCollectionImpl<T>(kotlin)
 
-open class MutableSetImpl<T>(kotlin: kotlin.collections.MutableSet<T>): MutableSet<T>, MutableCollectionImpl<T>(kotlin)
+open class MutableSetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): MutableSet<T>, MutableCollectionImpl<T>(kotlin)
