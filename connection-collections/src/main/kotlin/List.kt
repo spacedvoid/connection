@@ -22,11 +22,22 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 */
 	override operator fun iterator(): ListIterator<T>
 
+	/**
+	 * Returns a new iterator for this list, starting from the given [index].
+	 * Throws [IndexOutOfBoundsException] if the [index] is negative or greater than this list's size.
+	 *
+	 * The first call to [ListIterator.next] returns the value at the given [index],
+	 * while [ListIterator.previous] returns the value at [index]` - 1`, if exists.
+	 *
+	 * The iteration order is based on the index.
+	 */
+	fun iterator(index: Int): ListIterator<T>
+
 	override fun reversed(): ListView<T>
 
 	/**
 	 * Returns a sublist of this list, in the given range.
-	 * Throws [IndexOutOfBoundsException] if [startInclusive] is less than `0`,
+	 * Throws [IndexOutOfBoundsException] if [startInclusive] is negative,
 	 * [endExclusive] is greater than this list's size,
 	 * or [startInclusive] is greater than [endExclusive].
 	 *
@@ -84,12 +95,9 @@ interface List<T>: ListView<T>, SequencedCollection<T> {
  * A mutable list.
  */
 interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
-	/**
-	 * Returns a new iterator for this list.
-	 *
-	 * The iteration order is based on the index.
-	 */
 	override fun iterator(): MutableListIterator<T>
+
+	override fun iterator(index: Int): MutableListIterator<T>
 
 	override fun reversed(): MutableList<T>
 
@@ -97,12 +105,14 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 
 	/**
 	 * Adds the given [element] to the end of this list, and returns `true`.
+	 *
+	 * This method is equivalent with `add(size(), element)`.
 	 */
 	override fun add(element: T): Boolean
 
 	/**
 	 * Inserts the given [element] to the given [index].
-	 * Throws [IndexOutOfBoundsException] if the [index] is out of range.
+	 * Throws [IndexOutOfBoundsException] if the [index] is negative or greater than this list's size.
 	 */
 	fun add(index: Int, element: T)
 

@@ -18,6 +18,8 @@ open class ListViewImpl<T>(
 ): ListView<T>, SequencedCollectionViewImpl<T>(kotlin as java.util.SequencedCollection<T>) {
 	override fun iterator(): ListIterator<T> = this.kotlin.listIterator()
 
+	override fun iterator(index: Int): ListIterator<T> = this.kotlin.listIterator(index)
+
 	override fun reversed(): ListView<T> = ListViewImpl((this.kotlin as java.util.List<T>).reversed())
 
 	override fun subList(startInclusive: Int, endExclusive: Int): ListView<T> = ListViewImpl(this.kotlin.subList(startInclusive, endExclusive))
@@ -65,6 +67,8 @@ open class ListImpl<T>(override val kotlin: kotlin.collections.List<T>): List<T>
 
 open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableList<T>): MutableList<T>, ListViewImpl<T>(kotlin) {
 	override fun iterator(): MutableListIterator<T> = this.kotlin.listIterator()
+
+	override fun iterator(index: Int): MutableListIterator<T> = this.kotlin.listIterator(index)
 
 	override fun reversed(): MutableList<T> = MutableListImpl((this.kotlin as java.util.List<T>).reversed())
 
