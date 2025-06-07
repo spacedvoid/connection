@@ -6,10 +6,29 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
+
 /**
  * A set view that additionally defines the iteration order.
  */
 interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.DISTINCT], and [Spliterator.ORDERED] are reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun reversed(): SequencedSetView<T>
 }
 
@@ -17,6 +36,14 @@ interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
  * An immutable sequenced set.
  */
 interface SequencedSet<T>: SequencedCollection<T>, Set<T>, SequencedSetView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], [Spliterator.DISTINCT], and [Spliterator.ORDERED] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun reversed(): SequencedSet<T>
 }
 

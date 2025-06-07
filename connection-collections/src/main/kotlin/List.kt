@@ -6,6 +6,8 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
+
 /**
  * A sequenced collection view that supports element retrieval by indexes.
  * The index ranges from `0` to [size]` - 1`, inclusive.
@@ -85,6 +87,14 @@ interface ListView<T>: SequencedCollectionView<T> {
  */
 interface List<T>: ListView<T>, SequencedCollection<T> {
 	override fun iterator(): ListIterator<T>
+
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], and [Spliterator.ORDERED] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
 
 	override fun reversed(): List<T>
 

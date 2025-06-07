@@ -6,6 +6,8 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
+
 /**
  * A sequenced set view that defines the iteration order of the elements based on a [Comparator].
  *
@@ -15,11 +17,28 @@ package io.github.spacedvoid.connection
  */
 interface NavigableSetView<T>: SequencedSetView<T> {
 	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.DISTINCT], [Spliterator.ORDERED] and [Spliterator.SORTED] are reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
+	override fun reversed(): NavigableSetView<T>
+
+	/**
 	 * The comparator used to sort the elements in this collection.
 	 */
 	val comparator: Comparator<in T>
-
-	override fun reversed(): NavigableSetView<T>
 
 	/**
 	 * Returns a subset of this collection, in the given range.
@@ -64,6 +83,14 @@ interface NavigableSetView<T>: SequencedSetView<T> {
  * An immutable navigable set.
  */
 interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], [Spliterator.DISTINCT], [Spliterator.ORDERED], and [Spliterator.SORTED] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun reversed(): NavigableSet<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T>

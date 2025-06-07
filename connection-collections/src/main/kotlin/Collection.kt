@@ -6,6 +6,7 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
 import java.util.function.Consumer
 
 /**
@@ -30,6 +31,26 @@ interface CollectionView<T>: Iterable<T> {
 	 * The iteration order is not defined, and might not be consistent.
 	 */
 	override operator fun iterator(): Iterator<T>
+
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristic [Spliterator.SIZED] is reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 *
+	 * Any other characteristics are implementation-defined,
+	 * such as [Spliterator.DISTINCT] for [SetView] and [Spliterator.IMMUTABLE] for [Collection].
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
 
 	/**
 	 * Returns the size of this collection.
@@ -87,7 +108,15 @@ interface CollectionView<T>: Iterable<T> {
 /**
  * An immutable collection.
  */
-interface Collection<T>: CollectionView<T>
+interface Collection<T>: CollectionView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.IMMUTABLE] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+}
 
 /**
  * A mutable collection that only supports element removal operations.
