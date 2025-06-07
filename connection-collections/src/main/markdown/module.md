@@ -16,15 +16,15 @@ Most collection interfaces work similar from the Java Collections Framework:
 
 | Java collection                 | Kotlin collection               | Corresponding Connection type                  |
 |---------------------------------|---------------------------------|------------------------------------------------|
-| [java.util.Collection]          | [kotlin.collections.Collection] | [Collection]                                   |
-| [java.util.SequencedCollection] | -                               | [SequencedCollection]                          |
-| [java.util.List]                | [kotlin.collections.List]       | [List]                                         |
-| [java.util.Set]                 | [kotlin.collections.Set]        | [Set]                                          |
-| [java.util.SequencedSet]        | -                               | [SequencedSet]                                 |
-| [java.util.NavigableSet]        | -                               | [NavigableSet]                                 |
-| [java.util.Map]                 | [kotlin.collections.Map]        | [Map]                                          |
-| [java.util.SequencedMap]        | -                               | [SequencedMap]                                 |
-| [java.util.NavigableMap]        | -                               | [NavigableMap]                                 |
+| [java.util.Collection]          | [kotlin.collections.Collection] | [Collection][CollectionView]                   |
+| [java.util.SequencedCollection] | -                               | [SequencedCollection][SequencedCollectionView] |
+| [java.util.List]                | [kotlin.collections.List]       | [List][ListView]                               |
+| [java.util.Set]                 | [kotlin.collections.Set]        | [Set][SetView]                                 |
+| [java.util.SequencedSet]        | -                               | [SequencedSet][SequencedSetView]               |
+| [java.util.NavigableSet]        | -                               | [NavigableSet][NavigableSetView]               |
+| [java.util.Map]                 | [kotlin.collections.Map]        | [Map][MapView]                                 |
+| [java.util.SequencedMap]        | -                               | [SequencedMap][SequencedMapView]               |
+| [java.util.NavigableMap]        | -                               | [NavigableMap][NavigableMapView]               |
 
 Below are unsupported types because of various reasons, such as replaceable by another type:
 
@@ -57,6 +57,11 @@ Collections in this package are separated into 4 kinds, based on their propertie
 
 All kinds of the same type are called a *type family*.
 For example, [ListView], [List], and [MutableList] is a family of [List].
+
+(For sake of readability, when representing type families or their representative names, 
+the name of immutable collections such as [List] and [Set] is used,
+but do note that the lowest common supertype of all kinds in a family is a view collection, such as [ListView] and [SetView].
+This can be seen at the topmost table, where links to what seems to be immutable collections actually lead to view collections.)
 
 Remove-only collections support only element removal operations between mutation operations, such as [RemoveOnlyCollection.remove].
 They are usually obtained by map entry collections, such as [MutableMap.keys].
