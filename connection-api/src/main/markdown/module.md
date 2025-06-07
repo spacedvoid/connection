@@ -107,3 +107,8 @@ The following extensions change both the type and kind:
 </details>
 
 These conversions are copies, where operations on the resulting collection does not affect the original collection.
+
+## Operator methods
+
+Most extension methods that involve or return collection types from `kotlin.collections` or `kotlin.sequences` are also introduced here,
+such as [map], [sort], and [asList]. 
