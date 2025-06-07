@@ -39,20 +39,20 @@ fun <T> Sequence<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSeq
 /**
  * Returns a map that collects the entries after the [transform] of each element from this sequence.
  */
-fun <T, K, V> Sequence<T>.associate(transform: (T) -> Pair<K, V>): Map<K, V> = buildMap {
+inline fun <T, K, V> Sequence<T>.associate(transform: (T) -> Pair<K, V>): Map<K, V> = buildMap {
 	for(e in this@associate) transform(e).let { put(it.first, it.second) }
 }
 
 /**
  * Returns a map that collects the entries by associating the [transform] of each element as the key and the element as the value.
  */
-fun <T, K> Sequence<T>.associateBy(transform: (T) -> K): Map<K, T> = buildMap {
+inline fun <T, K> Sequence<T>.associateBy(transform: (T) -> K): Map<K, T> = buildMap {
 	for(e in this@associateBy) put(transform(e), e)
 }
 
 /**
  * Returns a map that collects the entries by associating the element as the key and the [transform] of each element as the value.
  */
-fun <T, V> Sequence<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap {
+inline fun <T, V> Sequence<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap {
 	for(e in this@associateWith) put(e, transform(e))
 }
