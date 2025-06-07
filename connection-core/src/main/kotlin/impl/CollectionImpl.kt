@@ -10,9 +10,14 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.Collection
 import io.github.spacedvoid.connection.MutableCollection
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
+import io.github.spacedvoid.connection.utils.Spliterators
+import java.util.Spliterator
 
 open class CollectionViewImpl<T>(open val kotlin: kotlin.collections.Collection<T>): CollectionView<T> {
 	override fun iterator(): Iterator<T> = this.kotlin.iterator()
+
+	@StreamSupport
+	override fun spliterator(): Spliterator<T> = Spliterators.fromDefault(this)
 
 	override fun size(): Int = this.kotlin.size
 

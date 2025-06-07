@@ -81,7 +81,10 @@ causing one submodule to overwrite another (sub)module's already generated docum
 
 - `v0.1.0`:
   - [ ] Special collections, such as stack, queue, and deque
-  - [ ] `Spliterator` support
+  - [x] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
+  - [x] `equals` and `hashCode` implementations
+  - [x] Operator and utility methods
+  - [x] `Spliterator` support
 
 - `v0.2.0`:
   - [ ] Allow `null` elements, disambiguating between `null` return values, but document `null`-hostile behaviors
@@ -89,11 +92,6 @@ causing one submodule to overwrite another (sub)module's already generated docum
 - Not scheduled
   - [ ] Simpler ways to express intervals for `subList` and `subSet`
   - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
-
-- Completed:
-  - [x] `equals` and `hashCode` implementations
-  - [x] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
-  - [x] Operator and utility methods
 
 ## License
 

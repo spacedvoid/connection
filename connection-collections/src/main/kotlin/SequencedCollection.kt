@@ -6,6 +6,8 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
+
 /**
  * A collection view that additionally defines the iteration order, which is also consistent.
  */
@@ -16,6 +18,23 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * The iteration order is defined by the specification, and is consistent.
 	 */
 	override fun iterator(): Iterator<T>
+
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
 
 	/**
 	 * Returns a reverse-ordered collection of this collection.
@@ -41,6 +60,14 @@ interface SequencedCollectionView<T>: CollectionView<T> {
  * An immutable sequenced collection.
  */
 interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], and [Spliterator.ORDERED] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun reversed(): SequencedCollection<T>
 }
 

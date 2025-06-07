@@ -6,6 +6,8 @@
 
 package io.github.spacedvoid.connection
 
+import java.util.Spliterator
+
 /**
  * A collection view that only stores one instance per element.
  *
@@ -16,6 +18,23 @@ package io.github.spacedvoid.connection
  * All operations that check whether an element matches an instance is determined via [Any.equals].
  */
 interface SetView<T>: CollectionView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	/**
 	 * Returns whether the given object is equal to this set.
 	 *
@@ -36,7 +55,15 @@ interface SetView<T>: CollectionView<T> {
 /**
  * An immutable set.
  */
-interface Set<T>: Collection<T>, SetView<T>
+interface Set<T>: Collection<T>, SetView<T> {
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE] and [Spliterator.DISTINCT] are reported by default.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+}
 
 /**
  * A mutable set that only supports element removal operations.
