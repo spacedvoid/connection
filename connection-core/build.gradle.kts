@@ -37,15 +37,3 @@ dokka {
 		}
 	}
 }
-
-tasks.dokkaGenerate {
-	enabled = false
-}
-
-tasks.dokkaGeneratePublicationHtml {
-	enabled = false
-}
-
-tasks.logLinkDokkaGeneratePublicationHtml {
-	enabled = false
-}
