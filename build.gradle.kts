@@ -86,6 +86,12 @@ tasks {
 	}
 }
 
+dokka {
+	dokkaPublications.html {
+		outputDirectory = dokkaOutputDir
+	}
+}
+
 tasks.clean {
 	delete(dokkaOutputDir)
 }

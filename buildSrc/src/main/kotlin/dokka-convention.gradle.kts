@@ -18,8 +18,4 @@ dokka {
 	dokkaPublications.configureEach {
 		failOnWarning.set(true)
 	}
-
-	dokkaPublications.html {
-		outputDirectory.set(dokkaOutputDir)
-	}
 }

@@ -74,8 +74,8 @@ Below will generate the Dokka documentation under `docs/`:
 gradlew :dokkaGenerate
 ```
 
-Generating documentations of submodules separately is disabled since `gradlew dokkaGenerate` would try to do so,
-causing one submodule to overwrite another (sub)module's already generated documentations.
+Only the root project's documentation will generate under `docs/`.
+To find the generated documentation of a submodule, look under `<submodule-dir>/build/dokka/html/`. 
 
 ## Upcoming features (or just a todo list)
 
