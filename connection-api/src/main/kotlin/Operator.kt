@@ -262,9 +262,28 @@ operator fun MutableCollection<Boolean>.minusAssign(elements: BooleanArray) {
 /**
  * Returns a new list that repeats the contents of this list [n] times in their order.
  */
-@Suppress("UNCHECKED_CAST")
 operator fun <T> ListView<T>.times(n: Int): List<T> = buildList(size() * n) {
 	repeat(n) { addAll(this@times) }
+}
+
+/**
+ * Returns the [index]-th element based on the encounter order.
+ * Throws [IndexOutOfBoundsException] if less than [index] elements were found.
+ */
+fun <T> Iterable<T>.elementAt(index: Int): T {
+	return when(this) {
+		is ListView<T> -> get(index)
+		is kotlin.collections.List<T> -> get(index)
+		else -> {
+			var current = 0
+			val iterator = iterator()
+			while(iterator.hasNext()) {
+				if(current == index) return iterator.next()
+				current++
+			}
+			throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
+		}
+	}
 }
 
 /**
