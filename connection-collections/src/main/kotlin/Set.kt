@@ -19,7 +19,7 @@ import java.util.Spliterator
  */
 interface SetView<T>: CollectionView<T> {
 	/**
-	 * Returns a new spliterator for this collection.
+	 * Returns a new spliterator for this set.
 	 *
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
 	 * Also, the spliterator must either report
@@ -28,9 +28,9 @@ interface SetView<T>: CollectionView<T> {
 	 * - be *[late-binding][Spliterator]*.
 	 *
 	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this collection ensures such.
+	 * unless the implementation of this set ensures such.
 	 * When the spliterator does not report such, it may, but is not required to,
-	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<T>
@@ -68,7 +68,21 @@ interface Set<T>: Collection<T>, SetView<T> {
 /**
  * A mutable set that only supports element removal operations.
  */
-interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T>
+interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T> {
+	/**
+	 * Returns a new spliterator for this set.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
+	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this set ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+}
 
 /**
  * A mutable set.

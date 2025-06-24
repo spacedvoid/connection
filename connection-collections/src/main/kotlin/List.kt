@@ -25,6 +25,23 @@ interface ListView<T>: SequencedCollectionView<T> {
 	override operator fun iterator(): ListIterator<T>
 
 	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
+	 * Also, the spliterator must either report
+	 * - [Spliterator.IMMUTABLE]
+	 * - [Spliterator.CONCURRENT]; or
+	 * - be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
+	/**
 	 * Returns a new iterator for this list, starting from the given [index].
 	 * Throws [IndexOutOfBoundsException] if the [index] is negative or greater than this list's size.
 	 *
@@ -107,6 +124,20 @@ interface List<T>: ListView<T>, SequencedCollection<T> {
 interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	override fun iterator(): MutableListIterator<T>
 
+	/**
+	 * Returns a new spliterator for this list.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
+	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this list ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this list is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun iterator(index: Int): MutableListIterator<T>
 
 	override fun reversed(): MutableList<T>
@@ -127,8 +158,8 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	fun add(index: Int, element: T)
 
 	/**
-	 * Adds all elements from the given [collection] to the end of this list by their encounter order,
-	 * and returns `true`.
+	 * Adds all elements from the given [collection] to the end of this list by their encounter order.
+	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
 	override fun addAll(collection: CollectionView<out T>): Boolean
 
