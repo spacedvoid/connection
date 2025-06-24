@@ -19,9 +19,6 @@ import java.util.function.Consumer
  * Thread-safety is not defined, unless the implementation ensures such.
  * As such, the behavior of operations when involved in a data race is not defined.
  *
- * The [iterator] may, but is not required to, throw [ConcurrentModificationException]
- * if the collection is modified while it is in use.
- *
  * Operations are not optional, and must not throw [UnsupportedOperationException].
  */
 interface CollectionView<T>: Iterable<T> {
@@ -29,6 +26,9 @@ interface CollectionView<T>: Iterable<T> {
 	 * Returns a new iterator for this collection.
 	 *
 	 * The iteration order is not defined, and might not be consistent.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if the collection is modified while it is in use.
 	 */
 	override operator fun iterator(): Iterator<T>
 
@@ -44,7 +44,7 @@ interface CollectionView<T>: Iterable<T> {
 	 * The spliterator does not report [Spliterator.CONCURRENT]
 	 * unless the implementation of this collection ensures such.
 	 * When the spliterator does not report such, it may, but is not required to,
-	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 *
 	 * Any other characteristics are implementation-defined,
 	 * such as [Spliterator.DISTINCT] for [SetView] and [Spliterator.IMMUTABLE] for [Collection].
@@ -123,6 +123,23 @@ interface Collection<T>: CollectionView<T> {
  */
 interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	override fun iterator(): MutableIterator<T>
+
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristic [Spliterator.SIZED] is reported by default.
+	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
+	 *
+	 * Any other characteristics are implementation-defined,
+	 * such as [Spliterator.DISTINCT] for [SetView] and [Spliterator.IMMUTABLE] for [Collection].
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
 
 	/**
 	 * Removes a single occurrence of the given [element] from this collection.

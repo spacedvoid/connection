@@ -17,7 +17,7 @@ import java.util.Spliterator
  */
 interface NavigableSetView<T>: SequencedSetView<T> {
 	/**
-	 * Returns a new spliterator for this collection.
+	 * Returns a new spliterator for this set.
 	 *
 	 * The characteristics [Spliterator.SIZED], [Spliterator.DISTINCT], [Spliterator.ORDERED] and [Spliterator.SORTED] are reported by default.
 	 * Also, the spliterator must either report
@@ -26,9 +26,9 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 * - be *[late-binding][Spliterator]*.
 	 *
 	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this collection ensures such.
+	 * unless the implementation of this set ensures such.
 	 * When the spliterator does not report such, it may, but is not required to,
-	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<T>
@@ -84,9 +84,10 @@ interface NavigableSetView<T>: SequencedSetView<T> {
  */
 interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
 	/**
-	 * Returns a new spliterator for this collection.
+	 * Returns a new spliterator for this set.
 	 *
-	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], [Spliterator.DISTINCT], [Spliterator.ORDERED], and [Spliterator.SORTED] are reported by default.
+	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], [Spliterator.DISTINCT],
+	 * [Spliterator.ORDERED], and [Spliterator.SORTED] are reported by default.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<T>
@@ -104,6 +105,20 @@ interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
  * A mutable navigable set that only supports element removal operations.
  */
 interface RemoveOnlyNavigableSet<T>: RemoveOnlySequencedSet<T>, NavigableSetView<T> {
+	/**
+	 * Returns a new spliterator for this set.
+	 *
+	 * The characteristics [Spliterator.SIZED], [Spliterator.DISTINCT], [Spliterator.ORDERED] and [Spliterator.SORTED] are reported by default.
+	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this set ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
+
 	override fun reversed(): RemoveOnlyNavigableSet<T>
 
 	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): RemoveOnlyNavigableSet<T>

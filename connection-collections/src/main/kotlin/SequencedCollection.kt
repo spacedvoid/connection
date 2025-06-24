@@ -31,7 +31,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * The spliterator does not report [Spliterator.CONCURRENT]
 	 * unless the implementation of this collection ensures such.
 	 * When the spliterator does not report such, it may, but is not required to,
-	 * throw [ConcurrentModificationException] if the collection is modified while it is in use.
+	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<T>
@@ -76,6 +76,20 @@ interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T> {
  */
 interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOnlyCollection<T> {
 	override fun iterator(): MutableIterator<T>
+
+	/**
+	 * Returns a new spliterator for this collection.
+	 *
+	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
+	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
+	 *
+	 * The spliterator does not report [Spliterator.CONCURRENT]
+	 * unless the implementation of this collection ensures such.
+	 * When the spliterator does not report such, it may, but is not required to,
+	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
+	 */
+	@StreamSupport
+	override fun spliterator(): Spliterator<T>
 
 	override fun reversed(): RemoveOnlySequencedCollection<T>
 
