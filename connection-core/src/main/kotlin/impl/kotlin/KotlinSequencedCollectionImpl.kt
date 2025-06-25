@@ -36,11 +36,8 @@ open class KotlinSequencedCollectionImpl<T>(private val connection: SequencedCol
 
 internal fun <T> CollectionView<T>.conditionalIterator(): MutableIterator<T> {
 	val iterator = iterator()
-	return object: MutableIterator<T> {
-		override fun hasNext(): Boolean = iterator.hasNext()
-
-		override fun next(): T = iterator.next()
-
-		override fun remove() = if(iterator is MutableIterator<T>) iterator.remove() else throw UnsupportedOperationException("remove")
+	return object: MutableIterator<T> by iterator {
+		@Suppress("UNCHECKED_CAST")
+		override fun remove() = (iterator as java.util.Iterator<T>).remove()
 	}
 }
