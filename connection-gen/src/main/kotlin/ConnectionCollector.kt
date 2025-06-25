@@ -93,10 +93,10 @@ private inline fun <reified T: Any> ConnectionGeneration.ConnectionType.Connecti
 	kotlin = KotlinType(T::class.simpleName!!, T::class.java.packageName).apply(configuration)
 }
 
-private fun ConnectionGeneration.ConnectionType.allKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
+private inline fun ConnectionGeneration.ConnectionType.allKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
 	kinds(*allConnectionKinds, configuration = configuration)
 
-private fun ConnectionGeneration.ConnectionType.standardKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
+private inline fun ConnectionGeneration.ConnectionType.standardKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
 	kinds(*standardKinds, configuration = configuration)
 
 private val allConnectionKinds = ConnectionKind.entries.toTypedArray()
