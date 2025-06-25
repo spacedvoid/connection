@@ -154,14 +154,14 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 		 * Defines a [kind] that this family has, and configures it.
 		 * Previous configurations with the [kind] will be preserved.
 		 */
-		fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}): ConnectionTypeKind =
+		inline fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}): ConnectionTypeKind =
 			this.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
 
 		/**
 		 * Defines a [kind] that this family has, and configures it.
 		 * Previous configurations with the [kinds] will be preserved.
 		 */
-		fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit) {
+		inline fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit) {
 			kinds.forEach { kind(it, configuration) }
 		}
 	}
@@ -175,29 +175,25 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 
 	/**
 	 * Creates or retrieves a Connection type which has one type argument.
-	 * The [name] must be unique from all other types.
-	 *
-	 * Additionally [Configurable] by the [configuration].
+	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
 	 */
-	fun collectionNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
-		findOrAdd(name, 1).apply(configuration)
+	inline fun collectionNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
+		named(name, 1, configuration)
 
 	/**
 	 * Creates or retrieves a Connection type which has two type arguments.
-	 * The [name] must be unique from all other types.
-	 *
-	 * Additionally [Configurable] by the [configuration].
+	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
 	 */
-	fun mapNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
-		findOrAdd(name, 2).apply(configuration)
+	inline fun mapNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
+		named(name, 2, configuration)
 
 	/**
 	 * Creates and/or returns the Connection type with the name.
 	 * Throws [IllegalArgumentException] if a type with the same name, but with a different [typeArgCount] already exists.
 	 */
-	private fun findOrAdd(name: String, typeArgCount: Int): ConnectionType {
+	inline fun named(name: String, typeArgCount: Int, configuration: ConnectionType.() -> Unit = {}): ConnectionType {
 		val type = this.connections.computeIfAbsent(name) { ConnectionType(name, typeArgCount) }
 		check(type.typeArgCount == typeArgCount) { "Requested type argument count $typeArgCount differs from found ${type.typeArgCount}" }
-		return type
+		return type.apply(configuration)
 	}
 }

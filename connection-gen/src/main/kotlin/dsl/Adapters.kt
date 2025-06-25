@@ -37,7 +37,7 @@ class Adapters: Configurable {
 		/**
 		 * Creates a new adapter, different from the [default] adapter.
 		 */
-		fun create(name: String, to: KotlinType, configuration: Adapter.() -> Unit = {}): Adapter =
+		inline fun create(name: String, to: KotlinType, configuration: Adapter.() -> Unit = {}): Adapter =
 			Adapter(to, name).apply {
 				configuration()
 				this@AdapterCollection.extra += this
