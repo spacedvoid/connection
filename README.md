@@ -87,7 +87,7 @@ To find the generated documentation of a submodule, look under `<submodule-dir>/
   - [x] `Spliterator` support
 
 - `v0.2.0`:
-  - [ ] Allow `null` elements, disambiguating between `null` return values, but document `null`-hostile behaviors
+  - [ ] Efficient collection implementations, such as empty lists or sets
 
 - Not scheduled
   - [ ] Simpler ways to express intervals for `subList` and `subSet`

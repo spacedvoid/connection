@@ -94,3 +94,11 @@ To be easy, one can understand that element additions (mostly) do not define the
 However, because these positional addition methods do have real-life usages,
 we are currently designing a proper intermediate collection type that allows such positional additions.
 (Currently, only positional deletions, such as [MutableSequencedCollection.removeFirst], are supported.)
+
+### Null-hostility
+
+Some implementations might reject `null` elements, either by (typically) throwing an exception or returning a predefined value.
+These collections are called *`null`-hostile*, and any attempts to add/modify/remove/query `null` elements will result in (typically) a [NullPointerException].
+This includes [add][MutableCollection.add]`(null)`, [remove][RemoveOnlyCollection.remove]`(null)`, and [contains][CollectionView.contains]`(null)`.
+However, because the generic system would prevent usages of `null` in such cases(for example, an `Int?` to a `MutableList<Int>`),
+users wouldn't need to care whether the collection accepts `null` or not, and thus not documented at the API.
