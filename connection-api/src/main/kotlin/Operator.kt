@@ -56,29 +56,39 @@ operator fun <T> ListView<T>.component5(): T = get(4)
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Iterable<T>) {
-	if(elements is CollectionView<T>) addAll(elements) else addAll(elements.toViewConnection())
+fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean {
+	return when(elements) {
+		is CollectionView<T> -> addAll(elements)
+		is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
+		else -> {
+			var result = false
+			for(e in elements) if(add(e)) result = true
+			return result
+		}
+	}
 }
 
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Array<out T>) {
-	addAll(elements.asList())
-}
+fun <T> MutableCollection<T>.addAll(elements: Array<out T>): Boolean = addAll(elements.asList())
 
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Sequence<T>) {
-	addAll(elements.toList())
+fun <T> MutableCollection<T>.addAll(elements: Sequence<T>): Boolean {
+	var result = false
+	for(e in elements) if(add(e)) result = true
+	return result
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<T>.removeAll(elements: Iterable<T>) {
-	if(elements is CollectionView<T>) removeAll(elements) else removeAll(elements.toViewConnection())
+fun <T> RemoveOnlyCollection<T>.removeAll(elements: Iterable<T>): Boolean = when(elements) {
+	is CollectionView<T> -> removeAll(elements)
+	is kotlin.collections.Collection<T> -> removeAll(elements.asViewConnection())
+	else -> removeAll(elements.toSet())
 }
 
 /**
@@ -92,7 +102,7 @@ fun <T> RemoveOnlyCollection<T>.removeAll(elements: Array<out T>) {
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
 fun <T> RemoveOnlyCollection<T>.removeAll(elements: Sequence<T>) {
-	removeAll(elements.toList())
+	removeAll(elements.toSet())
 }
 
 /**
@@ -105,17 +115,23 @@ operator fun <T> MutableCollection<T>.plusAssign(element: T) {
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Iterable<T>) = addAll(elements)
+operator fun <T> MutableCollection<T>.plusAssign(elements: Iterable<T>) {
+	addAll(elements)
+}
 
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Array<out T>) = addAll(elements)
+operator fun <T> MutableCollection<T>.plusAssign(elements: Array<out T>) {
+	addAll(elements)
+}
 
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Sequence<T>) = addAll(elements)
+operator fun <T> MutableCollection<T>.plusAssign(elements: Sequence<T>) {
+	addAll(elements)
+}
 
 /**
  * Shortcut for [RemoveOnlyCollection.remove].
@@ -127,7 +143,9 @@ operator fun <T> RemoveOnlyCollection<T>.minusAssign(element: T) {
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Iterable<T>) = removeAll(elements)
+operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Iterable<T>) {
+	removeAll(elements)
+}
 
 /**
  * Shortcut for [removeAll].
