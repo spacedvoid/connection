@@ -14,18 +14,16 @@ import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.VIEW
 import io.github.spacedvoid.connection.gen.dsl.KotlinType
 
 /**
- * The main DSL for the Connection Generator.
+ * The main DSL for the Connection generator.
  */
 fun ConnectionGeneration.collect() {
 	collectionNamed("Collection") {
 		allKinds()
 	}
 
-	collectionNamed("SequencedCollection") {
+	val sequencedCol = collectionNamed("SequencedCollection") {
 		allKinds {
-			kotlinType<java.util.SequencedCollection<*>> {
-				name = this@collectionNamed.name
-			}
+			kotlinType<java.util.SequencedCollection<*>>()
 		}
 	}
 
@@ -33,7 +31,7 @@ fun ConnectionGeneration.collect() {
 		standardKinds()
 		kind(VIEW) {
 			adapters.asKotlin {
-				create(to = collectionNamed("SequencedCollection").kind(VIEW).kotlin!!, name = "asSequencedKotlin") {
+				create(to = sequencedCol.kind(VIEW).kotlin!!, name = "asSequencedKotlin") {
 					unchecked = true
 					docs = """
 						/**
@@ -54,17 +52,13 @@ fun ConnectionGeneration.collect() {
 
 	collectionNamed("SequencedSet") {
 		allKinds {
-			kotlinType<java.util.SequencedSet<*>> {
-				name = this@collectionNamed.name
-			}
+			kotlinType<java.util.SequencedSet<*>>()
 		}
 	}
 
 	collectionNamed("NavigableSet") {
 		allKinds {
-			kotlinType<java.util.NavigableSet<*>> {
-				name = this@collectionNamed.name
-			}
+			kotlinType<java.util.NavigableSet<*>>()
 		}
 	}
 
@@ -74,17 +68,42 @@ fun ConnectionGeneration.collect() {
 
 	mapNamed("SequencedMap") {
 		standardKinds {
-			kotlinType<java.util.SequencedMap<*, *>> {
-				name = this@mapNamed.name
-			}
+			kotlinType<java.util.SequencedMap<*, *>>()
 		}
 	}
 
 	mapNamed("NavigableMap") {
 		standardKinds {
-			kotlinType<java.util.NavigableMap<*, *>> {
-				name = this@mapNamed.name
-			}
+			kotlinType<java.util.NavigableMap<*, *>>()
+		}
+	}
+
+	collectionNamed("Stack") {
+		kind(MUTABLE) {
+			name = "Stack"
+			adapters.asKotlin.default = null
+			adapters.asConnection.default = null
+
+			kotlinType<java.util.Deque<*>>()
+		}
+	}
+
+	collectionNamed("Queue") {
+		kind(MUTABLE) {
+			name = "Queue"
+			adapters.asKotlin.default = null
+			adapters.asConnection.default = null
+
+			kotlinType<java.util.Queue<*>>()
+		}
+	}
+
+	collectionNamed("Deque") {
+		kind(MUTABLE) {
+			name = "Deque"
+			adapters.asKotlin.default = null
+
+			kotlinType<java.util.Deque<*>>()
 		}
 	}
 }

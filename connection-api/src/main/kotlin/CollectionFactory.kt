@@ -6,6 +6,9 @@
 
 package io.github.spacedvoid.connection
 
+import io.github.spacedvoid.connection.impl.DequeImpl
+import io.github.spacedvoid.connection.impl.QueueImpl
+import io.github.spacedvoid.connection.impl.StackImpl
 import java.util.TreeMap
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
@@ -118,3 +121,26 @@ fun <K: Comparable<K>, V> mutableNavigableMapOf(vararg entries: Pair<K, V>): Mut
  */
 fun <K, V> mutableNavigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
 	TreeMap<K, V>(comparator).apply { entries.forEach { put(it.first, it.second) } }.asMutableConnection()
+
+/**
+ * Creates a [Stack] with the given [elements].
+ *
+ * The iteration order is defined as the reversed encounter order;
+ * the first element will be the bottom, and the last element will be the top.
+ * This behavior is consistent with creating stacks with collections, such as [ArrayDeque]`(listOf(1, 2, 3))`.
+ */
+fun <T> stackOf(vararg elements: T): Stack<T> = StackImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+
+/**
+ * Creates a [Queue] with the given [elements].
+ *
+ * The iteration order is defined as the encounter order.
+ */
+fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+
+/**
+ * Creates a [Deque] with the given [elements].
+ *
+ * The iteration order is defined as the encounter order.
+ */
+fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }

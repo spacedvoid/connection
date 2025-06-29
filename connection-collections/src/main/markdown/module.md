@@ -25,6 +25,9 @@ Most collection interfaces work similar from the Java Collections Framework:
 | [java.util.Map]                 | [kotlin.collections.Map]        | [Map][MapView]                                 |
 | [java.util.SequencedMap]        | -                               | [SequencedMap][SequencedMapView]               |
 | [java.util.NavigableMap]        | -                               | [NavigableMap][NavigableMapView]               |
+| Stacks                          | [kotlin.collections.ArrayDeque] | [Stack]                                        |
+| [java.util.Queue]               | [kotlin.collections.ArrayDeque] | [Queue]                                        |
+| [java.util.Deque]               | [kotlin.collections.ArrayDeque] | [Deque]                                        |
 
 Below are unsupported types because of various reasons, such as replaceable by another type:
 
@@ -32,9 +35,6 @@ Below are unsupported types because of various reasons, such as replaceable by a
 |--------------------------------------|--------------------------------------------|----------------------------------------------------------------------------------|
 | [java.util.SortedSet]                | [java.util.TreeSet]                        | `TreeSet().asMutableConnection()`                                                |
 | [java.util.SortedMap]                | [java.util.TreeMap]                        | `TreeMap().asMutableConnection()`                                                |
-| Stacks*                              | [java.util.Collections.asLifoQueue]        | -                                                                                |
-| [java.util.Queue]*                   | [java.util.LinkedList]                     | -                                                                                |
-| [java.util.Deque]*                   | [java.util.ArrayDeque]                     | -                                                                                |
 | [java.util.concurrent.ConcurrentMap] | [java.util.concurrent.ConcurrentHashMap]   | `ConcurrentHashMap().asMutableConnection()`                                      |
 | [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                                |
 | [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                                |

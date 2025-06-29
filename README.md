@@ -56,6 +56,14 @@ you might need to manually add imports for such types.
 This is because [star imports have lower priority than default imports](https://youtrack.jetbrains.com/issue/KT-4374).
 See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavior.
 
+Just as a suggestion, add Kotlin's relevant types and methods(not all of them!) to the *exclude-from-autocompletion* list of your IDE.
+For example, add `kotlin.collections.Collection` and `kotlin.collections.listOf` to the list, and qualify their usages or use an import alias.
+
+For IntelliJ IDEA, currently, there are no solutions because of
+https://youtrack.jetbrains.com/issue/KTIJ-12918/Some-of-the-Kotlin-packages-cannot-be-excluded-from-import-and-completion.
+Because `kotlin.collections` is imported by default,
+this prevents the setting `Editor - General - Auto Import - Exclude from auto-import and completion` to be used.
+
 ## Building
 
 Run:
@@ -80,7 +88,7 @@ To find the generated documentation of a submodule, look under `<submodule-dir>/
 ## Upcoming features (or just a todo list)
 
 - `v0.1.0`:
-  - [ ] Special collections, such as stack, queue, and deque
+  - [x] Special collections, such as stack, queue, and deque
   - [x] Completely migrate away from `kotlin.collections`, removing exposed internal API that depends on the Java Collections Framework
   - [x] `equals` and `hashCode` implementations
   - [x] Operator and utility methods
