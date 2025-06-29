@@ -163,119 +163,84 @@ operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Array<out T>) = r
  */
 operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
 
-//<editor-fold defaultState="collapsed" desc="Primitive array overloads">
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order and then the given [element].
  */
-operator fun MutableCollection<Double>.plusAssign(elements: DoubleArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.plus(element: T): List<T> = buildList {
+	addAll(this@plus)
+	add(element)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
  */
-operator fun MutableCollection<Float>.plusAssign(elements: FloatArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.plus(elements: Iterable<T>): List<T> = buildList {
+	addAll(this@plus)
+	addAll(elements)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
  */
-operator fun MutableCollection<Long>.plusAssign(elements: LongArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.plus(elements: Array<out T>): List<T> = buildList {
+	addAll(this@plus)
+	addAll(elements)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
  */
-operator fun MutableCollection<Int>.plusAssign(elements: IntArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.plus(elements: Sequence<T>): List<T> = buildList {
+	addAll(this@plus)
+	addAll(elements)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Shortcut for [plus].
+ *
+ * Useful when the [element] is a container, such as [Iterable], [Array], or [Sequence].
  */
-operator fun MutableCollection<Short>.plusAssign(elements: ShortArray) {
-	addAll(elements.asList())
+fun <T> Iterable<T>.plusElement(element: T): List<T> = plus(element)
+
+/**
+ * Returns a list that contains the elements by their encounter order, but without the first occurrence of the given [element].
+ *
+ * Whether an element matches the given [element] is determined via [Any.equals].
+ */
+operator fun <T> Iterable<T>.minus(element: T): List<T> = buildList {
+	addAll(this@minus)
+	remove(element)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ *
+ * Whether an element matches another element is determined via [Any.equals].
  */
-operator fun MutableCollection<Byte>.plusAssign(elements: ByteArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.minus(elements: Iterable<T>): List<T> = buildList {
+	addAll(this@minus)
+	removeAll(elements)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ *
+ * Whether an element matches another element is determined via [Any.equals].
  */
-operator fun MutableCollection<Char>.plusAssign(elements: CharArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.minus(elements: Array<out T>): List<T> = buildList {
+	addAll(this@minus)
+	removeAll(elements)
 }
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ *
+ * Whether an element matches another element is determined via [Any.equals].
  */
-operator fun MutableCollection<Boolean>.plusAssign(elements: BooleanArray) {
-	addAll(elements.asList())
+operator fun <T> Iterable<T>.minus(elements: Sequence<T>): List<T> = buildList {
+	addAll(this@minus)
+	removeAll(elements.toSet())
 }
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Double>.minusAssign(elements: DoubleArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Float>.minusAssign(elements: FloatArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Long>.minusAssign(elements: LongArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Int>.minusAssign(elements: IntArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Short>.minusAssign(elements: ShortArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Byte>.minusAssign(elements: ByteArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Char>.minusAssign(elements: CharArray) {
-	removeAll(elements.asList())
-}
-
-/**
- * Shortcut for [MutableCollection.removeAll].
- */
-operator fun MutableCollection<Boolean>.minusAssign(elements: BooleanArray) {
-	removeAll(elements.asList())
-}
-//</editor-fold>
 
 /**
  * Returns a new list that repeats the contents of this list [n] times in their order.
