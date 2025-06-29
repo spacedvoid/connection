@@ -12,21 +12,19 @@ package io.github.spacedvoid.connection.gen.dsl
  * Contains *adapters*, which convert collections between Connection and Kotlin.
  */
 @ConnectionDSL
-class Adapters: Configurable {
+class Adapters @DslInternal constructor(): Configurable {
 	/**
 	 * A collection for an adapter type.
 	 */
 	@ConnectionDSL
-	inner class AdapterCollection: Configurable {
+	inner class AdapterCollection @DslInternal constructor(): Configurable {
 		/**
 		 * The default adapter generated for all kinds.
-		 * Its [target type][Adapter.kotlin] will be the type of the `kotlin` property,
-		 * and the [name][Adapter.name] will be determined based on the kind of the Connection.
 		 *
 		 * Assign `null` to not generate the default adapter.
 		 * The behavior of the generator when assigning another adapter is not defined.
 		 */
-		var default: Adapter? = Adapter()
+		var default: Adapter? = Adapter(isExtra = false)
 
 		/**
 		 * Contains any other custom adapters created by the DSL.
@@ -38,7 +36,7 @@ class Adapters: Configurable {
 		 * Creates a new adapter, different from the [default] adapter.
 		 */
 		inline fun create(name: String, to: KotlinType, configuration: Adapter.() -> Unit = {}): Adapter =
-			Adapter(to, name).apply {
+			Adapter(to, name, isExtra = true).apply {
 				configuration()
 				this@AdapterCollection.extra += this
 			}
@@ -56,7 +54,10 @@ class Adapters: Configurable {
 
 /**
  * Represents an adapter.
- * `null` properties will be replaced with default values, which might cause compilation errors.
+ * `null` properties will be replaced with default values from [ConnectionTypeKind][ConnectionGeneration.ConnectionType.ConnectionTypeKind], which might cause compilation errors.
+ *
+ * @param [unchecked] Controls whether the collection object needs unchecked casting.
+ *                    Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
  */
 @ConnectionDSL
-data class Adapter @DslInternal constructor(var kotlin: KotlinType? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false): Configurable
+data class Adapter @DslInternal constructor(var kotlin: KotlinType? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false, @property:DslInternal val isExtra: Boolean): Configurable

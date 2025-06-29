@@ -15,7 +15,7 @@ package io.github.spacedvoid.connection.gen.dsl
  * Conversions that also change types should be manually created.
  */
 @ConnectionDSL
-class Conversions: Configurable {
+class Conversions @DslInternal constructor(): Configurable {
 	/**
 	 * Conversions that mask remove-only Connections to prevent downcasting.
 	 *
