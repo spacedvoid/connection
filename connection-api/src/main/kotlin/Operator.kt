@@ -101,7 +101,7 @@ fun <T> RemoveOnlyCollection<T>.removeAll(elements: Iterable<T>): Boolean = when
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
 fun <T> RemoveOnlyCollection<T>.removeAll(elements: Array<out T>) {
-	removeAll(elements.asList())
+	removeAll(elements.toSet())
 }
 
 /**
