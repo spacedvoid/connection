@@ -36,33 +36,33 @@ object ConversionAdapterGenerator {
 		// Conversions
 		// View
 		type.conversions.view?.let {
-			val (from, view) = conversionTarget(type, ConnectionKind.VIEW) ?: return@let
-			files.view.attachSources(resolver, from.qualifiedName, view.qualifiedName)
-			files.view.generateView(it, type.typeArgs, from.name, view.name)
+			val view = type.kinds[ConnectionKind.VIEW] ?: return@let
+			files.view.attachSources(resolver, view.qualifiedName)
+			files.view.generateView(it, type.typeArgs, view.name)
 		}
 		// RemoveOnly
 		type.conversions.removeOnly?.let {
-			val (from, removeOnly) = conversionTarget(type, ConnectionKind.REMOVE_ONLY) ?: return@let
-			files.removeOnly.attachSources(resolver, from.qualifiedName, removeOnly.qualifiedName)
-			files.removeOnly.generateRemoveOnly(it, type.typeArgs, from.name, removeOnly.name)
+			val removeOnly = type.kinds[ConnectionKind.REMOVE_ONLY] ?: return@let
+			files.removeOnly.attachSources(resolver, removeOnly.qualifiedName)
+			files.removeOnly.generateRemoveOnly(it, type.typeArgs, removeOnly.name)
 		}
 		type.kinds.values.forEach { kind: ConnectionTypeKind ->
 			// Adapters
 			// CollectionAsConnection
 			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach {
 				if(it == null) return@forEach
-				val kotlin = it.kotlin ?: kind.kotlin ?: throw IllegalArgumentException("`kotlin` not set for ColAsCon adapter in $it")
+				val kotlin = it.kotlin ?: kind.kotlin ?: if(it.isExtra) throw IllegalArgumentException("`kotlin` not set for ColAsCon adapter in $it") else return@forEach
 				files.colAsCon.attachSources(resolver, kind.qualifiedName)
 				files.colAsCon.generateColAsCon(it, kind, kotlin)
 			}
 			// ConnectionAsCollection
 			(kind.adapters.asKotlin.default + kind.adapters.asKotlin.extra).forEach {
 				if(it == null) return@forEach
-				val kotlin = it.kotlin ?: kind.kotlin ?: throw IllegalArgumentException("`kotlin` not set for ConAsCol adapter in $it")
+				val kotlin = it.kotlin ?: kind.kotlin ?: if(it.isExtra) throw IllegalArgumentException("`kotlin` not set for ConAsCol adapter in $it") else return@forEach
 				val apiClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
 				if(alreadyGenerated(apiClass, kotlin) && it === kind.adapters.asKotlin.default) return@forEach
 				apiClass.containingFile?.let { files.conAsCol.attach(it) }
-				files.conAsCol.generateConAsCol(it, kind, kotlin, it.unchecked)
+				files.conAsCol.generateConAsCol(it, kind, kotlin)
 			}
 		}
 	}
@@ -103,22 +103,6 @@ object ConversionAdapterGenerator {
 			this.colAsCon.close()
 			this.conAsCol.close()
 		}
-	}
-
-	/**
-	 * Returns the desired conversion as `(from, to)`, or `null` if no conversions should be generated.
-	 *
-	 * This method is used when conversions that change the kind (maintaining the type) are not needed,
-	 * such as the requested [kind] is [ConnectionKind.MUTABLE], or the target [kind] is not present on the [type].
-	 * In most cases, the returned pair is just `{`[type][type]`, `[type][type]`}`.
-	 */
-	private fun conversionTarget(
-		type: ConnectionGeneration.ConnectionType,
-		kind: ConnectionKind
-	): Pair<ConnectionTypeKind, ConnectionTypeKind>? {
-		val from = type.kinds[kind] ?: return null
-		val view = if(type.kinds.keys.any { it > kind }) from else return null
-		return from to view
 	}
 
 	private val defaultViewDoc = """
@@ -194,8 +178,7 @@ object ConversionAdapterGenerator {
 
 	private operator fun <T> T.plus(list: List<T>): List<T> = mutableListOf(this).apply { addAll(list) }
 
-	@DslInternal
-	val ConnectionGeneration.ConnectionType.typeArgs: String
+	private val ConnectionGeneration.ConnectionType.typeArgs: String
 		get() = when(this.typeArgCount) {
 			1 -> "<T>"
 			2 -> "<K, V>"
@@ -205,7 +188,7 @@ object ConversionAdapterGenerator {
 	/**
 	 * Shortcut for generating Kotlin collection to Connection adapters.
 	 */
-	fun GeneratingFiles.GeneratingFile.generateColAsCon(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
+	private fun GeneratingFiles.GeneratingFile.generateColAsCon(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
 		check(!this.closed)
 		val typeParams = kind.type.typeArgs
 		this += "\n"
@@ -215,38 +198,35 @@ object ConversionAdapterGenerator {
 
 	/**
 	 * Shortcut for generating Connection to Kotlin collection adapters.
-	 *
-	 * [unchecked] controls whether the collection object needs unchecked casting.
-	 * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
 	 */
-	fun GeneratingFiles.GeneratingFile.generateConAsCol(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType, unchecked: Boolean) {
+	private fun GeneratingFiles.GeneratingFile.generateConAsCol(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
 		check(!this.closed)
 		val typeParams = kind.type.typeArgs
 		this += "\n"
 		this += adapter.docs ?: defaultConAsColDocs
-		if(unchecked) this += "\n@Suppress(\"UNCHECKED_CAST\")"
+		if(adapter.unchecked) this += "\n@Suppress(\"UNCHECKED_CAST\")"
 		this += "\nfun $typeParams ${kind.name}$typeParams.${adapter.name ?: "asKotlin"}(): ${kotlin.qualifiedName}$typeParams = if(this is ${kind.impl.name}$typeParams) this.kotlin "
-		if(unchecked) this += "as ${kotlin.qualifiedName}$typeParams "
+		if(adapter.unchecked) this += "as ${kotlin.qualifiedName}$typeParams "
 		this += "else ${kotlin.impl.name}(this)\n"
 	}
 
 	/**
 	 * Shortcut for generating view conversions.
 	 */
-	fun GeneratingFiles.GeneratingFile.generateView(conversion: Conversion, typeParams: String, from: String, to: String) {
+	private fun GeneratingFiles.GeneratingFile.generateView(conversion: Conversion, typeParams: String, view: String) {
 		check(!this.closed)
 		this += "\n"
 		this += conversion.docs ?: defaultViewDoc
-		this += "\nfun $typeParams $from$typeParams.${conversion.name ?: "asView"}(): $to$typeParams = object: $to$typeParams by this {}\n"
+		this += "\nfun $typeParams $view$typeParams.${conversion.name ?: "asView"}(): $view$typeParams = object: $view$typeParams by this {}\n"
 	}
 
 	/**
 	 * Shortcut for generating remove-only conversions.
 	 */
-	fun GeneratingFiles.GeneratingFile.generateRemoveOnly(conversion: Conversion, typeParams: String, from: String, to: String) {
+	private fun GeneratingFiles.GeneratingFile.generateRemoveOnly(conversion: Conversion, typeParams: String, removeOnly: String) {
 		check(!this.closed)
 		this += "\n"
 		this += conversion.docs ?: defaultRemoveOnlyDoc
-		this += "\nfun $typeParams $from$typeParams.${conversion.name ?: "asRemoveOnly"}(): $to$typeParams = object: $to$typeParams by this {}\n"
+		this += "\nfun $typeParams $removeOnly$typeParams.${conversion.name ?: "asRemoveOnly"}(): $removeOnly$typeParams = object: $removeOnly$typeParams by this {}\n"
 	}
 }
