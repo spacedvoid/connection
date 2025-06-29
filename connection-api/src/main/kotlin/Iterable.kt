@@ -42,7 +42,7 @@ inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit
 		}
 
 		override fun yieldAll(elements: Iterable<U>) {
-			addAll(elements.toViewConnection())
+			addAll(elements)
 		}
 	}
 	for(e in this@mapMulti) acceptor.accumulator(e)
@@ -153,11 +153,4 @@ inline fun <T, K> Iterable<T>.associateBy(transform: (T) -> K): Map<K, T> = buil
  */
 inline fun <T, V> Iterable<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap {
 	for(e in this@associateWith) put(e, transform(e))
-}
-
-@PublishedApi
-internal fun <T> Iterable<T>.toViewConnection(): CollectionView<T> = when(this) {
-	is CollectionView<T> -> this
-	is kotlin.collections.Collection<T> -> asViewConnection()
-	else -> toMutableList()
 }
