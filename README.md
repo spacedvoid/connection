@@ -98,6 +98,7 @@ To find the generated documentation of a submodule, look under `<submodule-dir>/
   - [ ] Efficient collection implementations, such as empty lists or sets
 
 - Not scheduled
+  - [ ] Extend methods that involve generics to use variances (such as `out`)
   - [ ] Simpler ways to express intervals for `subList` and `subSet`
   - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
 
