@@ -16,7 +16,7 @@ Since Kotlin's collection kinds are narrower than Connection, most methods depen
 
 **Warning:** Do not assume mutability of iterators from non-Kotlin collections, such as [KotlinSequencedCollectionImpl].
 Treat them as if they were [java.util.Iterator]; they are mutable if the source collection is mutable.
-Mutable iterators **do not** imply the source collection is mutable.
+Mutable iterators do **not** imply the source collection is mutable.
 
 # Package io.github.spacedvoid.connection.utils
 

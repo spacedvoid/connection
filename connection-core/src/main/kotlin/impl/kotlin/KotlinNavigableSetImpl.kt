@@ -7,11 +7,9 @@
 package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
-import java.util.NavigableSet
-import java.util.SortedSet
 
-open class KotlinNavigableSetImpl<T>(private val connection: NavigableSetView<T>): KotlinSequencedSetImpl<T>(connection), NavigableSet<T> {
-	override fun reversed(): NavigableSet<T> = KotlinNavigableSetImpl(this.connection.reversed())
+open class KotlinNavigableSetImpl<T>(private val connection: NavigableSetView<T>): KotlinSequencedSetImpl<T>(connection), java.util.NavigableSet<T> {
+	override fun reversed(): java.util.NavigableSet<T> = KotlinNavigableSetImpl(this.connection.reversed())
 
 	override fun lower(e: T): T? = this.connection.lower(e, false)
 
@@ -25,26 +23,26 @@ open class KotlinNavigableSetImpl<T>(private val connection: NavigableSetView<T>
 		if(this.connection is RemoveOnlyNavigableSet<T>) this.connection.removeFirst() else throw UnsupportedOperationException("pollFirst")
 
 	override fun pollLast(): T? =
-		if(this.connection is RemoveOnlyNavigableSet<T>) this.connection.removeLast() else throw UnsupportedOperationException("removeLast")
+		if(this.connection is RemoveOnlyNavigableSet<T>) this.connection.removeLast() else throw UnsupportedOperationException("pollLast")
 
-	override fun descendingSet(): NavigableSet<T> = reversed()
+	override fun descendingSet(): java.util.NavigableSet<T> = reversed()
 
-	override fun descendingIterator(): Iterator<T> = descendingSet().iterator()
+	override fun descendingIterator(): MutableIterator<T> = descendingSet().iterator()
 
-	override fun subSet(fromElement: T, fromInclusive: Boolean, toElement: T, toInclusive: Boolean): NavigableSet<T> =
+	override fun subSet(fromElement: T, fromInclusive: Boolean, toElement: T, toInclusive: Boolean): java.util.NavigableSet<T> =
 		KotlinNavigableSetImpl(this.connection.subSet(fromElement, toElement, fromInclusive, toInclusive))
 
-	override fun headSet(toElement: T, inclusive: Boolean): NavigableSet<T> =
+	override fun headSet(toElement: T, inclusive: Boolean): java.util.NavigableSet<T> =
 		KotlinNavigableSetImpl(this.connection.headSet(toElement, inclusive))
 
-	override fun tailSet(fromElement: T, inclusive: Boolean): NavigableSet<T> =
+	override fun tailSet(fromElement: T, inclusive: Boolean): java.util.NavigableSet<T> =
 		KotlinNavigableSetImpl(this.connection.tailSet(fromElement, inclusive))
 
-	override fun subSet(fromElement: T, toElement: T): SortedSet<T> = subSet(fromElement, true, toElement, false)
+	override fun subSet(fromElement: T, toElement: T): java.util.NavigableSet<T> = subSet(fromElement, true, toElement, false)
 
-	override fun headSet(toElement: T): SortedSet<T> = headSet(toElement, false)
+	override fun headSet(toElement: T): java.util.NavigableSet<T> = headSet(toElement, false)
 
-	override fun tailSet(fromElement: T): SortedSet<T> = tailSet(fromElement, true)
+	override fun tailSet(fromElement: T): java.util.NavigableSet<T> = tailSet(fromElement, true)
 
 	override fun comparator(): Comparator<in T> = this.connection.comparator
 

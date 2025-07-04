@@ -8,12 +8,9 @@ package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.keySet
-import java.util.NavigableMap
-import java.util.NavigableSet
-import java.util.SortedMap
 
-open class KotlinNavigableMapImpl<K, V>(private val connection: NavigableMapView<K, V>): KotlinSequencedMapImpl<K, V>(connection), NavigableMap<K, V> {
-	override fun reversed(): NavigableMap<K, V> = KotlinNavigableMapImpl(this.connection.reversed())
+open class KotlinNavigableMapImpl<K, V>(private val connection: NavigableMapView<K, V>): KotlinSequencedMapImpl<K, V>(connection), java.util.NavigableMap<K, V> {
+	override fun reversed(): java.util.NavigableMap<K, V> = KotlinNavigableMapImpl(this.connection.reversed())
 
 	override fun lowerEntry(key: K): Map.Entry<K, V>? = this.connection.lowerEntry(key, false)?.toEntry()
 
@@ -31,26 +28,26 @@ open class KotlinNavigableMapImpl<K, V>(private val connection: NavigableMapView
 
 	override fun higherKey(key: K): K? = this.connection.higherKey(key, false)
 
-	override fun descendingMap(): NavigableMap<K, V> = reversed()
+	override fun descendingMap(): java.util.NavigableMap<K, V> = reversed()
 
-	override fun navigableKeySet(): NavigableSet<K> = keySet()
+	override fun navigableKeySet(): java.util.NavigableSet<K> = keySet()
 
-	override fun descendingKeySet(): NavigableSet<K> = descendingMap().keySet()
+	override fun descendingKeySet(): java.util.NavigableSet<K> = descendingMap().keySet()
 
-	override fun subMap(fromKey: K, fromInclusive: Boolean, toKey: K, toInclusive: Boolean): NavigableMap<K, V> =
+	override fun subMap(fromKey: K, fromInclusive: Boolean, toKey: K, toInclusive: Boolean): java.util.NavigableMap<K, V> =
 		KotlinNavigableMapImpl(this.connection.subMap(fromKey, toKey, fromInclusive, toInclusive))
 
-	override fun headMap(toKey: K, inclusive: Boolean): NavigableMap<K, V> =
+	override fun headMap(toKey: K, inclusive: Boolean): java.util.NavigableMap<K, V> =
 		KotlinNavigableMapImpl(this.connection.headMap(toKey, inclusive))
 
-	override fun tailMap(fromKey: K, inclusive: Boolean): NavigableMap<K, V> =
+	override fun tailMap(fromKey: K, inclusive: Boolean): java.util.NavigableMap<K, V> =
 		KotlinNavigableMapImpl(this.connection.tailMap(fromKey, inclusive))
 
-	override fun subMap(fromKey: K, toKey: K): SortedMap<K, V> = subMap(fromKey, true, toKey, false)
+	override fun subMap(fromKey: K, toKey: K): java.util.NavigableMap<K, V> = subMap(fromKey, true, toKey, false)
 
-	override fun headMap(toKey: K): SortedMap<K, V> = headMap(toKey, false)
+	override fun headMap(toKey: K): java.util.NavigableMap<K, V> = headMap(toKey, false)
 
-	override fun tailMap(fromKey: K): SortedMap<K, V> = tailMap(fromKey, true)
+	override fun tailMap(fromKey: K): java.util.NavigableMap<K, V> = tailMap(fromKey, true)
 
 	override fun firstEntry(): Map.Entry<K, V>? = this.connection.first()?.toEntry()
 

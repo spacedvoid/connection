@@ -9,12 +9,18 @@ package io.github.spacedvoid.connection.impl.kotlin
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
 import io.github.spacedvoid.connection.impl.SetViewImpl
-import java.util.SequencedSet
 
-open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>): KotlinCollectionImpl<T>(connection), SequencedSet<T> {
+open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>): KotlinCollectionImpl<T>(connection), java.util.SequencedSet<T> {
+	/**
+	 * Returns an iterator over the elements of this object.
+	 *
+	 * **Warning:** Do not assume mutability of iterators from non-Kotlin collections.
+	 * Treat them as if they were [java.util.Iterator]; they are mutable if the source collection is mutable.
+	 * Mutable iterators do **not** imply the source collection is mutable.
+	 */
 	override fun iterator(): MutableIterator<T> = this.connection.conditionalIterator()
 
-	override fun reversed(): SequencedSet<T> = KotlinSequencedSetImpl(this.connection.reversed())
+	override fun reversed(): java.util.SequencedSet<T> = KotlinSequencedSetImpl(this.connection.reversed())
 
 	override fun add(element: T): Boolean =
 		if(this.connection is MutableSequencedSet<T>) this.connection.add(element) else throw UnsupportedOperationException("add(T)")

@@ -11,11 +11,10 @@ import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
 import io.github.spacedvoid.connection.impl.MapViewImpl
 import io.github.spacedvoid.connection.impl.SetViewImpl
-import java.util.SequencedMap
 
 @Suppress("UNCHECKED_CAST")
-open class KotlinSequencedMapImpl<K, V>(private val connection: SequencedMapView<K, V>): KotlinMapImpl<K, V>(connection), SequencedMap<K, V> {
-	override fun reversed(): SequencedMap<K, V> = KotlinSequencedMapImpl(this.connection.reversed())
+open class KotlinSequencedMapImpl<K, V>(private val connection: SequencedMapView<K, V>): KotlinMapImpl<K, V>(connection), java.util.SequencedMap<K, V> {
+	override fun reversed(): java.util.SequencedMap<K, V> = KotlinSequencedMapImpl(this.connection.reversed())
 
 	override fun put(key: K, value: V): V? =
 		if(this.connection is MutableSequencedMap<K, V>) this.connection.put(key, value) else throw UnsupportedOperationException("put(K, V)")
@@ -29,10 +28,30 @@ open class KotlinSequencedMapImpl<K, V>(private val connection: SequencedMapView
 	override fun clear() =
 		if(this.connection is MutableSequencedMap<K, V>) this.connection.clear() else throw UnsupportedOperationException("clear")
 
+	/**
+	 * Returns a read-only [Set] of all keys in this map.
+	 *
+	 * **Warning:** Do not assume mutability of entry collections from non-Kotlin maps.
+	 * Treat them as if they were [java.util.Collection]; they are mutable if the source collection is mutable.
+	 * Mutable entry collections do **not** imply the source collection is mutable.
+	 */
 	override val keys: kotlin.collections.MutableSet<K> = ConditionallyMutableSet(this.connection.keys as SetView<K>)
 
+	/**
+	 * Returns a read-only [Collection] of all values in this map. Note that this collection may contain duplicate values.
+	 *
+	 * **Warning:** Do not assume mutability of entry collections from non-Kotlin maps.
+	 * Treat them as if they were [java.util.Collection]; they are mutable if the source collection is mutable.
+	 * Mutable entry collections do **not** imply the source collection is mutable.
+	 */
 	override val values: MutableCollection<V> = ConditionallyMutableCollection(this.connection.values as CollectionView<V>)
 
+	/**
+	 * Returns a read-only [Set] of all key/value pairs in this map.
+	 * **Warning:** Do not assume mutability of entry collections from non-Kotlin maps.
+	 * Treat them as if they were [java.util.Collection]; they are mutable if the source collection is mutable.
+	 * Mutable entry collections do **not** imply the source collection is mutable.
+	 */
 	override val entries: kotlin.collections.MutableSet<MutableMap.MutableEntry<K, V>> = ConditionallyMutableSet(this.connection.entries as SetView<MutableMap.MutableEntry<K, V>>)
 }
 

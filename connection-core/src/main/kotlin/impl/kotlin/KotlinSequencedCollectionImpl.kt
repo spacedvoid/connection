@@ -11,6 +11,13 @@ import io.github.spacedvoid.connection.impl.CollectionViewImpl
 import io.github.spacedvoid.connection.impl.SetViewImpl
 
 open class KotlinSequencedCollectionImpl<T>(private val connection: SequencedCollectionView<T>): KotlinCollectionImpl<T>(connection), java.util.SequencedCollection<T> {
+	/**
+	 * Returns an iterator over the elements of this object.
+	 *
+	 * **Warning:** Do not assume mutability of iterators from non-Kotlin collections.
+	 * Treat them as if they were [java.util.Iterator]; they are mutable if the source collection is mutable.
+	 * Mutable iterators do **not** imply the source collection is mutable.
+	 */
 	override fun iterator(): MutableIterator<T> = this.connection.conditionalIterator()
 
 	override fun reversed(): java.util.SequencedCollection<T> = KotlinSequencedCollectionImpl(this.connection.reversed())
