@@ -144,3 +144,45 @@ fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque<T
  * The iteration order is defined as the encounter order.
  */
 fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+
+/*
+ * TODO: Should enum collections implement Navigable-collection types, or at least Sequenced-collection types?
+ * First thought it would be helpful for users to do so,
+ * but became doubtful after reading some articles explaining why enum collections does not implement Sequenced-collections.
+ */
+
+/**
+ * Creates a specialized [Set] for enum entries.
+ *
+ * The iteration order is defined as the natural order of the enum type.
+ */
+inline fun <reified T: Enum<T>> enumSetOf(vararg elements: T): Set<T> {
+	if(T::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the element type for enum sets")
+	return java.util.EnumSet.noneOf(T::class.java).apply { addAll(elements) }.asConnection()
+}
+
+/**
+ * Creates a specialized [MutableSet] for enum entries.
+ *
+ * The iteration order is defined as the natural order of the enum type.
+ */
+inline fun <reified T: Enum<T>> mutableEnumSetOf(vararg elements: T): MutableSet<T> {
+	if(T::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the element type for enum sets")
+	return java.util.EnumSet.noneOf(T::class.java).apply { addAll(elements) }.asMutableConnection()
+}
+
+/**
+ * Creates a specialized [Map] for enum entries.
+ */
+inline fun <reified K: Enum<K>, V> enumMapOf(vararg entries: Pair<K, V>): Map<K, V> {
+	if(K::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the key type for enum maps")
+	return java.util.EnumMap<K, V>(K::class.java).apply { putAll(entries) }.asConnection()
+}
+
+/**
+ * Creates a specialized [MutableMap] for enum entries.
+ */
+inline fun <reified K: Enum<K>, V> mutableEnumMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> {
+	if(K::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the key type for enum maps")
+	return java.util.EnumMap<K, V>(K::class.java).apply { putAll(entries) }.asMutableConnection()
+}

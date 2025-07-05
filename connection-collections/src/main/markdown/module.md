@@ -39,10 +39,14 @@ Below are unsupported types because of various reasons, such as replaceable by a
 | [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                                |
 | [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                                |
 | Type-safe collections                | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asMutableConnection()` |
-| [java.util.EnumSet]*                 | [java.util.EnumSet.of]                     | `EnumSet.noneOf(EnumClass::class).asMutableConnection()`                         |
-| [java.util.EnumMap]*                 | [java.util.EnumMap]                        | `EnumMap(EnumClass::class).asMutableConnection()`                                |
+| [java.util.EnumSet]                  | [java.util.EnumSet.of]                     | `enumSetOf()`<sup>1</sup>                                                        |
+| [java.util.EnumMap]                  | [java.util.EnumMap]                        | `enumMapOf()`<sup>2</sup>                                                        |
 
-(*: Planned for support.)
+*1: See <a href="../../connection-api/io.github.spacedvoid.connection/enum-set-of.html">enumSetOf</a>
+and <a href="../../connection-api/io.github.spacedvoid.connection/mutable-enum-set-of.html">mutableEnumSetOf</a>.
+
+*2: See <a href="../../connection-api/io.github.spacedvoid.connection/enum-map-of.html">enumMapOf</a>
+and <a href="../../connection-api/io.github.spacedvoid.connection/mutable-enum-map-of.html">mutableEnumMapOf</a>.
 
 ## Collection kinds
 
