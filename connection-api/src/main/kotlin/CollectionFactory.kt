@@ -46,7 +46,8 @@ fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> = linkedSetOf(*eleme
 /**
  * Creates a [MutableSequencedSet] with the given [elements].
  *
- * The iteration order is defined as the encounter order.
+ * The iteration order is defined as the encounter order of the given [elements],
+ * and also the addition order of further elements.
  */
 fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> = linkedSetOf(*elements).asMutableConnection()
 
@@ -94,7 +95,8 @@ fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> = link
 /**
  * Creates a [MutableSequencedMap] with the given [entries].
  *
- * The iteration order is defined as the encounter order.
+ * The iteration order is defined as the encounter order of the given [entries],
+ * and also the addition order of further entries.
  */
 fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> = linkedMapOf(*entries).asMutableConnection()
 

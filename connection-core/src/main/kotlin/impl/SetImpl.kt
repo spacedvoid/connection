@@ -37,7 +37,7 @@ open class SetViewImpl<T>(override val kotlin: kotlin.collections.Set<T>): SetVi
 	override fun hashCode(): Int = sumOf { it.hashCode() }
 }
 
-open class SetImpl<T>(kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>(kotlin)
+open class SetImpl<T>(override val kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>(kotlin)
 
 open class RemoveOnlySetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): RemoveOnlySet<T>, RemoveOnlyCollectionImpl<T>(kotlin)
 
