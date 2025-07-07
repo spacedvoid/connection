@@ -4,6 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("Connection")
+
 package io.github.spacedvoid.connection
 
 import java.util.stream.Stream
