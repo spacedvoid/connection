@@ -164,6 +164,23 @@ operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Array<out T>) = r
 operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
 
 /**
+ * Removes all elements from this collection that matches the given [predicate].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ */
+inline fun <T> RemoveOnlyCollection<T>.removeAll(predicate: (T) -> Boolean): Boolean {
+	val iterator = iterator()
+	var result = false
+	while(iterator.hasNext()) {
+		val e = iterator.next()
+		if(predicate(e)) {
+			iterator.remove()
+			result = true
+		}
+	}
+	return result
+}
+
+/**
  * Returns a list that contains the elements by their encounter order and then the given [element].
  */
 operator fun <T> Iterable<T>.plus(element: T): List<T> = buildList {
