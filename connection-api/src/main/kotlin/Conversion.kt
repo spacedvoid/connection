@@ -41,7 +41,7 @@ fun <T> Iterable<T>.toSequencedSet(): SequencedSet<T> = if(this is SequencedSet<
  * If this set uses a different comparator than the natural order, this set is copied into a new set.
  */
 fun <T: Comparable<T>> Iterable<T>.toNavigableSet(): NavigableSet<T> =
-	if(this is NavigableSet<T> && this.comparator isApparently naturalOrder<T>()) this
+	if(this is NavigableSet<T> && this.comparator isEssentially naturalOrder<T>()) this
 	else NavigableSetImpl(MutableNavigableSetImpl<T>(sortedSetOf(naturalOrder())).apply { addAll(this@toNavigableSet) }.kotlin)
 
 /**
@@ -50,7 +50,7 @@ fun <T: Comparable<T>> Iterable<T>.toNavigableSet(): NavigableSet<T> =
  * If this set uses a different comparator than the given one, this set is copied into a new set.
  */
 fun <T> Iterable<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T> =
-	if(this is NavigableSet<T> && this.comparator isApparently comparator) this
+	if(this is NavigableSet<T> && this.comparator isEssentially comparator) this
 	else NavigableSetImpl(MutableNavigableSetImpl<T>(sortedSetOf(comparator)).apply { addAll(this@toNavigableSet) }.kotlin)
 
 /**
@@ -66,7 +66,7 @@ fun <K, V> MapView<K, V>.toSequencedMap(): SequencedMap<K, V> = if(this is Seque
  * If this map uses a different comparator than the natural order, this map is copied into a new map.
  */
 fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> =
-	if(this is NavigableMap<K, V> && this.comparator isApparently naturalOrder<K>()) this
+	if(this is NavigableMap<K, V> && this.comparator isEssentially naturalOrder<K>()) this
 	else NavigableMapImpl(MutableNavigableMapImpl<K, V>(TreeMap(naturalOrder<K>())).apply { putAll(this@toNavigableMap) }.kotlin)
 
 /**
@@ -75,7 +75,7 @@ fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> =
  * If this map uses a different comparator than the given one, this map is copied into a new map.
  */
 fun <K, V> MapView<K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> =
-	if(this is NavigableMap<K, V> && this.comparator isApparently comparator) this
+	if(this is NavigableMap<K, V> && this.comparator isEssentially comparator) this
 	else NavigableMapImpl(MutableNavigableMapImpl<K, V>(TreeMap(comparator)).apply { putAll(this@toNavigableMap) }.kotlin)
 
 /**
@@ -149,5 +149,5 @@ private val reverseOrderings: kotlin.collections.Set<Comparator<*>> = kotlin.col
 	reverseOrdering<Any>()
 )
 
-private infix fun Comparator<*>.isApparently(other: Comparator<*>): Boolean =
+private infix fun Comparator<*>.isEssentially(other: Comparator<*>): Boolean =
 	(this in naturalOrderings && other in naturalOrderings) || (this in reverseOrderings && other in reverseOrderings) || this == other

@@ -45,11 +45,13 @@ Tail branches will only be created if necessary.
 
 The main package for the API is `io.github.spacedvoid.connection`.
 Although you can import everything one by one, since there are a lot of extension methods here,
-just star-importing the package might be preferable.
+just star-importing the package might be preferable like
+```kotlin
+import io.github.spacedvoid.connection.*
+```
 
-The IDE might require additional configurations to preserve the star imports.
-In IntelliJ IDEA, add the imports above to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
-Make sure to uncheck `With Subpackages`, which contain implementations or unsafe features that you might not want to use.
+The IDE might require additional configurations to preserve the star import.
+In IntelliJ IDEA, add the import to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
 
 If the names of the collections are resolved to Kotlin's collections even if the star import was added,
 you might need to manually add imports for such types.
