@@ -1,13 +1,10 @@
-package io.github.spacedvoid.connection
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 
-import kotlin.collections.distinct
-import kotlin.collections.distinctBy
-import kotlin.collections.flatMap
-import kotlin.collections.flatMapIndexed
-import kotlin.collections.groupBy
-import kotlin.collections.map
-import kotlin.collections.mapIndexed
-import kotlin.collections.mapNotNull
+package io.github.spacedvoid.connection
 
 /**
  * Alias for [kotlin.collections.Collection].
