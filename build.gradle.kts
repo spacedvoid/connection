@@ -18,10 +18,6 @@ dependencies {
 	dokka(project(":connection-core"))
 }
 
-tasks.test {
-	useJUnitPlatform()
-}
-
 kotlin {
 	jvmToolchain(21)
 }

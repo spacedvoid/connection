@@ -10,6 +10,7 @@ import io.github.spacedvoid.connection.impl.DequeImpl
 import io.github.spacedvoid.connection.impl.QueueImpl
 import io.github.spacedvoid.connection.impl.StackImpl
 import java.util.TreeMap
+import kotlin.collections.asList as kotlinAsList
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
 /**
@@ -17,7 +18,7 @@ import kotlin.collections.sortedSetOf as kotlinSortedSetOf
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> listOf(vararg elements: T): List<T> = arrayListOf(*elements).asConnection()
+fun <T> listOf(vararg elements: T): List<T> = elements.kotlinAsList().asConnection()
 
 /**
  * Creates a [MutableList] with the given [elements].
@@ -104,25 +105,25 @@ fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMa
  * Creates a [NavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
  */
 fun <K: Comparable<K>, V> navigableMapOf(vararg entries: Pair<K, V>): NavigableMap<K, V> =
-	TreeMap<K, V>(naturalOrder()).apply { entries.forEach { put(it.first, it.second) } }.asConnection()
+	TreeMap<K, V>(naturalOrder()).apply { putAll(entries) }.asConnection()
 
 /**
  * Creates a [NavigableMap] with the given [entries] using the [comparator].
  */
 fun <K, V> navigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): NavigableMap<K, V> =
-	TreeMap<K, V>(comparator).apply { entries.forEach { put(it.first, it.second) } }.asConnection()
+	TreeMap<K, V>(comparator).apply { putAll(entries) }.asConnection()
 
 /**
  * Creates a [MutableNavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
  */
 fun <K: Comparable<K>, V> mutableNavigableMapOf(vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
-	TreeMap<K, V>(naturalOrder()).apply { entries.forEach { put(it.first, it.second) } }.asMutableConnection()
+	TreeMap<K, V>(naturalOrder()).apply { putAll(entries) }.asMutableConnection()
 
 /**
  * Creates a [MutableNavigableMap] with the given [entries] using the [comparator].
  */
 fun <K, V> mutableNavigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
-	TreeMap<K, V>(comparator).apply { entries.forEach { put(it.first, it.second) } }.asMutableConnection()
+	TreeMap<K, V>(comparator).apply { putAll(entries) }.asMutableConnection()
 
 /**
  * Creates a [Stack] with the given [elements].
@@ -147,11 +148,7 @@ fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque<T
  */
 fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
 
-/*
- * TODO: Should enum collections implement Navigable-collection types, or at least Sequenced-collection types?
- * First thought it would be helpful for users to do so,
- * but became doubtful after reading some articles explaining why enum collections does not implement Sequenced-collections.
- */
+//TODO: Should enum collections implement Navigable-collection types, or at least Sequenced-collection types?
 
 /**
  * Creates a specialized [Set] for enum entries.

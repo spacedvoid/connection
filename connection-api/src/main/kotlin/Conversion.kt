@@ -9,7 +9,6 @@
 package io.github.spacedvoid.connection
 
 import io.github.spacedvoid.connection.impl.MutableNavigableMapImpl
-import io.github.spacedvoid.connection.impl.MutableNavigableSetImpl
 import io.github.spacedvoid.connection.impl.NavigableMapImpl
 import io.github.spacedvoid.connection.impl.NavigableSetImpl
 import io.github.spacedvoid.connection.utils.naturalOrdering
@@ -42,7 +41,7 @@ fun <T> Iterable<T>.toSequencedSet(): SequencedSet<T> = if(this is SequencedSet<
  */
 fun <T: Comparable<T>> Iterable<T>.toNavigableSet(): NavigableSet<T> =
 	if(this is NavigableSet<T> && this.comparator isEssentially naturalOrder<T>()) this
-	else NavigableSetImpl(MutableNavigableSetImpl<T>(sortedSetOf(naturalOrder())).apply { addAll(this@toNavigableSet) }.kotlin)
+	else NavigableSetImpl(sortedSetOf<T>(naturalOrder()).apply { addAll(this@toNavigableSet) })
 
 /**
  * Returns a [NavigableSet] converted from this collection, using the [comparator].
@@ -51,7 +50,7 @@ fun <T: Comparable<T>> Iterable<T>.toNavigableSet(): NavigableSet<T> =
  */
 fun <T> Iterable<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T> =
 	if(this is NavigableSet<T> && this.comparator isEssentially comparator) this
-	else NavigableSetImpl(MutableNavigableSetImpl<T>(sortedSetOf(comparator)).apply { addAll(this@toNavigableSet) }.kotlin)
+	else NavigableSetImpl(sortedSetOf(comparator).apply { addAll(this@toNavigableSet) })
 
 /**
  * Returns a [SequencedMap] converted from this map.

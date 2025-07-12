@@ -11,11 +11,6 @@ repositories {
 
 dependencies {
 	api(project(":connection-collections"))
-	testImplementation(kotlin("test"))
-}
-
-tasks.test {
-	useJUnitPlatform()
 }
 
 kotlin {

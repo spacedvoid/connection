@@ -13,10 +13,6 @@ dependencies {
 	implementation(kotlin("reflect"))
 }
 
-tasks.test {
-	useJUnitPlatform()
-}
-
 kotlin {
 	jvmToolchain(21)
 }

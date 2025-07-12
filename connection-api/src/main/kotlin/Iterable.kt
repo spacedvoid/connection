@@ -19,6 +19,41 @@ import kotlin.collections.mapIndexed as kotlinMapIndexed
 import kotlin.collections.mapNotNull as kotlinMapNotNull
 
 /**
+ * Returns the [index]-th element based on the encounter order.
+ * Throws [IndexOutOfBoundsException] if less than [index] elements were found.
+ */
+fun <T> Iterable<T>.elementAt(index: Int): T {
+	return when(this) {
+		is ListView<T> -> get(index)
+		is kotlin.collections.List<T> -> get(index)
+		else -> {
+			var current = 0
+			for(e in iterator()) {
+				if(current == index) return e
+				current++
+			}
+			throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
+		}
+	}
+}
+
+/**
+ * Removes all elements from this collection that matches the given [predicate].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ */
+inline fun <T> MutableIterable<T>.removeAll(predicate: (T) -> Boolean): Boolean {
+	val iterator = iterator()
+	var result = false
+	for(e in iterator) {
+		if(predicate(e)) {
+			iterator.remove()
+			result = true
+		}
+	}
+	return result
+}
+
+/**
  * Returns a list that contains the elements after the [transform], in their encounter order.
  */
 inline fun <T, U> Iterable<T>.map(transform: (T) -> U): List<U> = kotlinMap(transform).asConnection()
@@ -51,8 +86,8 @@ inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit
 /**
  * Class to wrap sinks of [mapMulti].
  *
- * The usage is similar to [SequenceScope]: use [yield] and [yieldAll] to provide elements to the sink.
- * However, do note that this class is not lazy: providing elements to the sink are immediately performed.
+ * The usage is similar to [SequenceScope]; use [yield] and [yieldAll] to provide elements to the sink.
+ * However, do note that this class is not lazy; providing elements to the sink are immediately performed.
  */
 interface MultiMapScope<T> {
 	/**

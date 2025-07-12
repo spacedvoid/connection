@@ -164,23 +164,6 @@ operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Array<out T>) = r
 operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
 
 /**
- * Removes all elements from this collection that matches the given [predicate].
- * Returns `true` if any elements were removed, `false` otherwise.
- */
-inline fun <T> RemoveOnlyCollection<T>.removeAll(predicate: (T) -> Boolean): Boolean {
-	val iterator = iterator()
-	var result = false
-	while(iterator.hasNext()) {
-		val e = iterator.next()
-		if(predicate(e)) {
-			iterator.remove()
-			result = true
-		}
-	}
-	return result
-}
-
-/**
  * Returns a list that contains the elements by their encounter order and then the given [element].
  */
 operator fun <T> Iterable<T>.plus(element: T): List<T> = buildList {
@@ -211,13 +194,6 @@ operator fun <T> Iterable<T>.plus(elements: Sequence<T>): List<T> = buildList {
 	addAll(this@plus)
 	addAll(elements)
 }
-
-/**
- * Shortcut for [plus].
- *
- * Useful when the [element] is a container, such as [Iterable], [Array], or [Sequence].
- */
-fun <T> Iterable<T>.plusElement(element: T): List<T> = plus(element)
 
 /**
  * Returns a list that contains the elements by their encounter order, but without the first occurrence of the given [element].
@@ -264,26 +240,6 @@ operator fun <T> Iterable<T>.minus(elements: Sequence<T>): List<T> = buildList {
  */
 operator fun <T> ListView<T>.times(n: Int): List<T> = buildList(size() * n) {
 	repeat(n) { addAll(this@times) }
-}
-
-/**
- * Returns the [index]-th element based on the encounter order.
- * Throws [IndexOutOfBoundsException] if less than [index] elements were found.
- */
-fun <T> Iterable<T>.elementAt(index: Int): T {
-	return when(this) {
-		is ListView<T> -> get(index)
-		is kotlin.collections.List<T> -> get(index)
-		else -> {
-			var current = 0
-			val iterator = iterator()
-			while(iterator.hasNext()) {
-				if(current == index) return iterator.next()
-				current++
-			}
-			throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
-		}
-	}
 }
 
 /**

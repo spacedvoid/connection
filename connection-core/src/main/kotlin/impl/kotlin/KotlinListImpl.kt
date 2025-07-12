@@ -15,7 +15,7 @@ open class KotlinListImpl<T>(private val connection: ListView<T>): KotlinCollect
 	override fun listIterator(): ListIterator<T> = this.connection.iterator()
 
 	override fun listIterator(index: Int): ListIterator<T> =
-		if(index in 0..this.size) this.connection.iterator().apply { for(unused in 0..index) next() } else throw IndexOutOfBoundsException("$index out of size ${this.size}")
+		if(index in 0..this.size) this.connection.iterator().apply { repeat(index) { next() } } else throw IndexOutOfBoundsException("$index out of size ${this.size}")
 
 	override fun subList(fromIndex: Int, toIndex: Int): List<T> = KotlinListImpl(this.connection.subList(fromIndex, toIndex))
 
@@ -45,7 +45,7 @@ open class KotlinMutableListImpl<T>(private val connection: MutableList<T>): Kot
 	override fun listIterator(): MutableListIterator<T> = this.connection.iterator()
 
 	override fun listIterator(index: Int): MutableListIterator<T> =
-		if(index in 0..this.size) this.connection.iterator().apply { for(unused in 0..index) next() } else throw IndexOutOfBoundsException("$index out of size ${this.size}")
+		if(index in 0..this.size) this.connection.iterator().apply { repeat(index) { next() } } else throw IndexOutOfBoundsException("$index out of size ${this.size}")
 
 	override fun subList(fromIndex: Int, toIndex: Int): kotlin.collections.MutableList<T> = KotlinMutableListImpl(this.connection.subList(fromIndex, toIndex))
 

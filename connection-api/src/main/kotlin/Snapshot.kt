@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:Suppress("IfThenToElvis")
+
 package io.github.spacedvoid.connection
 
 /**
@@ -39,7 +41,7 @@ fun <T> NavigableSetView<T>.snapshot(): NavigableSet<T> = toNavigableSet(this.co
 /**
  * Creates an immutable copy of this map.
  */
-fun <K, V> MapView<K, V>.snapshot(): Map<K, V> = mapOf(*this.toArray())
+fun <K, V> MapView<K, V>.snapshot(): Map<K, V> = if(this is Map<K, V>) this else buildMap { putAll(this@snapshot) }
 
 /**
  * Creates an immutable copy of this map.
