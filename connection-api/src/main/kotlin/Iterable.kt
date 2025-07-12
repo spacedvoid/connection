@@ -86,7 +86,7 @@ inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Itera
 /**
  * Returns a list that contains the elements after the [transform] except for `null`, in their encounter order.
  */
-inline fun <T, R> Iterable<T>.mapNotNull(transform: (T) -> R?): List<R> = kotlinMapNotNull(transform).asConnection()
+inline fun <T, R: Any> Iterable<T>.mapNotNull(transform: (T) -> R?): List<R> = kotlinMapNotNull(transform).asConnection()
 
 /**
  * Returns a list that contains only the elements that match the given [predicate], in their encounter order.
