@@ -79,19 +79,20 @@ interface CollectionView<T>: Iterable<T> {
 	/**
 	 * Returns whether the given object is equal to this collection.
 	 *
-	 * This specification is very vague, simply because [ListView] and [SetView] have conflicting overrides.
-	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
-	 * such cases should have careful implementations to obey the [general contracts][Any.equals] of this method.
-	 * For element-wise equality, use [containsAll].
+	 * This specification is very vague, simply because [CollectionView] is the base type for all kinds of collections.
+	 * Although implementations will perform element-wise comparisons on their best efforts basis,
+	 * the result is not consistent with `this.containsAll(other) && other.containsAll(this)`.
+	 * For accurate element-wise equality, use [containsAll].
+	 *
+	 * @see ListView.equals
+	 * @see SetView.equals
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns the hash code for this collection.
 	 *
-	 * This specification is very vague, simply because [ListView] and [SetView] have conflicting overrides.
-	 * While there should really be no direct implementations of [CollectionView] or its subkinds,
-	 * such cases should have careful implementations to obey the [general contracts][Any.hashCode] of this method.
+	 * This specification is very vague, simply because [CollectionView] is the base type for all kinds of collections.
 	 */
 	override fun hashCode(): Int
 
@@ -100,7 +101,10 @@ interface CollectionView<T>: Iterable<T> {
 	 * Since kotlin.collections.forEach is annotated with @HidesMembers, this method won't be selected.
 	 * Compile with `-Xjvm-default=all-compatibility` in K1, although this will be the default behavior in K2, as this will be fixed at 2.2.0.
 	 */
-	@Deprecated("This method should not be used. Use Kotlin's forEach instead.", ReplaceWith("forEach { action(it) }"), DeprecationLevel.HIDDEN)
+	/**
+	 * @suppress
+	 */
+	@Suppress("RedundantOverride")
 	override fun forEach(action: Consumer<in T>?) = super.forEach(action)
 	//</editor-fold>
 }
