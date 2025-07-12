@@ -1,11 +1,10 @@
 # Module connection-api
 
-The base API for Connection.
+Contains operations for Connection.
 
 # Package io.github.spacedvoid.connection
 
-Main package for the Connection.
-Contains operations for collections.
+Main package for Connection.
 
 ## Adapters
 
