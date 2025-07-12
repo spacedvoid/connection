@@ -46,7 +46,7 @@ open class KotlinNavigableSetImpl<T>(private val connection: NavigableSetView<T>
 
 	override fun comparator(): Comparator<in T> = this.connection.comparator
 
-	override fun first(): T? = this.connection.first()
+	override fun first(): T = this.connection.first()
 
-	override fun last(): T? = this.connection.last()
+	override fun last(): T = this.connection.last()
 }
