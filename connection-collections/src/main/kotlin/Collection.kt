@@ -96,7 +96,7 @@ interface CollectionView<T>: Iterable<T> {
 	 */
 	override fun hashCode(): Int
 
-	//<editor-fold defaultState="collapsed" desc="// Hidden overrides, deprecated since these become problematic when generating documentation">
+	//<editor-fold defaultState="collapsed" desc="// Hidden overrides, suppressed since these become problematic when generating documentation">
 	/*
 	 * Since kotlin.collections.forEach is annotated with @HidesMembers, this method won't be selected.
 	 * Compile with `-Xjvm-default=all-compatibility` in K1, although this will be the default behavior in K2, as this will be fixed at 2.2.0.
@@ -157,7 +157,7 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 * Removes all elements from this collection which matches the given [predicate].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 */
-	@Deprecated("This method is replaced with an inline operation.", ReplaceWith("removeAll", "io.github.spacedvoid.connection.removeAll"))
+	@Deprecated("This method is replaced with an inline operation.", ReplaceWith("removeAll(predicate)", "io.github.spacedvoid.connection.removeAll"))
 	fun removeIf(predicate: (T) -> Boolean): Boolean
 
 	/**

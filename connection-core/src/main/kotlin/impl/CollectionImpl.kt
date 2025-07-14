@@ -41,7 +41,7 @@ open class RemoveOnlyCollectionImpl<T>(override val kotlin: kotlin.collections.M
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)
 
-	@Deprecated("This method is replaced with an inline operation.", replaceWith = ReplaceWith("removeAll", "io.github.spacedvoid.connection.removeAll"))
+	@Deprecated("This method is replaced with an inline operation.", replaceWith = ReplaceWith("removeAll(predicate)", "io.github.spacedvoid.connection.removeAll"))
 	override fun removeIf(predicate: (T) -> Boolean): Boolean = this.kotlin.removeIf(predicate)
 
 	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
