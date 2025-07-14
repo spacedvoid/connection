@@ -21,7 +21,7 @@ fun <T> reverseOrdering(): Comparator<T> = ReverseOrdering as Comparator<T>
 private object NaturalOrdering: Comparator<Any?> {
 	@Suppress("UNCHECKED_CAST")
 	override fun compare(o1: Any?, o2: Any?): Int {
-		if(o1 == null || o2 == null) throw NullPointerException()
+		if(o1 == null || o2 == null) throw NullPointerException("Comparing $o1 with $o2")
 		if(o1 !is Comparable<*> || o2 !is Comparable<*>) throw TypeCastException("Non-comparable objects: $o1 and $o2")
 		return (o1 as Comparable<Any>).compareTo(o2)
 	}
@@ -32,7 +32,7 @@ private object NaturalOrdering: Comparator<Any?> {
 private object ReverseOrdering: Comparator<Any?> {
 	@Suppress("UNCHECKED_CAST")
 	override fun compare(o1: Any?, o2: Any?): Int {
-		if(o1 == null || o2 == null) throw NullPointerException()
+		if(o1 == null || o2 == null) throw NullPointerException("Comparing $o1 with $o2")
 		if(o1 !is Comparable<*> || o2 !is Comparable<*>) throw TypeCastException("Non-comparable objects: $o1 and $o2")
 		return (o2 as Comparable<Any>).compareTo(o1)
 	}

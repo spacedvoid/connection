@@ -9,7 +9,6 @@ package io.github.spacedvoid.connection.impl.kotlin
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableCollection
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
-import io.github.spacedvoid.connection.impl.SetViewImpl
 
 open class KotlinCollectionImpl<T>(private val connection: CollectionView<T>): Collection<T> {
 	override fun iterator(): Iterator<T> = this.connection.iterator()
@@ -21,7 +20,7 @@ open class KotlinCollectionImpl<T>(private val connection: CollectionView<T>): C
 
 	override fun contains(element: T): Boolean = this.connection.contains(element)
 
-	override fun containsAll(elements: Collection<T>): Boolean = this.connection.containsAll(SetViewImpl(elements.toSet()))
+	override fun containsAll(elements: Collection<T>): Boolean = this.connection.containsAll(CollectionViewImpl(elements))
 
 	override fun toString(): String = "${this::class.qualifiedName}{elements=[${joinToString()}]}"
 }
@@ -37,9 +36,9 @@ open class KotlinMutableCollectionImpl<T>(private val connection: RemoveOnlyColl
 
 	override fun remove(element: T): Boolean = this.connection.remove(element)
 
-	override fun removeAll(elements: Collection<T>): Boolean = this.connection.removeAll(SetViewImpl(elements.toSet()))
+	override fun removeAll(elements: Collection<T>): Boolean = this.connection.removeAll(CollectionViewImpl(elements))
 
-	override fun retainAll(elements: Collection<T>): Boolean = this.connection.retainAll(SetViewImpl(elements.toSet()))
+	override fun retainAll(elements: Collection<T>): Boolean = this.connection.retainAll(CollectionViewImpl(elements))
 
 	override fun clear() = this.connection.clear()
 }

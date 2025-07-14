@@ -8,7 +8,6 @@ package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
-import io.github.spacedvoid.connection.impl.SetViewImpl
 
 open class KotlinSequencedCollectionImpl<T>(private val connection: SequencedCollectionView<T>): KotlinCollectionImpl<T>(connection), java.util.SequencedCollection<T> {
 	/**
@@ -32,10 +31,10 @@ open class KotlinSequencedCollectionImpl<T>(private val connection: SequencedCol
 		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.remove(element) else throw UnsupportedOperationException("remove(T)")
 
 	override fun removeAll(elements: Collection<T>): Boolean =
-		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.removeAll(SetViewImpl(elements.toSet())) else throw UnsupportedOperationException("removeAll(kotlin.collections.Collection)")
+		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.removeAll(CollectionViewImpl(elements)) else throw UnsupportedOperationException("removeAll(kotlin.collections.Collection)")
 
 	override fun retainAll(elements: Collection<T>): Boolean =
-		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.retainAll(SetViewImpl(elements.toSet())) else throw UnsupportedOperationException("retainAll(kotlin.collections.Collection)")
+		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.retainAll(CollectionViewImpl(elements)) else throw UnsupportedOperationException("retainAll(kotlin.collections.Collection)")
 
 	override fun clear() =
 		if(this.connection is RemoveOnlySequencedCollection<T>) this.connection.clear() else throw UnsupportedOperationException("clear")

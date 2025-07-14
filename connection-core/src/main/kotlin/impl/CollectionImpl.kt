@@ -25,7 +25,7 @@ open class CollectionViewImpl<T>(open val kotlin: kotlin.collections.Collection<
 
 	override fun contains(element: T): Boolean = this.kotlin.contains(element)
 
-	override fun containsAll(collection: CollectionView<out T>): Boolean = this.kotlin.containsAll(collection.toSet())
+	override fun containsAll(collection: CollectionView<out T>): Boolean = this.kotlin.containsAll(KotlinCollectionImpl(collection))
 
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
@@ -44,9 +44,9 @@ open class RemoveOnlyCollectionImpl<T>(override val kotlin: kotlin.collections.M
 	@Deprecated("This method is replaced with an inline operation.", replaceWith = ReplaceWith("removeAll", "io.github.spacedvoid.connection.removeAll"))
 	override fun removeIf(predicate: (T) -> Boolean): Boolean = this.kotlin.removeIf(predicate)
 
-	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(collection.toSet())
+	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
 
-	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(collection.toSet())
+	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
 
 	override fun clear() = this.kotlin.clear()
 }

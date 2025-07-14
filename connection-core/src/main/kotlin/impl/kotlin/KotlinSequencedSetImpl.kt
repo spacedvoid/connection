@@ -8,7 +8,6 @@ package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
-import io.github.spacedvoid.connection.impl.SetViewImpl
 
 open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>): KotlinCollectionImpl<T>(connection), java.util.SequencedSet<T> {
 	/**
@@ -32,7 +31,7 @@ open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>
 		if(this.connection is MutableSequencedSet<T>) this.connection.addAll(CollectionViewImpl(elements)) else throw UnsupportedOperationException("addAll(kotlin.collections.Collection)")
 
 	override fun removeAll(elements: Collection<T>): Boolean =
-		if(this.connection is RemoveOnlySequencedSet<T>) this.connection.removeAll(SetViewImpl(elements.toSet())) else throw UnsupportedOperationException("removeAll(kotlin.collections.Collection)")
+		if(this.connection is RemoveOnlySequencedSet<T>) this.connection.removeAll(CollectionViewImpl(elements)) else throw UnsupportedOperationException("removeAll(kotlin.collections.Collection)")
 
 	override fun retainAll(elements: Collection<T>): Boolean =
 		if(this.connection is RemoveOnlySequencedSet<T>) this.connection.retainAll(CollectionViewImpl(elements)) else throw UnsupportedOperationException("retainAll(kotlin.collections.Collection)")

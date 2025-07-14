@@ -79,9 +79,9 @@ open class MutableNavigableMapImpl<K, V>(override val kotlin: java.util.Navigabl
 	override fun tailMap(after: K, inclusive: Boolean): MutableNavigableMap<K, V> =
 		MutableNavigableMapImpl(this.kotlin.tailMap(after, inclusive))
 
-	override fun removeFirst(): Pair<K, V>? = this.kotlin.pollFirstEntry()?.let { it.key to it.value }
+	override fun removeFirst(): Pair<K, V>? = this.kotlin.pollFirstEntry()?.toPair()
 
-	override fun removeLast(): Pair<K, V>? = this.kotlin.pollLastEntry()?.let { it.key to it.value }
+	override fun removeLast(): Pair<K, V>? = this.kotlin.pollLastEntry()?.toPair()
 
 	override fun put(key: K, value: V): V? = this.kotlin.put(key, value)
 
@@ -134,7 +134,7 @@ internal fun <K> java.util.NavigableMap<K, *>.keySet(): java.util.NavigableSet<K
 
 		override fun tailSet(fromElement: K): SortedSet<K> = tailSet(fromElement, true)
 
-		override fun comparator(): java.util.Comparator<in K>? = this@keySet.comparator()
+		override fun comparator(): java.util.Comparator<in K> = this@keySet.comparator()
 
 		override fun first(): K? = this@keySet.firstKey()
 

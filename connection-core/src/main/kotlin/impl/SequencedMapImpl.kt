@@ -40,9 +40,9 @@ open class SequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K,
 open class MutableSequencedMapImpl<K, V>(override val kotlin: java.util.SequencedMap<K, V>): MutableSequencedMap<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): MutableSequencedMap<K, V> = MutableSequencedMapImpl(this.kotlin.reversed())
 
-	override fun removeFirst(): Pair<K, V>? = this.kotlin.pollFirstEntry()?.let { it.key to it.value }
+	override fun removeFirst(): Pair<K, V>? = this.kotlin.pollFirstEntry()?.toPair()
 
-	override fun removeLast(): Pair<K, V>? = this.kotlin.pollLastEntry()?.let { it.key to it.value }
+	override fun removeLast(): Pair<K, V>? = this.kotlin.pollLastEntry()?.toPair()
 
 	override fun put(key: K, value: V): V? = this.kotlin.put(key, value)
 

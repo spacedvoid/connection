@@ -9,7 +9,6 @@ package io.github.spacedvoid.connection.impl.kotlin
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableList
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
-import io.github.spacedvoid.connection.impl.SetViewImpl
 
 open class KotlinListImpl<T>(private val connection: ListView<T>): KotlinCollectionImpl<T>(connection), List<T> {
 	override fun listIterator(): ListIterator<T> = this.connection.iterator()
@@ -61,9 +60,9 @@ open class KotlinMutableListImpl<T>(private val connection: MutableList<T>): Kot
 		return elements.isNotEmpty()
 	}
 
-	override fun removeAll(elements: Collection<T>): Boolean = this.connection.removeAll(SetViewImpl(elements.toSet()))
+	override fun removeAll(elements: Collection<T>): Boolean = this.connection.removeAll(CollectionViewImpl(elements))
 
-	override fun retainAll(elements: Collection<T>): Boolean = this.connection.retainAll(SetViewImpl(elements.toSet()))
+	override fun retainAll(elements: Collection<T>): Boolean = this.connection.retainAll(CollectionViewImpl(elements))
 
 	override fun clear() = this.connection.clear()
 
