@@ -6,6 +6,7 @@
 
 package io.github.spacedvoid.connection
 
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.collections.distinct as kotlinDistinct
 import kotlin.collections.distinctBy as kotlinDistinctBy
 import kotlin.collections.filter as kotlinFilter
@@ -68,12 +69,18 @@ inline fun <T, U> Iterable<T>.mapIndexed(transform: (index: Int, T) -> U): List<
  * Returns a list that contains the elements provided through the [accumulator].
  *
  * The [accumulator] provides a sink, accessible with [MultiMapScope.yield] and [MultiMapScope.yieldAll].
- * The list will contain the elements by the invocation order of the sink.
+ * The list will contain the elements in the invocation order of the sink.
+ *
+ * Note that unlike [SequenceScope], the accumulation is not lazy.
  */
 inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit): List<U> = buildList {
 	val acceptor = object: MultiMapScope<U> {
 		override fun yield(element: U) {
 			add(element)
+		}
+
+		override fun yieldAll(elements: Iterator<U>) {
+			for(e in elements) add(e)
 		}
 
 		override fun yieldAll(elements: Iterable<U>) {
@@ -87,7 +94,7 @@ inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit
  * Class to wrap sinks of [mapMulti].
  *
  * The usage is similar to [SequenceScope]; use [yield] and [yieldAll] to provide elements to the sink.
- * However, do note that this class is not lazy; providing elements to the sink are immediately performed.
+ * However, note that the accumulation is not lazy.
  */
 interface MultiMapScope<T> {
 	/**
@@ -97,10 +104,18 @@ interface MultiMapScope<T> {
 
 	/**
 	 * Provides multiple elements to the sink, in their encounter order.
-	 *
-	 * This method is equivalent with `for(e in elements) `[yield]`(e)`.
 	 */
-	fun yieldAll(elements: Iterable<T>)
+	fun yieldAll(elements: Iterator<T>)
+
+	/**
+	 * Provides multiple elements to the sink, in their encounter order.
+	 */
+	fun yieldAll(elements: Iterable<T>) = yieldAll(elements.iterator())
+
+	/**
+	 * Provides multiple elements to the sink, in their encounter order.
+	 */
+	fun yieldAll(elements: Sequence<T>) = yieldAll(elements.iterator())
 }
 
 /**
@@ -111,12 +126,33 @@ interface MultiMapScope<T> {
 inline fun <T, U> Iterable<T>.flatMap(transform: (T) -> Iterable<U>): List<U> = kotlinFlatMap(transform).asConnection()
 
 /**
+ * Returns a list that contains the unpacked elements after the [transform], in their encounter order.
+ *
+ * The resulting [Sequence] will be collected into the resulting list in their encounter order.
+ */
+@JvmName("flatMapSequence")
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T, U> Iterable<T>.flatMap(transform: (T) -> Sequence<U>): List<U> = kotlinFlatMap(transform).asConnection()
+
+/**
  * Returns a list that contains the unpacked elements after the [transform] in their encounter order,
  * additionally providing an [Int] representing the encounter number of the element.
  *
  * The resulting [Iterable] will be collected into the resulting list in their encounter order.
  */
 inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Iterable<U>): List<U> = kotlinFlatMapIndexed(transform).asConnection()
+
+/**
+ * Returns a list that contains the unpacked elements after the [transform] in their encounter order,
+ * additionally providing an [Int] representing the encounter number of the element.
+ *
+ * The resulting [Sequence] will be collected into the resulting list in their encounter order.
+ */
+@JvmName("flatMapIndexedSequence")
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Sequence<U>): List<U> = kotlinFlatMapIndexed(transform).asConnection()
 
 /**
  * Returns a list that contains the elements after the [transform] except for `null`, in their encounter order.
