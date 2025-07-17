@@ -31,7 +31,8 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		val generation = ConnectionGeneration()
 		generation.collect()
 		GeneratingFiles(this.environment.codeGenerator).let { files ->
-			ConversionAdapterGenerator.generate(resolver, files, generation)
+			ConversionGenerator.generate(resolver, files, generation)
+			AdapterGenerator.generate(resolver, files, generation)
 		}
 		return listOf()
 	}
