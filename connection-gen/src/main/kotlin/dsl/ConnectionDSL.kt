@@ -31,28 +31,6 @@ interface Configurable {
 }
 
 /**
- * Represents that this object represents a type(class or interface).
- */
-@ConnectionDSL
-interface Named: Configurable {
-	/**
-	 * The simple name of the type.
-	 */
-	var name: String
-	/**
-	 * The package containing the type, separated with dots(`.`).
-	 * The last dot is omitted.
-	 */
-	var inPackage: String
-}
-
-/**
- * The qualified name of the type, based on the [name][Named.name] and [package][Named.inPackage].
- */
-val Named.qualifiedName: String
-	get() = "${this.inPackage}.${this.name}"
-
-/**
  * Class used for Kotlin representations of Connections.
  */
 class KotlinType(override var name: String, override var inPackage: String): Named {
@@ -85,6 +63,37 @@ private class ConfigurableNamed(override var inPackage: String, private val defa
  */
 class ConnectionGeneration @DslInternal constructor(): Configurable {
 	/**
+	 * Contains all connections specified by [collectionNamed] and [mapNamed].
+	 * Mapped by their [names][ConnectionType.name], since no two types should have the same name.
+	 */
+	@DslInternal
+	val connections: MutableMap<String, ConnectionType> = mutableMapOf()
+
+	/**
+	 * Creates or retrieves a Connection type which has one type argument.
+	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
+	 */
+	inline fun collectionNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
+		named(name, 1, configuration)
+
+	/**
+	 * Creates or retrieves a Connection type which has two type arguments.
+	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
+	 */
+	inline fun mapNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
+		named(name, 2, configuration)
+
+	/**
+	 * Creates and/or returns the Connection type with the name.
+	 * Throws [IllegalArgumentException] if a type with the same name, but with a different [typeArgCount] already exists.
+	 */
+	inline fun named(name: String, typeArgCount: Int, configuration: ConnectionType.() -> Unit = {}): ConnectionType {
+		val type = this.connections.computeIfAbsent(name) { ConnectionType(name, typeArgCount) }
+		check(type.typeArgCount == typeArgCount) { "Requested type argument count $typeArgCount differs from found ${type.typeArgCount}" }
+		return type.apply(configuration)
+	}
+
+	/**
 	 * Represents a Connection type family, such as `List` or `Map`.
 	 * Kinds are defined by [kinds].
 	 *
@@ -93,6 +102,31 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 	 */
 	@ConnectionDSL
 	inner class ConnectionType @DslInternal constructor(val name: String, @property:DslInternal val typeArgCount: Int): Configurable {
+		/**
+		 * Contains all kinds that this type family has.
+		 */
+		@DslInternal
+		val kinds: EnumMap<ConnectionKind, ConnectionTypeKind> = EnumMap(ConnectionKind::class.java)
+		/**
+		 * The conversions for this type.
+		 */
+		val conversions: Conversions = Conversions()
+
+		/**
+		 * Defines a [kind] that this family has, and configures it.
+		 * Previous configurations with the [kind] will be preserved.
+		 */
+		inline fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}): ConnectionTypeKind =
+			this.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
+
+		/**
+		 * Defines a [kind] that this family has, and configures it.
+		 * Previous configurations with the [kinds] will be preserved.
+		 */
+		inline fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit) {
+			kinds.forEach { kind(it, configuration) }
+		}
+
 		/**
 		 * Represents a Connection with a type and [kind][ConnectionKind], such as `MutableList`.
 		 */
@@ -158,61 +192,17 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 			@DslInternal
 			val type: ConnectionType = this@ConnectionType
 		}
-
-		/**
-		 * Contains all kinds that this type family has.
-		 */
-		@DslInternal
-		val kinds: EnumMap<ConnectionKind, ConnectionTypeKind> = EnumMap(ConnectionKind::class.java)
-		/**
-		 * The conversions for this type.
-		 */
-		val conversions: Conversions = Conversions()
-
-		/**
-		 * Defines a [kind] that this family has, and configures it.
-		 * Previous configurations with the [kind] will be preserved.
-		 */
-		inline fun kind(kind: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit = {}): ConnectionTypeKind =
-			this.kinds.computeIfAbsent(kind) { ConnectionTypeKind(kind) }.apply(configuration)
-
-		/**
-		 * Defines a [kind] that this family has, and configures it.
-		 * Previous configurations with the [kinds] will be preserved.
-		 */
-		inline fun kinds(vararg kinds: ConnectionKind, configuration: ConnectionTypeKind.() -> Unit) {
-			kinds.forEach { kind(it, configuration) }
-		}
-	}
-
-	/**
-	 * Contains all connections specified by [collectionNamed] and [mapNamed].
-	 * Mapped by their [names][ConnectionType.name], since no two types should have the same name.
-	 */
-	@DslInternal
-	val connections: MutableMap<String, ConnectionType> = mutableMapOf()
-
-	/**
-	 * Creates or retrieves a Connection type which has one type argument.
-	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
-	 */
-	inline fun collectionNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
-		named(name, 1, configuration)
-
-	/**
-	 * Creates or retrieves a Connection type which has two type arguments.
-	 * Throws [IllegalArgumentException] if a type with the same name, but with a different type argument count already exists.
-	 */
-	inline fun mapNamed(name: String, configuration: ConnectionType.() -> Unit = {}): ConnectionType =
-		named(name, 2, configuration)
-
-	/**
-	 * Creates and/or returns the Connection type with the name.
-	 * Throws [IllegalArgumentException] if a type with the same name, but with a different [typeArgCount] already exists.
-	 */
-	inline fun named(name: String, typeArgCount: Int, configuration: ConnectionType.() -> Unit = {}): ConnectionType {
-		val type = this.connections.computeIfAbsent(name) { ConnectionType(name, typeArgCount) }
-		check(type.typeArgCount == typeArgCount) { "Requested type argument count $typeArgCount differs from found ${type.typeArgCount}" }
-		return type.apply(configuration)
 	}
 }
+
+/**
+ * Returns a string for a type argument definition.
+ * Currently expects up to 2 type arguments; throws [IllegalStateException] if [typeArgCount][ConnectionGeneration.ConnectionType.typeArgCount] more than 2.
+ */
+@DslInternal
+val ConnectionGeneration.ConnectionType.typeArgs: String
+	get() = when(this.typeArgCount) {
+		1 -> "<T>"
+		2 -> "<K, V>"
+		else -> throw IllegalStateException("Undefined type argument count ${this.typeArgCount}")
+	}
