@@ -2,6 +2,7 @@
 
 package io.github.spacedvoid.connection.gen
 
+import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
@@ -11,8 +12,8 @@ import io.github.spacedvoid.connection.gen.dsl.qualifiedName
 import io.github.spacedvoid.connection.gen.dsl.typeArgs
 
 object ConversionGenerator {
-	fun generate(resolver: Resolver, files: GeneratingFiles, collected: ConnectionGeneration) {
-		ConversionFiles(files).use { files ->
+	fun generate(resolver: Resolver, generator: CodeGenerator, collected: ConnectionGeneration) {
+		ConversionFiles(generator).use { files ->
 			collected.connections.values.forEach { generatePerType(files, resolver, it) }
 		}
 	}
@@ -30,10 +31,10 @@ object ConversionGenerator {
 		}
 	}
 
-	private class ConversionFiles(generator: GeneratingFiles): AutoCloseable {
-		val view: GeneratingFiles.GeneratingFile = generator.GeneratingFile("io.github.spacedvoid.connection", "View")
+	private class ConversionFiles(generator: CodeGenerator): AutoCloseable {
+		val view: GeneratingFile = GeneratingFile(generator, "io.github.spacedvoid.connection", "View")
 
-		val removeOnly: GeneratingFiles.GeneratingFile = generator.GeneratingFile("io.github.spacedvoid.connection", "RemoveOnly")
+		val removeOnly: GeneratingFile = GeneratingFile(generator, "io.github.spacedvoid.connection", "RemoveOnly")
 
 		override fun close() {
 			this.view.close()
@@ -56,7 +57,7 @@ object ConversionGenerator {
 	/**
 	 * Shortcut for generating view conversions.
 	 */
-	private fun GeneratingFiles.GeneratingFile.generateView(conversion: Conversion, typeParams: String, view: String) {
+	private fun GeneratingFile.generateView(conversion: Conversion, typeParams: String, view: String) {
 		check(!this.closed)
 		this += "\n"
 		this += conversion.docs ?: defaultViewDoc
@@ -66,7 +67,7 @@ object ConversionGenerator {
 	/**
 	 * Shortcut for generating remove-only conversions.
 	 */
-	private fun GeneratingFiles.GeneratingFile.generateRemoveOnly(conversion: Conversion, typeParams: String, removeOnly: String) {
+	private fun GeneratingFile.generateRemoveOnly(conversion: Conversion, typeParams: String, removeOnly: String) {
 		check(!this.closed)
 		this += "\n"
 		this += conversion.docs ?: defaultRemoveOnlyDoc

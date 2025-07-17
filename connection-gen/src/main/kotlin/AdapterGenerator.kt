@@ -10,6 +10,7 @@ package io.github.spacedvoid.connection.gen
 
 import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.getClassDeclarationByName
+import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import io.github.spacedvoid.connection.gen.AdapterGenerator.generatePerType
@@ -23,8 +24,8 @@ import io.github.spacedvoid.connection.gen.dsl.qualifiedName
 import io.github.spacedvoid.connection.gen.dsl.typeArgs
 
 object AdapterGenerator {
-	fun generate(resolver: Resolver, files: GeneratingFiles, collected: ConnectionGeneration) {
-		AdapterFiles(files).use { files ->
+	fun generate(resolver: Resolver, generator: CodeGenerator, collected: ConnectionGeneration) {
+		AdapterFiles(generator).use { files ->
 			collected.connections.values.forEach { generatePerType(files, resolver, it) }
 		}
 	}
@@ -52,10 +53,10 @@ object AdapterGenerator {
 	}
 
 	/**
-	 * Collection of [GeneratingFiles.GeneratingFile] to maintain between iterations of [generatePerType].
+	 * Collection of [GeneratingFile] to maintain between iterations of [generatePerType].
 	 */
-	private class AdapterFiles(generator: GeneratingFiles): AutoCloseable {
-		val colAsCon: GeneratingFiles.GeneratingFile = generator.GeneratingFile("io.github.spacedvoid.connection", "CollectionAsConnection").also {
+	private class AdapterFiles(generator: CodeGenerator): AutoCloseable {
+		val colAsCon: GeneratingFile = GeneratingFile(generator, "io.github.spacedvoid.connection", "CollectionAsConnection").also {
 			it += """
 				
 				import io.github.spacedvoid.connection.impl.*
@@ -63,7 +64,7 @@ object AdapterGenerator {
 			""".trimIndent()
 		}
 
-		val conAsCol: GeneratingFiles.GeneratingFile = generator.GeneratingFile("io.github.spacedvoid.connection", "ConnectionAsCollection").also {
+		val conAsCol: GeneratingFile = GeneratingFile(generator, "io.github.spacedvoid.connection", "ConnectionAsCollection").also {
 			it += """
 				
 				import io.github.spacedvoid.connection.impl.*
@@ -147,7 +148,7 @@ object AdapterGenerator {
 	/**
 	 * Shortcut for generating Kotlin collection to Connection adapters.
 	 */
-	private fun GeneratingFiles.GeneratingFile.generateColAsCon(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
+	private fun GeneratingFile.generateColAsCon(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
 		check(!this.closed)
 		val typeParams = kind.type.typeArgs
 		this += "\n"
@@ -158,7 +159,7 @@ object AdapterGenerator {
 	/**
 	 * Shortcut for generating Connection to Kotlin collection adapters.
 	 */
-	private fun GeneratingFiles.GeneratingFile.generateConAsCol(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
+	private fun GeneratingFile.generateConAsCol(adapter: Adapter, kind: ConnectionTypeKind, kotlin: KotlinType) {
 		check(!this.closed)
 		val typeParams = kind.type.typeArgs
 		this += "\n"
