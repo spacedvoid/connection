@@ -30,10 +30,8 @@ class ConnectionGenerator(private val environment: SymbolProcessorEnvironment): 
 		if(resolver.getAllFiles().find { it.fileName == "CollectionAsConnection.kt" } != null) return listOf()
 		val generation = ConnectionGeneration()
 		generation.collect()
-		GeneratingFiles(this.environment.codeGenerator).let { files ->
-			ConversionGenerator.generate(resolver, files, generation)
-			AdapterGenerator.generate(resolver, files, generation)
-		}
+		ConversionGenerator.generate(resolver, this.environment.codeGenerator, generation)
+		AdapterGenerator.generate(resolver, this.environment.codeGenerator, generation)
 		return listOf()
 	}
 }
