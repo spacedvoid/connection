@@ -154,13 +154,6 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	fun remove(element: T): Boolean
 
 	/**
-	 * Removes all elements from this collection which matches the given [predicate].
-	 * Returns `true` if any elements were removed, `false` otherwise.
-	 */
-	@Deprecated("This method is replaced with an inline operation.", ReplaceWith("removeAll(predicate)", "io.github.spacedvoid.connection.removeAll"))
-	fun removeIf(predicate: (T) -> Boolean): Boolean
-
-	/**
 	 * Removes all elements from this collection which are also contained in the given [collection].
 	 * Returns `true` if any elements were removed, `false` otherwise.
 	 *
