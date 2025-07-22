@@ -61,8 +61,8 @@ All kinds of the same type are called a *type family*.
 For example, [ListView], [List], and [MutableList] is a family of [List].
 
 (For sake of readability, when representing type families or their representative names, 
-the name of immutable collections such as [List] and [Set] is used,
-but do note that the lowest common supertype of all kinds in a family is a view collection, such as [ListView] and [SetView].
+the name of immutable collections such as [List] and [Set] is mostly used,
+but do note that the lowest common supertype of all kinds in a family is mostly a collection view, such as [ListView] and [SetView].
 This can be seen at the topmost table, where links to what seems to be immutable collections actually lead to collection views.)
 
 Remove-only collections support only element removal operations between mutation operations, such as [RemoveOnlyCollection.remove].
