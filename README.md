@@ -93,10 +93,12 @@ gradlew :dokkaGenerate
   - [x] Operator and utility methods
   - [x] `Spliterator` support
   - [x] Make non-modifiable collections be covariant(`out`) by default
-  - [ ] Efficient collection implementations, such as empty lists or sets
 
 - `v0.2.0`:
+  - [ ] Linked collections, which are a subtype of `SequencedCollection` that supports `addFirst` and `addLast`
   - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
+  - [ ] One-line operators for maps(such as `compute` or `replaceAll`)
+  - [ ] Do not throw exceptions when creating a submap of `NavigableMap`
 
 - Not scheduled
   - [ ] Simpler ways to express intervals for `subList` and `subSet`

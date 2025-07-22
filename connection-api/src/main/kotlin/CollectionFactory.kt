@@ -13,6 +13,15 @@ import java.util.TreeMap
 import kotlin.collections.asList as kotlinAsList
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
+private val emptyList = emptyList<Nothing>().asConnection()
+private val emptySet = emptySet<Nothing>().asConnection()
+private val emptyMap = emptyMap<Any?, Nothing>().asConnection()
+
+/**
+ * Returns an empty [List].
+ */
+fun <T> listOf(): List<T> = emptyList
+
 /**
  * Creates a [List] with the given [elements].
  *
@@ -26,6 +35,11 @@ fun <T> listOf(vararg elements: T): List<T> = elements.kotlinAsList().asConnecti
  * The iteration order is defined as the encounter order.
  */
 fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*elements).asMutableConnection()
+
+/**
+ * Returns an empty set.
+ */
+fun <T> setOf(): Set<T> = emptySet
 
 /**
  * Creates a [Set] with the given [elements].
@@ -75,6 +89,12 @@ fun <T: Comparable<T>> mutableNavigableSetOf(vararg elements: T): MutableNavigab
  */
 fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T): MutableNavigableSet<T> =
 	kotlinSortedSetOf(comparator, *elements).asMutableConnection()
+
+/**
+ * Returns an empty map.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <K, V> mapOf(): Map<K, V> = emptyMap as Map<K, V>
 
 /**
  * Creates a [Map] with the given [entries].
