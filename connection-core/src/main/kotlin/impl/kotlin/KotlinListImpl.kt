@@ -10,7 +10,7 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableList
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
 
-open class KotlinListImpl<T>(private val connection: ListView<T>): KotlinCollectionImpl<T>(connection), List<T> {
+open class KotlinListImpl<out T>(private val connection: ListView<T>): KotlinCollectionImpl<T>(connection), List<T> {
 	override fun listIterator(): ListIterator<T> = this.connection.iterator()
 
 	override fun listIterator(index: Int): ListIterator<T> =
@@ -20,9 +20,9 @@ open class KotlinListImpl<T>(private val connection: ListView<T>): KotlinCollect
 
 	override fun get(index: Int): T = this.connection[index]
 
-	override fun indexOf(element: T): Int = this.connection.indexOf(element)
+	override fun indexOf(element: @UnsafeVariance T): Int = this.connection.indexOf(element)
 
-	override fun lastIndexOf(element: T): Int = this.connection.lastIndexOf(element)
+	override fun lastIndexOf(element: @UnsafeVariance T): Int = this.connection.lastIndexOf(element)
 
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true

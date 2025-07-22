@@ -15,7 +15,7 @@ import java.util.Spliterator
  * which is also called as *consistent with equals*.
  * Otherwise, the behavior of this collection is undefined.
  */
-interface NavigableSetView<T>: SequencedSetView<T> {
+interface NavigableSetView<out T>: SequencedSetView<T> {
 	/**
 	 * Returns a new spliterator for this set.
 	 *
@@ -31,14 +31,14 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): NavigableSetView<T>
 
 	/**
 	 * The comparator used to sort the elements in this collection.
 	 */
-	val comparator: Comparator<in T>
+	val comparator: Comparator<in @UnsafeVariance T>
 
 	/**
 	 * Returns a subset of this collection, in the given range.
@@ -48,7 +48,7 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
 	 */
-	fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
+	fun subSet(from: @UnsafeVariance T, to: @UnsafeVariance T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
 
 	/**
 	 * Returns a subset of this collection, based on the given element.
@@ -57,7 +57,7 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
 	 */
-	fun headSet(before: T, inclusive: Boolean): NavigableSetView<T>
+	fun headSet(before: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T>
 
 	/**
 	 * Returns a subset of this collection, based on the given element.
@@ -66,23 +66,23 @@ interface NavigableSetView<T>: SequencedSetView<T> {
 	 * Operations on the returned collection is delegated to this collection.
 	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
 	 */
-	fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T>
+	fun tailSet(after: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T>
 
 	/**
 	 * Returns the element higher than the given element, or `null` if there is no such element.
 	 */
-	fun higher(than: T, inclusive: Boolean): T?
+	fun higher(than: @UnsafeVariance T, inclusive: Boolean): T?
 
 	/**
 	 * Returns the element lower than the given element, or `null` if there is no such element.
 	 */
-	fun lower(than: T, inclusive: Boolean): T?
+	fun lower(than: @UnsafeVariance T, inclusive: Boolean): T?
 }
 
 /**
  * An immutable navigable set.
  */
-interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
+interface NavigableSet<out T>: SequencedSet<T>, NavigableSetView<T> {
 	/**
 	 * Returns a new spliterator for this set.
 	 *
@@ -90,15 +90,15 @@ interface NavigableSet<T>: SequencedSet<T>, NavigableSetView<T> {
 	 * [Spliterator.ORDERED], and [Spliterator.SORTED] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): NavigableSet<T>
 
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T>
+	override fun subSet(from: @UnsafeVariance T, to: @UnsafeVariance T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T>
 
-	override fun headSet(before: T, inclusive: Boolean): NavigableSet<T>
+	override fun headSet(before: @UnsafeVariance T, inclusive: Boolean): NavigableSet<T>
 
-	override fun tailSet(after: T, inclusive: Boolean): NavigableSet<T>
+	override fun tailSet(after: @UnsafeVariance T, inclusive: Boolean): NavigableSet<T>
 }
 
 /**
@@ -150,5 +150,5 @@ interface MutableNavigableSet<T>: MutableSequencedSet<T>, RemoveOnlyNavigableSet
 	 * Adds all elements from the given [collection] to this collection.
 	 * Returns `true` if the addition changed this collection, `false` otherwise.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 }

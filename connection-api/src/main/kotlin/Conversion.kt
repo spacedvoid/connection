@@ -57,14 +57,14 @@ fun <T> Iterable<T>.toNavigableSet(comparator: Comparator<in T>): NavigableSet<T
  *
  * The iteration order is defined as the encounter order.
  */
-fun <K, V> MapView<K, V>.toSequencedMap(): SequencedMap<K, V> = if(this is SequencedMap<K, V>) this else buildSequencedMap { putAll(this@toSequencedMap) }
+fun <K, V> MapView<out K, V>.toSequencedMap(): SequencedMap<K, V> = if(this is SequencedMap<K, V>) this else buildSequencedMap { putAll(this@toSequencedMap) }
 
 /**
  * Returns a [NavigableMap] converted from this map, using the [natural order][naturalOrder].
  *
  * If this map uses a different comparator than the natural order, this map is copied into a new map.
  */
-fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> =
+fun <K: Comparable<K>, V> MapView<out K, V>.toNavigableMap(): NavigableMap<K, V> =
 	if(this is NavigableMap<K, V> && this.comparator isEssentially naturalOrder<K>()) this
 	else NavigableMapImpl(MutableNavigableMapImpl<K, V>(TreeMap(naturalOrder<K>())).apply { putAll(this@toNavigableMap) }.kotlin)
 
@@ -73,7 +73,7 @@ fun <K: Comparable<K>, V> MapView<K, V>.toNavigableMap(): NavigableMap<K, V> =
  *
  * If this map uses a different comparator than the given one, this map is copied into a new map.
  */
-fun <K, V> MapView<K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> =
+fun <K, V> MapView<out K, V>.toNavigableMap(comparator: Comparator<in K>): NavigableMap<K, V> =
 	if(this is NavigableMap<K, V> && this.comparator isEssentially comparator) this
 	else NavigableMapImpl(MutableNavigableMapImpl<K, V>(TreeMap(comparator)).apply { putAll(this@toNavigableMap) }.kotlin)
 
@@ -113,28 +113,28 @@ fun <T> Iterable<T>.toMutableNavigableSet(comparator: Comparator<in T>): Mutable
 /**
  * Returns a new [MutableMap] copied from the map.
  */
-fun <K, V> MapView<K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf<K, V>().apply { putAll(this@toMutableMap) }
+fun <K, V> MapView<out K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf<K, V>().apply { putAll(this@toMutableMap) }
 
 /**
  * Returns a new [MutableSequencedMap] copied from the map.
  *
  * The iteration order is defined as the encounter order.
  */
-fun <K, V> MapView<K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf<K, V>().apply { putAll(this@toMutableSequencedMap) }
+fun <K, V> MapView<out K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf<K, V>().apply { putAll(this@toMutableSequencedMap) }
 
 /**
  * Returns a new [MutableNavigableMap] copied from the map.
  *
  * The [natural order][naturalOrder] is used.
  */
-fun <K: Comparable<K>, V> MapView<K, V>.toMutableNavigableMap(): MutableNavigableMap<K, V> = mutableNavigableMapOf<K, V>().apply { putAll(this@toMutableNavigableMap) }
+fun <K: Comparable<K>, V> MapView<out K, V>.toMutableNavigableMap(): MutableNavigableMap<K, V> = mutableNavigableMapOf<K, V>().apply { putAll(this@toMutableNavigableMap) }
 
 /**
  * Returns a new [MutableNavigableMap] copied from the collection.
  *
  * The given [comparator] is used.
  */
-fun <K, V> MapView<K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf<K, V>(comparator).apply { putAll(this@toMutableNavigableMap) }
+fun <K, V> MapView<out K, V>.toMutableNavigableMap(comparator: Comparator<in K>): MutableNavigableMap<K, V> = mutableNavigableMapOf<K, V>(comparator).apply { putAll(this@toMutableNavigableMap) }
 
 private val naturalOrderings: kotlin.collections.Set<Comparator<*>> = kotlin.collections.setOf(
 	java.util.Comparator.naturalOrder<Comparable<Any>>(),

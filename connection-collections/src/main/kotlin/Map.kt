@@ -24,7 +24,7 @@ package io.github.spacedvoid.connection
  *
  * Operations are not optional, and must not throw [UnsupportedOperationException].
  */
-interface MapView<K, V> {
+interface MapView<K, out V> {
 	/**
 	 * Returns the size of this map.
 	 */
@@ -43,7 +43,7 @@ interface MapView<K, V> {
 	/**
 	 * Returns `true` if an entry has the given [value] in this map, `false` otherwise.
 	 */
-	fun containsValue(value: V): Boolean
+	fun containsValue(value: @UnsafeVariance V): Boolean
 
 	/**
 	 * Returns the value of the entry associated with the given [key], or `null` if no entries have the [key].
@@ -53,12 +53,12 @@ interface MapView<K, V> {
 	/**
 	 * Returns a collection that reflects the keys that this map contains.
 	 */
-	val keys: SetView<out K>
+	val keys: SetView<K>
 
 	/**
 	 * Returns a collection that reflects the values that this map contains.
 	 */
-	val values: CollectionView<out V>
+	val values: CollectionView<V>
 
 	/**
 	 * Returns a collection that reflects the entries that this map contains.
@@ -66,7 +66,7 @@ interface MapView<K, V> {
 	 * Although this uses [kotlin.collections.Map.Entry] for compatibility,
 	 * it must not be casted to [kotlin.collections.MutableMap.MutableEntry].
 	 */
-	val entries: SetView<out Map.Entry<K, V>>
+	val entries: SetView<Map.Entry<K, V>>
 
 	/**
 	 * Returns whether the given object is equal to this map.
@@ -88,12 +88,12 @@ interface MapView<K, V> {
 /**
  * An immutable map.
  */
-interface Map<K, V>: MapView<K, V> {
-	override val keys: Set<out K>
+interface Map<K, out V>: MapView<K, V> {
+	override val keys: Set<K>
 
-	override val values: Collection<out V>
+	override val values: Collection<V>
 
-	override val entries: Set<out Map.Entry<K, V>>
+	override val entries: Set<Map.Entry<K, V>>
 }
 
 /**
@@ -110,7 +110,7 @@ interface MutableMap<K, V>: MapView<K, V> {
 	 * For all entries in the given [map],
 	 * copies the entry to this map or replaces the value of the entry in this map associated with the key by the entry's value.
 	 */
-	fun putAll(map: MapView<out K, out V>)
+	fun putAll(map: MapView<out K, V>)
 
 	/**
 	 * Removes the entry associated with the given [key] and returns the value, or returns `null` if no entries have the [key].

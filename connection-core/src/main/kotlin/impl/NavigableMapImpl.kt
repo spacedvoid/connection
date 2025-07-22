@@ -11,7 +11,7 @@ import io.github.spacedvoid.connection.impl.kotlin.KotlinMapImpl
 import io.github.spacedvoid.connection.utils.naturalOrdering
 import java.util.SortedSet
 
-open class NavigableMapViewImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMapView<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
+open class NavigableMapViewImpl<K, out V>(override val kotlin: java.util.NavigableMap<K, @UnsafeVariance V>): NavigableMapView<K, V>, SequencedMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): NavigableMapView<K, V> = NavigableMapViewImpl(this.kotlin.reversed())
 
 	override val comparator: Comparator<in K> = this.kotlin.comparator() ?: naturalOrdering()
@@ -41,14 +41,14 @@ open class NavigableMapViewImpl<K, V>(override val kotlin: java.util.NavigableMa
 
 	override fun lowerKey(key: K, inclusive: Boolean): K? = if(inclusive) this.kotlin.floorKey(key) else this.kotlin.lowerKey(key)
 
-	override val keys: NavigableSetView<out K> = NavigableSetViewImpl(this.kotlin.keySet())
+	override val keys: NavigableSetView<K> = NavigableSetViewImpl(this.kotlin.keySet())
 
-	override val values: SequencedCollectionView<out V> = SequencedCollectionViewImpl(this.kotlin.sequencedValues())
+	override val values: SequencedCollectionView<V> = SequencedCollectionViewImpl(this.kotlin.sequencedValues())
 
-	override val entries: SequencedSetView<out Map.Entry<K, V>> = SequencedSetViewImpl(this.kotlin.sequencedEntrySet())
+	override val entries: SequencedSetView<Map.Entry<K, V>> = SequencedSetViewImpl(this.kotlin.sequencedEntrySet())
 }
 
-open class NavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): NavigableMap<K, V>, NavigableMapViewImpl<K, V>(kotlin) {
+open class NavigableMapImpl<K, out V>(override val kotlin: java.util.NavigableMap<K, @UnsafeVariance V>): NavigableMap<K, V>, NavigableMapViewImpl<K, V>(kotlin) {
 	override fun reversed(): NavigableMap<K, V> = NavigableMapImpl(this.kotlin.reversed())
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMap<K, V> =
@@ -60,11 +60,11 @@ open class NavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K,
 	override fun tailMap(after: K, inclusive: Boolean): NavigableMap<K, V> =
 		NavigableMapImpl(this.kotlin.tailMap(after, inclusive))
 
-	override val keys: NavigableSet<out K> = NavigableSetImpl(this.kotlin.keySet())
+	override val keys: NavigableSet<K> = NavigableSetImpl(this.kotlin.keySet())
 
-	override val values: SequencedCollection<out V> = SequencedCollectionImpl(this.kotlin.sequencedValues())
+	override val values: SequencedCollection<V> = SequencedCollectionImpl(this.kotlin.sequencedValues())
 
-	override val entries: SequencedSet<out Map.Entry<K, V>> = SequencedSetImpl(this.kotlin.sequencedEntrySet())
+	override val entries: SequencedSet<Map.Entry<K, V>> = SequencedSetImpl(this.kotlin.sequencedEntrySet())
 }
 
 open class MutableNavigableMapImpl<K, V>(override val kotlin: java.util.NavigableMap<K, V>): MutableNavigableMap<K, V>, NavigableMapViewImpl<K, V>(kotlin) {
@@ -85,7 +85,7 @@ open class MutableNavigableMapImpl<K, V>(override val kotlin: java.util.Navigabl
 
 	override fun put(key: K, value: V): V? = this.kotlin.put(key, value)
 
-	override fun putAll(map: MapView<out K, out V>) = this.kotlin.putAll(KotlinMapImpl(map))
+	override fun putAll(map: MapView<out K, V>) = this.kotlin.putAll(KotlinMapImpl(map))
 
 	override fun remove(key: K): V? = this.kotlin.remove(key)
 

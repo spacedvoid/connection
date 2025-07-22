@@ -84,9 +84,6 @@ Below will generate the Dokka documentation under `docs/`:
 gradlew :dokkaGenerate
 ```
 
-Only the root project's documentation will generate under `docs/`.
-To find the generated documentation of a submodule, look under `<submodule-dir>/build/dokka/html/`. 
-
 ## Upcoming features (or just a todo list)
 
 - `v0.1.0`:
@@ -95,14 +92,14 @@ To find the generated documentation of a submodule, look under `<submodule-dir>/
   - [x] `equals` and `hashCode` implementations
   - [x] Operator and utility methods
   - [x] `Spliterator` support
-
-- `v0.2.0`:
+  - [x] Make non-modifiable collections be covariant(`out`) by default
   - [ ] Efficient collection implementations, such as empty lists or sets
 
-- Not scheduled
-  - [ ] Extend methods that involve generics to use variances (such as `out`)
-  - [ ] Simpler ways to express intervals for `subList` and `subSet`
+- `v0.2.0`:
   - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
+
+- Not scheduled
+  - [ ] Simpler ways to express intervals for `subList` and `subSet`
 
 ## License
 

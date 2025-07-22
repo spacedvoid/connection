@@ -11,7 +11,7 @@ import java.util.Spliterator
 /**
  * A set view that additionally defines the iteration order.
  */
-interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
+interface SequencedSetView<out T>: SequencedCollectionView<T>, SetView<T> {
 	/**
 	 * Returns a new spliterator for this set.
 	 *
@@ -27,7 +27,7 @@ interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): SequencedSetView<T>
 }
@@ -35,14 +35,14 @@ interface SequencedSetView<T>: SequencedCollectionView<T>, SetView<T> {
 /**
  * An immutable sequenced set.
  */
-interface SequencedSet<T>: SequencedCollection<T>, Set<T>, SequencedSetView<T> {
+interface SequencedSet<out T>: SequencedCollection<T>, Set<T>, SequencedSetView<T> {
 	/**
 	 * Returns a new spliterator for this collection.
 	 *
 	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], [Spliterator.DISTINCT], and [Spliterator.ORDERED] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): SequencedSet<T>
 }
@@ -95,5 +95,5 @@ interface MutableSequencedSet<T>: MutableSequencedCollection<T>, MutableSet<T>, 
 	 * The additions are not strictly determined;
 	 * it may add to the first, last, or any position, even for consecutive elements in the given [collection].
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 }

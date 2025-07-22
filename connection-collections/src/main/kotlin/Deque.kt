@@ -70,7 +70,7 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 * Adds all elements from the given [collection] to the head of this deque, by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	fun addAllFirst(collection: CollectionView<out T>): Boolean
+	fun addAllFirst(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Adds all elements from the given [collection] to the tail of this deque, by their encounter order.
@@ -78,7 +78,7 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 *
 	 * This method is equivalent with [addAll].
 	 */
-	fun addAllLast(collection: CollectionView<out T>): Boolean = addAll(collection)
+	fun addAllLast(collection: CollectionView<T>): Boolean = addAll(collection)
 
 	/**
 	 * Removes and returns the head of this deque.
@@ -153,7 +153,7 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 * Adds all elements from the given [collection] to the tail of this deque, by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Removes the first occurrence of the given [element] from this deque, searching from the head of this deque.

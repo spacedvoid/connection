@@ -17,7 +17,7 @@ import java.util.Spliterator
  *
  * All operations that check whether an element matches an instance is determined via [Any.equals].
  */
-interface SetView<T>: CollectionView<T> {
+interface SetView<out T>: CollectionView<T> {
 	/**
 	 * Returns a new spliterator for this set.
 	 *
@@ -33,7 +33,7 @@ interface SetView<T>: CollectionView<T> {
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	/**
 	 * Returns whether the given object is equal to this set.
@@ -55,14 +55,14 @@ interface SetView<T>: CollectionView<T> {
 /**
  * An immutable set.
  */
-interface Set<T>: Collection<T>, SetView<T> {
+interface Set<out T>: Collection<T>, SetView<T> {
 	/**
 	 * Returns a new spliterator for this collection.
 	 *
 	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE] and [Spliterator.DISTINCT] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 }
 
 /**
@@ -107,5 +107,5 @@ interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T> {
 	 * When an element which already matches an instance in this set is added,
 	 * the contained instance is not replaced, and this set remains unchanged.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 }

@@ -16,7 +16,7 @@ import java.util.Spliterator
  * this API restricts the retrieval of elements outside the non-negative integer index.
  * Element addition, removal, modification, or access operations outside such index may throw any type of exceptions.
  */
-interface ListView<T>: SequencedCollectionView<T> {
+interface ListView<out T>: SequencedCollectionView<T> {
 	/**
 	 * Returns a new iterator for this list.
 	 *
@@ -39,7 +39,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	/**
 	 * Returns a new iterator for this list, starting from the given [index].
@@ -76,12 +76,12 @@ interface ListView<T>: SequencedCollectionView<T> {
 	/**
 	 * Returns the index of the first occurrence of the given [element], or `-1` if the [element] is not in this list.
 	 */
-	fun indexOf(element: T): Int
+	fun indexOf(element: @UnsafeVariance T): Int
 
 	/**
 	 * Returns the index of the last occurrence of the given [element], or `-1` if the [element] is not in this list.
 	 */
-	fun lastIndexOf(element: T): Int
+	fun lastIndexOf(element: @UnsafeVariance T): Int
 
 	/**
 	 * Returns whether the given object is equal to this list.
@@ -102,7 +102,7 @@ interface ListView<T>: SequencedCollectionView<T> {
 /**
  * An immutable list.
  */
-interface List<T>: ListView<T>, SequencedCollection<T> {
+interface List<out T>: ListView<T>, SequencedCollection<T> {
 	override fun iterator(): ListIterator<T>
 
 	/**
@@ -111,7 +111,7 @@ interface List<T>: ListView<T>, SequencedCollection<T> {
 	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], and [Spliterator.ORDERED] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): List<T>
 
@@ -161,7 +161,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 * Adds all elements from the given [collection] to the end of this list by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Adds the given [element] to the beginning of this list.

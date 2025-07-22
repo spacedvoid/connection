@@ -13,7 +13,7 @@ import io.github.spacedvoid.connection.List
 import io.github.spacedvoid.connection.MutableList
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 
-open class ListViewImpl<T>(
+open class ListViewImpl<out T>(
 	@property:Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE") override val kotlin: kotlin.collections.List<T>
 ): ListView<T>, SequencedCollectionViewImpl<T>(kotlin as java.util.SequencedCollection<T>) {
 	override fun iterator(): ListIterator<T> = this.kotlin.listIterator()
@@ -26,9 +26,9 @@ open class ListViewImpl<T>(
 
 	override fun get(index: Int): T = this.kotlin[index]
 
-	override fun indexOf(element: T): Int = this.kotlin.indexOf(element)
+	override fun indexOf(element: @UnsafeVariance T): Int = this.kotlin.indexOf(element)
 
-	override fun lastIndexOf(element: T): Int = this.kotlin.lastIndexOf(element)
+	override fun lastIndexOf(element: @UnsafeVariance T): Int = this.kotlin.lastIndexOf(element)
 
 	/**
 	 * Returns whether the given object is equal to this list.
@@ -59,7 +59,7 @@ open class ListViewImpl<T>(
 	override fun hashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }
 }
 
-open class ListImpl<T>(override val kotlin: kotlin.collections.List<T>): List<T>, ListViewImpl<T>(kotlin) {
+open class ListImpl<out T>(override val kotlin: kotlin.collections.List<T>): List<T>, ListViewImpl<T>(kotlin) {
 	override fun reversed(): List<T> = ListImpl((this.kotlin as java.util.List<T>).reversed())
 
 	override fun subList(startInclusive: Int, endExclusive: Int): List<T> = ListImpl(this.kotlin.subList(startInclusive, endExclusive))
@@ -78,7 +78,7 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun add(index: Int, element: T) = this.kotlin.add(index, element)
 
-	override fun addAll(collection: CollectionView<out T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
 
 	override fun addFirst(element: T) = this.kotlin.addFirst(element)
 
@@ -94,9 +94,9 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun removeLast(): T = this.kotlin.removeLast()
 
-	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
 
-	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
 
 	override fun clear() = this.kotlin.clear()
 }

@@ -15,7 +15,7 @@ import kotlin.collections.toSet as kotlinToSet
  *
  * The order is defined as the encounter order.
  */
-inline fun <reified T> CollectionView<out T>.toTypedArray(): Array<T> {
+inline fun <reified T> CollectionView<T>.toTypedArray(): Array<T> {
 	val iterator = iterator()
 	return Array(size()) { iterator.next() }
 }
@@ -25,7 +25,7 @@ inline fun <reified T> CollectionView<out T>.toTypedArray(): Array<T> {
  *
  * The order is defined as the encounter order.
  */
-fun <K, V> MapView<out K, out V>.toArray(): Array<Pair<K, V>> {
+fun <K, V> MapView<out K, V>.toArray(): Array<Pair<K, V>> {
 	val iterator = this.entries.iterator()
 	return Array(size()) {
 		iterator.next().let { it.key to it.value }

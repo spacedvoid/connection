@@ -282,21 +282,21 @@ fun <T> CollectionView<T>.randomOrNull(random: Random = Random.Default): T? =
  *
  * The [natural ordering][naturalOrder] is used.
  */
-fun <T: Comparable<T>> MutableList<T>.sort() = if(this is MutableListImpl<T>) this.kotlin.sort() else asKotlin().sort()
+fun <T: Comparable<T>> MutableList<out T>.sort() = if(this is MutableListImpl<T>) this.kotlin.sort() else asKotlin().sort()
 
 /**
  * Performs a stable reversed sort on the elements in this list in-place.
  *
  * The [reverse ordering][reverseOrder] is used.
  */
-fun <T: Comparable<T>> MutableList<T>.sortDescending() = if(this is MutableListImpl<T>) this.kotlin.sortDescending() else asKotlin().sortDescending()
+fun <T: Comparable<T>> MutableList<out T>.sortDescending() = if(this is MutableListImpl<T>) this.kotlin.sortDescending() else asKotlin().sortDescending()
 
 /**
  * Performs a stable sort on the elements in this list in-place.
  *
  * The given [comparator] is used.
  */
-fun <T> MutableList<T>.sort(comparator: Comparator<in T>) = if(this is MutableListImpl<T>) this.kotlin.sortWith(comparator) else asKotlin().sortWith(comparator)
+fun <T> MutableList<out T>.sort(comparator: Comparator<in T>) = if(this is MutableListImpl<T>) this.kotlin.sortWith(comparator) else asKotlin().sortWith(comparator)
 
 /**
  * Returns a stable sorted list with the elements in this list.
@@ -353,4 +353,4 @@ operator fun <K> MapView<K, *>.contains(key: K): Boolean = containsKey(key)
 /**
  * Shortcut for `this.entries.iterator`.
  */
-operator fun <K, V> Map<K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()
+operator fun <K, V> Map<out K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()

@@ -9,11 +9,11 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 
-open class SequencedSetViewImpl<T>(override val kotlin: java.util.SequencedSet<T>): SequencedSetView<T>, SequencedCollectionViewImpl<T>(kotlin) {
+open class SequencedSetViewImpl<out T>(override val kotlin: java.util.SequencedSet<@UnsafeVariance T>): SequencedSetView<T>, SequencedCollectionViewImpl<T>(kotlin) {
 	override fun reversed(): SequencedSetView<T> = SequencedSetViewImpl(this.kotlin.reversed())
 }
 
-open class SequencedSetImpl<T>(override val kotlin: java.util.SequencedSet<T>): SequencedSet<T>, SequencedSetViewImpl<T>(kotlin) {
+open class SequencedSetImpl<out T>(override val kotlin: java.util.SequencedSet<@UnsafeVariance T>): SequencedSet<T>, SequencedSetViewImpl<T>(kotlin) {
 	override fun reversed(): SequencedSet<T> = SequencedSetImpl<T>(this.kotlin.reversed())
 }
 
@@ -28,9 +28,9 @@ open class RemoveOnlySequencedSetImpl<T>(override val kotlin: java.util.Sequence
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)
 
-	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
 
-	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
 
 	override fun clear() = this.kotlin.clear()
 }
@@ -40,5 +40,5 @@ open class MutableSequencedSetImpl<T>(override val kotlin: java.util.SequencedSe
 
 	override fun add(element: T): Boolean = this.kotlin.add(element)
 
-	override fun addAll(collection: CollectionView<out T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
 }

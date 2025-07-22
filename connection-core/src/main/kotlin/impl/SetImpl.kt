@@ -10,7 +10,7 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.Set
 
-open class SetViewImpl<T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
+open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
 	/**
 	 * Returns whether the given object is equal to this set.
 	 *
@@ -37,7 +37,7 @@ open class SetViewImpl<T>(override val kotlin: kotlin.collections.Set<T>): SetVi
 	override fun hashCode(): Int = sumOf { it.hashCode() }
 }
 
-open class SetImpl<T>(override val kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>(kotlin)
+open class SetImpl<out T>(override val kotlin: kotlin.collections.Set<T>): Set<T>, SetViewImpl<T>(kotlin)
 
 open class RemoveOnlySetImpl<T>(override val kotlin: kotlin.collections.MutableSet<T>): RemoveOnlySet<T>, RemoveOnlyCollectionImpl<T>(kotlin)
 

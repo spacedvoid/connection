@@ -57,7 +57,7 @@ interface Stack<T>: MutableCollection<T> {
 	 *
 	 * This method is equivalent with [addAll].
 	 */
-	fun pushAll(collection: CollectionView<out T>): Boolean = addAll(collection)
+	fun pushAll(collection: CollectionView<T>): Boolean = addAll(collection)
 
 	/**
 	 * Removes and returns the topmost element of this stack.
@@ -100,7 +100,7 @@ interface Stack<T>: MutableCollection<T> {
 	 * Adds all elements from the given [collection] to the top of this stack by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Removes the first occurrence of the given [element], searching from the top of this stack.

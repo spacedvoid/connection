@@ -10,7 +10,7 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableCollection
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
 
-open class KotlinCollectionImpl<T>(private val connection: CollectionView<T>): Collection<T> {
+open class KotlinCollectionImpl<out T>(private val connection: CollectionView<T>): Collection<T> {
 	override fun iterator(): Iterator<T> = this.connection.iterator()
 
 	override val size: Int
@@ -18,9 +18,9 @@ open class KotlinCollectionImpl<T>(private val connection: CollectionView<T>): C
 
 	override fun isEmpty(): Boolean = this.connection.isEmpty()
 
-	override fun contains(element: T): Boolean = this.connection.contains(element)
+	override fun contains(element: @UnsafeVariance T): Boolean = this.connection.contains(element)
 
-	override fun containsAll(elements: Collection<T>): Boolean = this.connection.containsAll(CollectionViewImpl(elements))
+	override fun containsAll(elements: Collection<@UnsafeVariance T>): Boolean = this.connection.containsAll(CollectionViewImpl(elements))
 
 	override fun toString(): String = "${this::class.qualifiedName}{elements=[${joinToString()}]}"
 }

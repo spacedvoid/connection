@@ -53,7 +53,7 @@ interface Queue<T>: MutableCollection<T> {
 	 * Adds all elements from the given [collection] to this queue, by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Removes and returns the head of this queue.

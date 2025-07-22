@@ -9,7 +9,7 @@ package io.github.spacedvoid.connection
 /**
  * A map view that additionally defines the iteration order of the entries.
  */
-interface SequencedMapView<K, V>: MapView<K, V> {
+interface SequencedMapView<K, out V>: MapView<K, V> {
 	/**
 	 * Returns a reverse-ordered map of this map.
 	 *
@@ -39,24 +39,24 @@ interface SequencedMapView<K, V>: MapView<K, V> {
 	 */
 	fun lastKey(): K
 
-	override val keys: SequencedSetView<out K>
+	override val keys: SequencedSetView<K>
 
-	override val values: SequencedCollectionView<out V>
+	override val values: SequencedCollectionView<V>
 
-	override val entries: SequencedSetView<out kotlin.collections.Map.Entry<K, V>>
+	override val entries: SequencedSetView<kotlin.collections.Map.Entry<K, V>>
 }
 
 /**
  * An immutable sequenced map.
  */
-interface SequencedMap<K, V>: Map<K, V>, SequencedMapView<K, V> {
+interface SequencedMap<K, out V>: Map<K, V>, SequencedMapView<K, V> {
 	override fun reversed(): SequencedMap<K, V>
 
-	override val keys: SequencedSet<out K>
+	override val keys: SequencedSet<K>
 
-	override val values: SequencedCollection<out V>
+	override val values: SequencedCollection<V>
 
-	override val entries: SequencedSet<out kotlin.collections.Map.Entry<K, V>>
+	override val entries: SequencedSet<kotlin.collections.Map.Entry<K, V>>
 }
 
 /**

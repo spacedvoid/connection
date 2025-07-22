@@ -10,35 +10,35 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 import io.github.spacedvoid.connection.utils.naturalOrdering
 
-open class NavigableSetViewImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSetView<T>, SequencedSetViewImpl<T>(kotlin) {
+open class NavigableSetViewImpl<out T>(override val kotlin: java.util.NavigableSet<@UnsafeVariance T>): NavigableSetView<T>, SequencedSetViewImpl<T>(kotlin) {
 	override fun reversed(): NavigableSetView<T> = NavigableSetViewImpl(this.kotlin.reversed())
 
-	override val comparator: Comparator<in T> = this.kotlin.comparator() ?: naturalOrdering()
+	override val comparator: Comparator<in @UnsafeVariance T> = this.kotlin.comparator() ?: naturalOrdering()
 
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T> =
+	override fun subSet(from: @UnsafeVariance T, to: @UnsafeVariance T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T> =
 		NavigableSetViewImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))
 
-	override fun headSet(before: T, inclusive: Boolean): NavigableSetView<T> =
+	override fun headSet(before: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T> =
 		NavigableSetViewImpl(this.kotlin.headSet(before, inclusive))
 
-	override fun tailSet(after: T, inclusive: Boolean): NavigableSetView<T> =
+	override fun tailSet(after: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T> =
 		NavigableSetViewImpl(this.kotlin.tailSet(after, inclusive))
 
-	override fun higher(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
+	override fun higher(than: @UnsafeVariance T, inclusive: Boolean): T? = if(inclusive) this.kotlin.ceiling(than) else this.kotlin.higher(than)
 
-	override fun lower(than: T, inclusive: Boolean): T? = if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
+	override fun lower(than: @UnsafeVariance T, inclusive: Boolean): T? = if(inclusive) this.kotlin.floor(than) else this.kotlin.lower(than)
 }
 
-open class NavigableSetImpl<T>(override val kotlin: java.util.NavigableSet<T>): NavigableSet<T>, NavigableSetViewImpl<T>(kotlin) {
+open class NavigableSetImpl<out T>(override val kotlin: java.util.NavigableSet<@UnsafeVariance T>): NavigableSet<T>, NavigableSetViewImpl<T>(kotlin) {
 	override fun reversed(): NavigableSet<T> = NavigableSetImpl(this.kotlin.reversed())
 
-	override fun subSet(from: T, to: T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T> =
+	override fun subSet(from: @UnsafeVariance T, to: @UnsafeVariance T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSet<T> =
 		NavigableSetImpl(this.kotlin.subSet(from, fromInclusive, to, toInclusive))
 
-	override fun headSet(before: T, inclusive: Boolean): NavigableSet<T> =
+	override fun headSet(before: @UnsafeVariance T, inclusive: Boolean): NavigableSet<T> =
 		NavigableSetImpl(this.kotlin.headSet(before, inclusive))
 
-	override fun tailSet(after: T, inclusive: Boolean): NavigableSet<T> =
+	override fun tailSet(after: @UnsafeVariance T, inclusive: Boolean): NavigableSet<T> =
 		NavigableSetImpl(this.kotlin.tailSet(after, inclusive))
 }
 
@@ -62,9 +62,9 @@ open class RemoveOnlyNavigableSetImpl<T>(override val kotlin: java.util.Navigabl
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)
 
-	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
 
-	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
 
 	override fun clear() = this.kotlin.clear()
 }
@@ -83,5 +83,5 @@ open class MutableNavigableSetImpl<T>(override val kotlin: java.util.NavigableSe
 
 	override fun add(element: T): Boolean = this.kotlin.add(element)
 
-	override fun addAll(collection: CollectionView<out T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
 }

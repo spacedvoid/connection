@@ -11,7 +11,7 @@ import java.util.Spliterator
 /**
  * A collection view that additionally defines the iteration order, which is also consistent.
  */
-interface SequencedCollectionView<T>: CollectionView<T> {
+interface SequencedCollectionView<out T>: CollectionView<T> {
 	/**
 	 * Returns a new iterator for this collection.
 	 *
@@ -34,7 +34,7 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	/**
 	 * Returns a reverse-ordered collection of this collection.
@@ -59,14 +59,14 @@ interface SequencedCollectionView<T>: CollectionView<T> {
 /**
  * An immutable sequenced collection.
  */
-interface SequencedCollection<T>: SequencedCollectionView<T>, Collection<T> {
+interface SequencedCollection<out T>: SequencedCollectionView<T>, Collection<T> {
 	/**
 	 * Returns a new spliterator for this collection.
 	 *
 	 * The characteristics [Spliterator.SIZED], [Spliterator.IMMUTABLE], and [Spliterator.ORDERED] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): SequencedCollection<T>
 }
@@ -137,7 +137,7 @@ interface MutableSequencedCollection<T>: RemoveOnlySequencedCollection<T>, Mutab
 	 * The additions are not strictly determined;
 	 * it may add to the first, last, or any position, even for consecutive elements in the given [collection].
 	 */
-	override fun addAll(collection: CollectionView<out T>): Boolean
+	override fun addAll(collection: CollectionView<T>): Boolean
 
 	override fun reversed(): MutableSequencedCollection<T>
 }

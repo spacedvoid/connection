@@ -13,22 +13,22 @@ import io.github.spacedvoid.connection.MutableMap
 import io.github.spacedvoid.connection.Set
 import io.github.spacedvoid.connection.impl.kotlin.KotlinMapImpl
 
-open class MapViewImpl<K, V>(open val kotlin: kotlin.collections.Map<K, V>): MapView<K, V> {
+open class MapViewImpl<K, out V>(open val kotlin: kotlin.collections.Map<K, V>): MapView<K, V> {
 	override fun size(): Int = this.kotlin.size
 
 	override fun isEmpty(): Boolean = this.kotlin.isEmpty()
 
 	override fun containsKey(key: K): Boolean = this.kotlin.containsKey(key)
 
-	override fun containsValue(value: V): Boolean = this.kotlin.containsValue(value)
+	override fun containsValue(value: @UnsafeVariance V): Boolean = this.kotlin.containsValue(value)
 
 	override fun get(key: K): V? = this.kotlin[key]
 
-	override val keys: SetView<out K> = SetViewImpl(this.kotlin.keys)
+	override val keys: SetView<K> = SetViewImpl(this.kotlin.keys)
 
-	override val values: CollectionView<out V> = CollectionViewImpl(this.kotlin.values)
+	override val values: CollectionView<V> = CollectionViewImpl(this.kotlin.values)
 
-	override val entries: SetView<out kotlin.collections.Map.Entry<K, V>> = SetViewImpl(this.kotlin.entries)
+	override val entries: SetView<kotlin.collections.Map.Entry<K, V>> = SetViewImpl(this.kotlin.entries)
 
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
@@ -37,18 +37,18 @@ open class MapViewImpl<K, V>(open val kotlin: kotlin.collections.Map<K, V>): Map
 	override fun toString(): String = "${this::class.qualifiedName}{entries=[${this.entries.joinToString { "{${it.key}=${it.value}}" }}]}"
 }
 
-open class MapImpl<K, V>(override val kotlin: kotlin.collections.Map<K, V>): Map<K, V>, MapViewImpl<K, V>(kotlin) {
-	override val keys: Set<out K> = SetImpl(this.kotlin.keys)
+open class MapImpl<K, out V>(override val kotlin: kotlin.collections.Map<K, V>): Map<K, V>, MapViewImpl<K, V>(kotlin) {
+	override val keys: Set<K> = SetImpl(this.kotlin.keys)
 
-	override val values: Collection<out V> = CollectionImpl(this.kotlin.values)
+	override val values: Collection<V> = CollectionImpl(this.kotlin.values)
 
-	override val entries: Set<out kotlin.collections.Map.Entry<K, V>> = SetImpl(this.kotlin.entries)
+	override val entries: Set<kotlin.collections.Map.Entry<K, V>> = SetImpl(this.kotlin.entries)
 }
 
 open class MutableMapImpl<K, V>(override val kotlin: kotlin.collections.MutableMap<K, V>): MutableMap<K, V>, MapViewImpl<K, V>(kotlin) {
 	override fun put(key: K, value: V): V? = this.kotlin.put(key, value)
 
-	override fun putAll(map: MapView<out K, out V>) = this.kotlin.putAll(KotlinMapImpl(map))
+	override fun putAll(map: MapView<out K, V>) = this.kotlin.putAll(KotlinMapImpl(map))
 
 	override fun remove(key: K): V? = this.kotlin.remove(key)
 

@@ -9,7 +9,7 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 
-open class SequencedCollectionViewImpl<T>(override val kotlin: java.util.SequencedCollection<T>): SequencedCollectionView<T>, CollectionViewImpl<T>(kotlin) {
+open class SequencedCollectionViewImpl<out T>(override val kotlin: java.util.SequencedCollection<@UnsafeVariance T>): SequencedCollectionView<T>, CollectionViewImpl<T>(kotlin) {
 	override fun reversed(): SequencedCollectionView<T> = SequencedCollectionViewImpl(this.kotlin.reversed())
 
 	override fun first(): T = this.kotlin.first
@@ -17,7 +17,7 @@ open class SequencedCollectionViewImpl<T>(override val kotlin: java.util.Sequenc
 	override fun last(): T = this.kotlin.last
 }
 
-open class SequencedCollectionImpl<T>(override val kotlin: java.util.SequencedCollection<T>): SequencedCollection<T>, SequencedCollectionViewImpl<T>(kotlin) {
+open class SequencedCollectionImpl<out T>(override val kotlin: java.util.SequencedCollection<@UnsafeVariance T>): SequencedCollection<T>, SequencedCollectionViewImpl<T>(kotlin) {
 	override fun reversed(): SequencedCollection<T> = SequencedCollectionImpl(this.kotlin.reversed())
 }
 
@@ -32,9 +32,9 @@ open class RemoveOnlySequencedCollectionImpl<T>(override val kotlin: java.util.S
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)
 
-	override fun removeAll(collection: CollectionView<out T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
 
-	override fun retainAll(collection: CollectionView<out T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
 
 	override fun clear() = this.kotlin.clear()
 }
@@ -44,5 +44,5 @@ open class MutableSequencedCollectionImpl<T>(override val kotlin: java.util.Sequ
 
 	override fun add(element: T): Boolean = this.kotlin.add(element)
 
-	override fun addAll(collection: CollectionView<out T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
 }

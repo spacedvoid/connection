@@ -21,7 +21,7 @@ import java.util.function.Consumer
  *
  * Operations are not optional, and must not throw [UnsupportedOperationException].
  */
-interface CollectionView<T>: Iterable<T> {
+interface CollectionView<out T>: Iterable<T> {
 	/**
 	 * Returns a new iterator for this collection.
 	 *
@@ -50,7 +50,7 @@ interface CollectionView<T>: Iterable<T> {
 	 * such as [Spliterator.DISTINCT] for [SetView] and [Spliterator.IMMUTABLE] for [Collection].
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	/**
 	 * Returns the size of this collection.
@@ -67,14 +67,14 @@ interface CollectionView<T>: Iterable<T> {
 	 *
 	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
 	 */
-	operator fun contains(element: T): Boolean
+	operator fun contains(element: @UnsafeVariance T): Boolean
 
 	/**
 	 * Returns `true` if this collection contains all elements from the given [collection], `false` otherwise.
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun containsAll(collection: CollectionView<out T>): Boolean
+	fun containsAll(collection: CollectionView<@UnsafeVariance T>): Boolean
 
 	/**
 	 * Returns whether the given object is equal to this collection.
@@ -112,14 +112,14 @@ interface CollectionView<T>: Iterable<T> {
 /**
  * An immutable collection.
  */
-interface Collection<T>: CollectionView<T> {
+interface Collection<out T>: CollectionView<T> {
 	/**
 	 * Returns a new spliterator for this collection.
 	 *
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.IMMUTABLE] are reported by default.
 	 */
 	@StreamSupport
-	override fun spliterator(): Spliterator<T>
+	override fun spliterator(): Spliterator<@UnsafeVariance T>
 }
 
 /**
@@ -159,7 +159,7 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun removeAll(collection: CollectionView<out T>): Boolean
+	fun removeAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Removes all elements from this collection which are not contained in the given [collection].
@@ -167,7 +167,7 @@ interface RemoveOnlyCollection<T>: CollectionView<T>, MutableIterable<T> {
 	 *
 	 * Whether an element in this collection matches an element is determined via [Any.equals].
 	 */
-	fun retainAll(collection: CollectionView<out T>): Boolean
+	fun retainAll(collection: CollectionView<T>): Boolean
 
 	/**
 	 * Removes all elements in this collection.
@@ -189,5 +189,5 @@ interface MutableCollection<T>: RemoveOnlyCollection<T> {
 	 * Adds all elements from the given [collection] to this collection.
 	 * Returns `true` if the addition changed this collection, `false` otherwise.
 	 */
-	fun addAll(collection: CollectionView<out T>): Boolean
+	fun addAll(collection: CollectionView<T>): Boolean
 }

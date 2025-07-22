@@ -14,7 +14,7 @@ package io.github.spacedvoid.connection
  * which is also called as *consistent with equals*.
  * Otherwise, the behavior of this map is not defined.
  */
-interface NavigableMapView<K, V>: SequencedMapView<K, V> {
+interface NavigableMapView<K, out V>: SequencedMapView<K, V> {
 	/**
 	 * The comparator used to sort the entries in this map.
 	 */
@@ -70,13 +70,13 @@ interface NavigableMapView<K, V>: SequencedMapView<K, V> {
 	 */
 	fun lowerKey(key: K, inclusive: Boolean): K?
 
-	override val keys: NavigableSetView<out K>
+	override val keys: NavigableSetView<K>
 }
 
 /**
  * An immutable navigable map.
  */
-interface NavigableMap<K, V>: SequencedMap<K, V>, NavigableMapView<K, V> {
+interface NavigableMap<K, out V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 	override fun reversed(): NavigableMap<K, V>
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMap<K, V>
@@ -85,7 +85,7 @@ interface NavigableMap<K, V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 
 	override fun tailMap(after: K, inclusive: Boolean): NavigableMap<K, V>
 
-	override val keys: NavigableSet<out K>
+	override val keys: NavigableSet<K>
 }
 
 /**

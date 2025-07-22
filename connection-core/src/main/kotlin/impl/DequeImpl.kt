@@ -17,7 +17,7 @@ open class DequeImpl<T>(override val kotlin: java.util.Deque<T>): Deque<T>, Muta
 
 	override fun addFirst(element: T) = this.kotlin.addFirst(element)
 
-	override fun addAllFirst(collection: CollectionView<out T>): Boolean {
+	override fun addAllFirst(collection: CollectionView<T>): Boolean {
 		var result = false
 		for(e in collection) {
 			addFirst(e)

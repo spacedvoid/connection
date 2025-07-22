@@ -10,7 +10,7 @@ import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableMap
 import io.github.spacedvoid.connection.impl.MapViewImpl
 
-open class KotlinMapImpl<K, V>(private val connection: MapView<K, V>): Map<K, V> {
+open class KotlinMapImpl<K, out V>(private val connection: MapView<K, V>): Map<K, V> {
 	override val size: Int
 		get() = this.connection.size()
 
@@ -18,7 +18,7 @@ open class KotlinMapImpl<K, V>(private val connection: MapView<K, V>): Map<K, V>
 
 	override fun containsKey(key: K): Boolean = this.connection.containsKey(key)
 
-	override fun containsValue(value: V): Boolean = this.connection.containsValue(value)
+	override fun containsValue(value: @UnsafeVariance V): Boolean = this.connection.containsValue(value)
 
 	override fun get(key: K): V? = this.connection[key]
 

@@ -41,14 +41,15 @@ fun <T> NavigableSetView<T>.snapshot(): NavigableSet<T> = toNavigableSet(this.co
 /**
  * Creates an immutable copy of this map.
  */
-fun <K, V> MapView<K, V>.snapshot(): Map<K, V> = if(this is Map<K, V>) this else buildMap { putAll(this@snapshot) }
+fun <K, V> MapView<out K, V>.snapshot(): Map<K, V> = if(this is Map<K, V>) this else buildMap { putAll(this@snapshot) }
 
 /**
  * Creates an immutable copy of this map.
  */
-fun <K ,V> SequencedMapView<K, V>.snapshot(): SequencedMap<K, V> = toSequencedMap()
+fun <K ,V> SequencedMapView<out K, V>.snapshot(): SequencedMap<K, V> = toSequencedMap()
 
 /**
  * Creates an immutable copy of this map.
  */
-fun <K, V> NavigableMapView<K, V>.snapshot(): NavigableMap<K, V> = toNavigableMap(this.comparator)
+@Suppress("UNCHECKED_CAST")
+fun <K, V> NavigableMapView<out K, V>.snapshot(): NavigableMap<K, V> = toNavigableMap(this.comparator as Comparator<in K>)
