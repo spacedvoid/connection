@@ -8,8 +8,14 @@ package io.github.spacedvoid.connection
 
 import io.github.spacedvoid.connection.impl.MutableListImpl
 import kotlin.random.Random
+import kotlin.collections.first as kotlinFirst
+import kotlin.collections.firstOrNull as kotlinFirstOrNull
+import kotlin.collections.last as kotlinLast
+import kotlin.collections.lastOrNull as kotlinLastOrNull
 import kotlin.collections.shuffle as kotlinShuffle
 import kotlin.collections.shuffled as kotlinShuffled
+import kotlin.collections.single as kotlinSingle
+import kotlin.collections.singleOrNull as kotlinSingleOrNull
 
 /**
  * Shortcut for `!isEmpty()`.
@@ -62,15 +68,13 @@ operator fun <T> ListView<T>.component5(): T = get(4)
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean {
-	return when(elements) {
-		is CollectionView<T> -> addAll(elements)
-		is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
-		else -> {
-			var result = false
-			for(e in elements) if(add(e)) result = true
-			return result
-		}
+fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean = when(elements) {
+	is CollectionView<T> -> addAll(elements)
+	is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
+	else -> {
+		var result = false
+		for(e in elements) if(add(e)) result = true
+		result // ^when
 	}
 }
 
@@ -109,6 +113,27 @@ fun <T> RemoveOnlyCollection<T>.removeAll(elements: Array<out T>) {
  */
 fun <T> RemoveOnlyCollection<T>.removeAll(elements: Sequence<T>) {
 	removeAll(elements.toSet())
+}
+
+/**
+ * Shortcut for [RemoveOnlyCollection.retainAll].
+ */
+fun <T> RemoveOnlyCollection<T>.retainAll(elements: Iterable<T>) {
+	retainAll(elements.toSet())
+}
+
+/**
+ * Shortcut for [RemoveOnlyCollection.retainAll].
+ */
+fun <T> RemoveOnlyCollection<T>.retainAll(elements: Array<out T>) {
+	retainAll(elements.toSet())
+}
+
+/**
+ * Shortcut for [RemoveOnlyCollection.retainAll].
+ */
+fun <T> RemoveOnlyCollection<T>.retainAll(elements: Sequence<T>) {
+	retainAll(elements.toSet())
 }
 
 /**
@@ -243,39 +268,140 @@ operator fun <T> ListView<T>.times(n: Int): List<T> = buildList(size() * n) {
 }
 
 /**
- * Returns the last element of this list, or `null` if this list is empty.
+ * Returns the first element by their encounter order.
+ * Throws [NoSuchElementException] if this collection is empty.
  */
-fun <T> ListView<T>.lastOrNull(): T? = if(isEmpty()) null else last()
+fun <T> Iterable<T>.first(): T = when(this) {
+	is SequencedCollectionView<T> -> first()
+	is kotlin.collections.List<T> -> kotlinFirst()
+	else -> run {
+		val iterator = iterator()
+		return@run if(iterator.hasNext()) iterator.next() else throw NoSuchElementException("Collection is empty")
+	}
+}
+
+/**
+ * Returns the last element by their encounter order.
+ * Throws [NoSuchElementException] if this collection is empty.
+ */
+fun <T> Iterable<T>.last(): T = when(this) {
+	is SequencedCollectionView<T> -> last()
+	is kotlin.collections.List<T> -> kotlinLast()
+	else -> run {
+		val iterator = iterator()
+		if(!iterator.hasNext()) throw NoSuchElementException("Collection is empty")
+		var last = iterator.next()
+		while(iterator.hasNext()) last = iterator.next()
+		return@run last
+	}
+}
+
+/**
+ * Returns the first element of this collection, or `null` if this collection is empty.
+ */
+fun <T> Iterable<T>.firstOrNull(): T? = when(this) {
+	is SequencedCollectionView<T> -> firstOrNull()
+	is kotlin.collections.List<T> -> kotlinFirstOrNull()
+	else -> run {
+		val iterator = iterator()
+		return@run if(iterator.hasNext()) iterator.next() else null
+	}
+}
+
+/**
+ * Returns the last element of this collection, or `null` if this collection is empty.
+ */
+fun <T> Iterable<T>.lastOrNull(): T? = when(this) {
+	is SequencedCollectionView<T> -> lastOrNull()
+	is kotlin.collections.List<T> -> kotlinLastOrNull()
+	else -> run {
+		var last: T? = null
+		for(e in this) last = e
+		return last
+	}
+}
+
+/**
+ * Returns the first element of this collection, or `null` if this collection is empty.
+ */
+fun <T> SequencedCollectionView<T>.firstOrNull(): T? = if(isEmpty()) null else first()
+
+/**
+ * Returns the last element of this collection, or `null` if this collection is empty.
+ */
+fun <T> SequencedCollectionView<T>.lastOrNull(): T? = if(isEmpty()) null else last()
 
 /**
  * Returns the last element that matches the [predicate], or `null` if no matching elements were found.
  */
-inline fun <T> ListView<T>.lastOrNull(predicate: (T) -> Boolean): T? {
-	val iterator = iterator(size())
-	while(iterator.hasPrevious()) iterator.previous().let { if(predicate(it)) return it }
-	return null
+inline fun <T> SequencedCollectionView<T>.lastOrNull(predicate: (T) -> Boolean): T? = reversed().kotlinFirstOrNull(predicate)
+
+/**
+ * Returns the last element that matches the [predicate], or `null` if no matching elements were found.
+ *
+ * This method is equivalent with [lastOrNull].
+ */
+inline fun <T> SequencedCollectionView<T>.findLast(predicate: (T) -> Boolean): T? = lastOrNull(predicate)
+
+/**
+ * Returns the only element of this collection.
+ * Throws [NoSuchElementException] if this collection is empty,
+ * or [IllegalArgumentException] if this collection has more than one element.
+ */
+fun <T> Iterable<T>.single(): T = when(this) {
+	is SequencedCollectionView<T> -> single()
+	is kotlin.collections.List<T> -> kotlinSingle()
+	else -> run {
+		val iterator = iterator()
+		if(!iterator.hasNext()) throw NoSuchElementException("Collection is empty")
+		val single = iterator.next()
+		if(iterator.hasNext()) throw IllegalArgumentException("Collection has more than one element")
+		return@run single
+	}
 }
 
 /**
- * Returns the last element that matches the [predicate], or throws a [NoSuchElementException].
+ * Returns the only element of this collection.
+ * Throws [NoSuchElementException] if this collection is empty,
+ * or [IllegalArgumentException] if this collection has more than one element.
  */
-inline fun <T> ListView<T>.last(predicate: (T) -> Boolean): T {
-	val iterator = iterator(size())
-	while(iterator.hasPrevious()) iterator.previous().let { if(predicate(it)) return it }
-	throw NoSuchElementException("No elements match the predicate")
+fun <T> SequencedCollectionView<T>.single(): T = when(size()) {
+	0 -> throw NoSuchElementException("Collection is empty")
+	1 -> first()
+	else -> throw IllegalArgumentException("Collection has more than one element")
 }
+
+/**
+ * Returns the only element of this collection, or `null` if this collection is empty or has more than one element.
+ */
+fun <T> Iterable<T>.singleOrNull(): T? = when(this) {
+	is SequencedCollectionView<T> -> singleOrNull()
+	is kotlin.collections.List<T> -> kotlinSingleOrNull()
+	else -> run {
+		val iterator = iterator()
+		if(!iterator.hasNext()) return@run null
+		val single = iterator.next()
+		if(iterator.hasNext()) return@run null
+		return@run single
+	}
+}
+
+/**
+ * Returns the only element of this collection, or `null` if this collection is empty or has more than one element.
+ */
+fun <T> SequencedCollectionView<T>.singleOrNull(): T? = if(size() == 1) first() else null
 
 /**
  * Returns a random element from the collection, or throws [NoSuchElementException] if the collection is empty.
  */
 fun <T> CollectionView<T>.random(random: Random = Random.Default): T =
-	if(isEmpty()) throw NoSuchElementException("Collection is empty") else elementAt(random.nextInt(this.size()))
+	if(isEmpty()) throw NoSuchElementException("Collection is empty") else elementAt(random.nextInt(size()))
 
 /**
  * Returns a random element from the collection, or `null` if the collection is empty.
  */
 fun <T> CollectionView<T>.randomOrNull(random: Random = Random.Default): T? =
-	if(isEmpty()) null else elementAt(random.nextInt(this.size()))
+	if(isEmpty()) null else elementAt(random.nextInt(size()))
 
 /**
  * Performs a stable sort on the elements in this list in-place.
@@ -303,7 +429,7 @@ fun <T> MutableList<out T>.sort(comparator: Comparator<in T>) = if(this is Mutab
  *
  * The [natural ordering][naturalOrder] is used.
  */
-fun <T: Comparable<T>> CollectionView<T>.sorted(): List<T> = buildList(size()) {
+fun <T: Comparable<T>> Iterable<T>.sorted(): List<T> = buildList {
 	addAll(this@sorted)
 	sort()
 }
@@ -313,7 +439,7 @@ fun <T: Comparable<T>> CollectionView<T>.sorted(): List<T> = buildList(size()) {
  *
  * The [reverse ordering][reverseOrder] is used.
  */
-fun <T: Comparable<T>> CollectionView<T>.sortedDescending(): List<T> = buildList(size()) {
+fun <T: Comparable<T>> Iterable<T>.sortedDescending(): List<T> = buildList {
 	addAll(this@sortedDescending)
 	sortDescending()
 }
@@ -323,7 +449,7 @@ fun <T: Comparable<T>> CollectionView<T>.sortedDescending(): List<T> = buildList
  *
  * The given [comparator] is used.
  */
-fun <T> CollectionView<T>.sorted(comparator: Comparator<in T>): List<T> = buildList(size()) {
+fun <T> Iterable<T>.sorted(comparator: Comparator<in T>): List<T> = buildList {
 	addAll(this@sorted)
 	sort(comparator)
 }
@@ -339,11 +465,96 @@ fun MutableList<*>.shuffle(random: Random = Random.Default) = if(this is Mutable
 fun <T> Iterable<T>.shuffled(random: Random = Random.Default): List<T> = kotlinShuffled(random).asConnection()
 
 /**
- * Shortcut for [MutableMap.put].
+ * Replaces all elements in this list with the [transform] of each element.
  */
-operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
-	put(key, value)
+inline fun <T> MutableList<T>.replaceAll(transform: (T) -> T) {
+	val iterator = iterator()
+	for(e in iterator) iterator.set(transform(e))
 }
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+fun <K, V> MutableMap<K, V>.putAll(entries: Iterable<Pair<K, V>>) {
+	for((key, value) in entries) put(key, value)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+fun <K, V> MutableMap<K, V>.putAll(entries: Array<Pair<K, V>>) = putAll(entries.asList())
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+fun <K, V> MutableMap<K, V>.putAll(entries: Sequence<Pair<K, V>>) {
+	for((key, value) in entries) put(key, value)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MutableMap<K, V>.plusAssign(map: MapView<out K, V>) {
+	putAll(map)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Iterable<Pair<K, V>>) {
+	putAll(entries)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Array<Pair<K, V>>) {
+	putAll(entries)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Sequence<Pair<K, V>>) {
+	putAll(entries)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MapView<out K, V>.plus(map: MapView<out K, V>): Map<K, V> = buildMap {
+	putAll(this@plus)
+	putAll(map)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MapView<out K, V>.plus(entries: Iterable<Pair<K, V>>): Map<K, V> = buildMap {
+	putAll(this@plus)
+	putAll(entries)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MapView<out K, V>.plus(entries: Array<Pair<K, V>>): Map<K, V> = buildMap {
+	putAll(this@plus)
+	putAll(entries)
+}
+
+/**
+ * Shortcut for [MutableMap.putAll].
+ */
+operator fun <K, V> MapView<out K, V>.plus(entries: Sequence<Pair<K, V>>): Map<K, V> = buildMap {
+	putAll(this@plus)
+	putAll(entries)
+}
+
+/**
+ * Returns `true` if this map is not empty, `false` otherwise.
+ */
+fun MapView<*, *>.isNotEmpty(): Boolean = !isEmpty()
 
 /**
  * Shortcut for [MapView.containsKey].
@@ -353,4 +564,60 @@ operator fun <K> MapView<K, *>.contains(key: K): Boolean = containsKey(key)
 /**
  * Shortcut for `this.entries.iterator`.
  */
-operator fun <K, V> Map<out K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()
+operator fun <K, V> MapView<out K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()
+
+/**
+ * Returns the iterator for this map's [entries][MutableMap.entries].
+ */
+operator fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<kotlin.collections.MutableMap.MutableEntry<K, V>> = this.entries.iterator()
+
+/**
+ * Performs the given [action] on this map's [entries][MapView.entries].
+ */
+inline fun <K, V> MapView<out K, V>.forEach(action: (kotlin.collections.Map.Entry<K, V>) -> Unit) {
+	for(e in this.entries) action(e)
+}
+
+/**
+ * Returns the value of the entry associated with the given [key].
+ * Throws [NoSuchElementException] if no entries have the [key].
+ */
+@Suppress("UNCHECKED_CAST")
+@JvmName("getNullableValue")
+fun <K, V> MapView<K, V>.getValue(key: K): V =
+	get(key) ?: if(key in this) null as V else throw NoSuchElementException("Value for key $key is not present")
+
+/**
+ * Returns the value of the entry associated with the given [key].
+ * Throws [NoSuchElementException] if no entries have the [key].
+ */
+fun <K, V: Any> MapView<K, V>.getValue(key: K): V = get(key) ?: throw NoSuchElementException("Value for key $key is not present")
+
+/**
+ * Returns the value of the entry associated with the given [key],
+ * or returns and puts a new entry with the [defaultValue].
+ */
+@Suppress("UNCHECKED_CAST")
+@JvmName("getOrPutNullable")
+inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V =
+	get(key) ?: if(key in this) null as V else defaultValue().also { put(key, it) }
+
+/**
+ * Returns the value of the entry associated with the given [key],
+ * or returns and puts a new entry with the [defaultValue].
+ */
+inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V = get(key) ?: defaultValue().also { put(key, it) }
+
+/**
+ * Shortcut for [MutableMap.put].
+ */
+operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
+	put(key, value)
+}
+
+/**
+ * Replaces all values in this map with the [transform] of each entry.
+ */
+inline fun <K, V> MutableMap<K, V>.replaceAll(transform: (kotlin.collections.Map.Entry<K, V>) -> V) {
+	for(e in this) e.setValue(transform(e))
+}

@@ -23,18 +23,13 @@ import kotlin.collections.mapNotNull as kotlinMapNotNull
  * Returns the [index]-th element based on the encounter order.
  * Throws [IndexOutOfBoundsException] if less than [index] elements were found.
  */
-fun <T> Iterable<T>.elementAt(index: Int): T {
-	return when(this) {
-		is ListView<T> -> get(index)
-		is kotlin.collections.List<T> -> get(index)
-		else -> {
-			var current = 0
-			for(e in iterator()) {
-				if(current == index) return e
-				current++
-			}
-			throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
-		}
+fun <T> Iterable<T>.elementAt(index: Int): T = when(this) {
+	is ListView<T> -> get(index)
+	is kotlin.collections.List<T> -> get(index)
+	else -> {
+		var current = 0
+		for(e in this) if(current++ == index) e // ^when
+		throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
 	}
 }
 
@@ -157,7 +152,7 @@ inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Seque
 /**
  * Returns a list that contains the elements after the [transform] except for `null`, in their encounter order.
  */
-inline fun <T, R: Any> Iterable<T>.mapNotNull(transform: (T) -> R?): List<R> = kotlinMapNotNull(transform).asConnection()
+inline fun <T, U: Any> Iterable<T>.mapNotNull(transform: (T) -> U?): List<U> = kotlinMapNotNull(transform).asConnection()
 
 /**
  * Returns a list that contains only the elements that match the given [predicate], in their encounter order.
@@ -171,9 +166,9 @@ inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> = kotlinFi
 inline fun <T> Iterable<T>.filterIndexed(predicate: (index: Int, T) -> Boolean): List<T> = kotlinFilterIndexed(predicate).asConnection()
 
 /**
- * Returns a list that contains only the elements that are instances of [R], in their encounter order.
+ * Returns a list that contains only the elements that are instances of [U], in their encounter order.
  */
-inline fun <reified R> Iterable<*>.filterIsInstance(): List<R> = kotlinFilterIsInstance<R>().asConnection()
+inline fun <reified U> Iterable<*>.filterIsInstance(): List<U> = kotlinFilterIsInstance<U>().asConnection()
 
 /**
  * Groups the elements based on the extracted key from each element.
