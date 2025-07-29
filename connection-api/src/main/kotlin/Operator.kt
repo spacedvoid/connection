@@ -6,7 +6,6 @@
 
 package io.github.spacedvoid.connection
 
-import io.github.spacedvoid.connection.impl.MutableListImpl
 import kotlin.random.Random
 import kotlin.collections.first as kotlinFirst
 import kotlin.collections.firstOrNull as kotlinFirstOrNull
@@ -408,21 +407,31 @@ fun <T> CollectionView<T>.randomOrNull(random: Random = Random.Default): T? =
  *
  * The [natural ordering][naturalOrder] is used.
  */
-fun <T: Comparable<T>> MutableList<out T>.sort() = if(this is MutableListImpl<T>) this.kotlin.sort() else asKotlin().sort()
+@Suppress("UNCHECKED_CAST")
+fun <T: Comparable<T>> MutableList<T>.sort() {
+	val array = toTypedArray<Comparable<T>>()
+	array.sort()
+	for(i in array.indices) set(i, array[i] as T)
+}
 
 /**
  * Performs a stable reversed sort on the elements in this list in-place.
  *
  * The [reverse ordering][reverseOrder] is used.
  */
-fun <T: Comparable<T>> MutableList<out T>.sortDescending() = if(this is MutableListImpl<T>) this.kotlin.sortDescending() else asKotlin().sortDescending()
+fun <T: Comparable<T>> MutableList<T>.sortDescending() = sort(reverseOrder())
 
 /**
  * Performs a stable sort on the elements in this list in-place.
  *
  * The given [comparator] is used.
  */
-fun <T> MutableList<out T>.sort(comparator: Comparator<in T>) = if(this is MutableListImpl<T>) this.kotlin.sortWith(comparator) else asKotlin().sortWith(comparator)
+@Suppress("UNCHECKED_CAST")
+fun <T> MutableList<T>.sort(comparator: Comparator<in T>) {
+	val array = toTypedArray<Any?>() as Array<T>
+	array.sortWith(comparator)
+	for(i in array.indices) set(i, array[i])
+}
 
 /**
  * Returns a stable sorted list with the elements in this list.
@@ -456,13 +465,25 @@ fun <T> Iterable<T>.sorted(comparator: Comparator<in T>): List<T> = buildList {
 
 /**
  * Shuffles the list in-place, using the given [random] generator.
+ *
+ * This implementation uses the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
  */
-fun MutableList<*>.shuffle(random: Random = Random.Default) = if(this is MutableListImpl<*>) this.kotlin.kotlinShuffle(random) else asKotlin().kotlinShuffle(random)
+fun <T> MutableList<T>.shuffle(random: Random = Random.Default) {
+	for(i in this.lastIndex downTo 1) {
+		val j = random.nextInt(i + 1)
+		this[i] = set(j, this[i])
+	}
+}
 
 /**
  * Returns a list that shuffles the elements from their encounter order, using the given [random] generator.
+ *
+ * This implementation uses the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
  */
-fun <T> Iterable<T>.shuffled(random: Random = Random.Default): List<T> = kotlinShuffled(random).asConnection()
+fun <T> Iterable<T>.shuffled(random: Random = Random.Default): List<T> = buildList {
+	addAll(this@shuffled)
+	shuffle(random)
+}
 
 /**
  * Replaces all elements in this list with the [transform] of each element.
