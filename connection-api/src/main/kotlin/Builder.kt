@@ -24,8 +24,11 @@ import io.github.spacedvoid.connection.impl.SetImpl
  * The supplied [MutableList] instance will be available only from the [filler].
  * Behavior of the list outside the lambda will be undefined.
  */
-inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() -> Unit): List<T> =
-	ListImpl(MutableListImpl<T>(ArrayList(initialCapacity)).apply(filler).kotlin)
+inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() -> Unit): List<T> {
+	val result = MutableListImpl<T>(ArrayList(initialCapacity)).apply(filler)
+	return if(result.isNotEmpty()) ListImpl(result.kotlin) else listOf()
+}
+
 
 /**
  * Dynamically builds an immutable set with an expected capacity.
@@ -34,8 +37,10 @@ inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() ->
  * The supplied [MutableSet] instance will be available only from the [filler].
  * Behavior of the set outside the lambda will be undefined.
  */
-inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> Unit): Set<T> =
-	SetImpl(MutableSetImpl<T>(HashSet.newHashSet(initialCapacity)).apply(filler).kotlin)
+inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> Unit): Set<T> {
+	val result = MutableSetImpl<T>(HashSet.newHashSet(initialCapacity)).apply(filler)
+	return if(result.isNotEmpty()) SetImpl(result.kotlin) else setOf()
+}
 
 /**
  * Dynamically builds an immutable sequenced set with an expected capacity.
@@ -44,8 +49,10 @@ inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> U
  * The supplied [MutableSet] instance will be available only from the [filler].
  * Behavior of the set outside the lambda will be undefined.
  */
-inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> =
-	SequencedSetImpl(MutableSequencedSetImpl<T>(LinkedHashSet(initialCapacity)).apply(filler).kotlin)
+inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
+	val result = MutableSequencedSetImpl<T>(LinkedHashSet(initialCapacity)).apply(filler)
+	return if(result.isNotEmpty()) SequencedSetImpl(result.kotlin) else sequencedSetOf()
+}
 
 /**
  * Dynamically builds an immutable map with an expected capacity.
@@ -54,8 +61,10 @@ inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSeque
  * The supplied [MutableMap] instance will be available only from the [filler].
  * Behavior of the map outside the lambda will be undefined.
  */
-inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): Map<K, V> =
-	MapImpl(MutableMapImpl<K, V>(HashMap.newHashMap(initialCapacity)).apply(filler).kotlin)
+inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
+	val result = MutableMapImpl<K, V>(HashMap.newHashMap(initialCapacity)).apply(filler)
+	return if(result.isNotEmpty()) MapImpl(result.kotlin) else mapOf()
+}
 
 /**
  * Dynamically builds an immutable sequenced map with an expected capacity.
@@ -64,5 +73,7 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
  * The supplied [MutableMap] instance will be available only from the [filler].
  * Behavior of the map outside the lambda will be undefined.
  */
-inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): SequencedMap<K, V> =
-	SequencedMapImpl(MutableSequencedMapImpl<K, V>(LinkedHashMap.newLinkedHashMap(initialCapacity)).apply(filler).kotlin)
+inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): SequencedMap<K, V> {
+	val result = MutableSequencedMapImpl<K, V>(LinkedHashMap.newLinkedHashMap(initialCapacity)).apply(filler)
+	return if(result.isNotEmpty()) SequencedMapImpl(result.kotlin) else sequencedMapOf()
+}
