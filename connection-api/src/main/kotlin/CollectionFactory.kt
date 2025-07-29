@@ -13,10 +13,6 @@ import java.util.TreeMap
 import kotlin.collections.asList as kotlinAsList
 import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
-private val emptyList = emptyList<Nothing>().asConnection()
-private val emptySet = emptySet<Nothing>().asConnection()
-private val emptyMap = emptyMap<Any?, Nothing>().asConnection()
-
 /**
  * Returns an empty [List].
  */
@@ -39,7 +35,7 @@ fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*element
 /**
  * Returns an empty set.
  */
-fun <T> setOf(): Set<T> = emptySet
+fun <T> setOf(): Set<T> = EmptySequencedSet
 
 /**
  * Creates a [Set] with the given [elements].
@@ -50,6 +46,11 @@ fun <T> setOf(vararg elements: T): Set<T> = hashSetOf(*elements).asConnection()
  * Creates a [MutableSet] with the given [elements].
  */
 fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = hashSetOf(*elements).asMutableConnection()
+
+/**
+ * Returns an empty sequenced set.
+ */
+fun <T> sequencedSetOf(): SequencedSet<T> = EmptySequencedSet
 
 /**
  * Creates a [SequencedSet] with the given [elements].
@@ -94,7 +95,7 @@ fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T):
  * Returns an empty map.
  */
 @Suppress("UNCHECKED_CAST")
-fun <K, V> mapOf(): Map<K, V> = emptyMap as Map<K, V>
+fun <K, V> mapOf(): Map<K, V> = EmptySequencedMap as Map<K, V>
 
 /**
  * Creates a [Map] with the given [entries].
@@ -105,6 +106,12 @@ fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> = hashMapOf(*entries).as
  * Creates a [MutableMap] with the given [entries].
  */
 fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> = hashMapOf(*entries).asMutableConnection()
+
+/**
+ * Returns an empty sequenced map.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <K, V> sequencedMapOf(): SequencedMap<K, V> = EmptySequencedMap as SequencedMap<K, V>
 
 /**
  * Creates a [SequencedMap] with the given [entries].
