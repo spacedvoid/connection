@@ -4,15 +4,18 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+@file:OptIn(ExperimentalContracts::class)
+
 package io.github.spacedvoid.connection
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.random.Random
 import kotlin.collections.first as kotlinFirst
 import kotlin.collections.firstOrNull as kotlinFirstOrNull
 import kotlin.collections.last as kotlinLast
 import kotlin.collections.lastOrNull as kotlinLastOrNull
-import kotlin.collections.shuffle as kotlinShuffle
-import kotlin.collections.shuffled as kotlinShuffled
 import kotlin.collections.single as kotlinSingle
 import kotlin.collections.singleOrNull as kotlinSingleOrNull
 
@@ -620,14 +623,25 @@ fun <K, V: Any> MapView<K, V>.getValue(key: K): V = get(key) ?: throw NoSuchElem
  */
 @Suppress("UNCHECKED_CAST")
 @JvmName("getOrPutNullable")
-inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V =
-	get(key) ?: if(key in this) null as V else defaultValue().also { put(key, it) }
+inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
+	contract {
+		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+	}
+
+	return get(key) ?: if(key in this) null as V else defaultValue().also { put(key, it) }
+}
 
 /**
  * Returns the value of the entry associated with the given [key],
  * or returns and puts a new entry with the [defaultValue].
  */
-inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V = get(key) ?: defaultValue().also { put(key, it) }
+inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
+	contract {
+		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+	}
+
+	return get(key) ?: defaultValue().also { put(key, it) }
+}
 
 /**
  * Shortcut for [MutableMap.put].
