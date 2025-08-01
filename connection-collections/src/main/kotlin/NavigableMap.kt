@@ -71,6 +71,10 @@ interface NavigableMapView<K, out V>: SequencedMapView<K, V> {
 	fun lowerKey(key: K, inclusive: Boolean): K?
 
 	override val keys: NavigableSetView<K>
+
+	override val values: SequencedCollectionView<V>
+
+	override val entries: SequencedSetView<Map.Entry<K, V>>
 }
 
 /**
@@ -86,6 +90,10 @@ interface NavigableMap<K, out V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 	override fun tailMap(after: K, inclusive: Boolean): NavigableMap<K, V>
 
 	override val keys: NavigableSet<K>
+
+	override val values: SequencedCollection<V>
+
+	override val entries: SequencedSet<Map.Entry<K, V>>
 }
 
 /**
@@ -101,4 +109,11 @@ interface MutableNavigableMap<K, V>: MutableSequencedMap<K, V>, NavigableMapView
 	override fun tailMap(after: K, inclusive: Boolean): MutableNavigableMap<K, V>
 
 	override val keys: RemoveOnlyNavigableSet<K>
+
+	override val values: RemoveOnlySequencedCollection<V>
+
+	/**
+	 * Returns a collection that reflects the entries that this map contains.
+	 */
+	override val entries: RemoveOnlySequencedSet<MutableMap.MutableEntry<K, V>>
 }
