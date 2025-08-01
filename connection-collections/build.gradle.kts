@@ -23,7 +23,7 @@ dokka {
 
         sourceLink {
             localDirectory = file("src/main/kotlin")
-            remoteUrl = URI("https://github.com/spacedvoid/connection/tree/manual-impl/connection-collections/src/main/kotlin")
+            remoteUrl = URI("https://github.com/spacedvoid/connection/tree/main/connection-collections/src/main/kotlin")
         }
     }
 }
