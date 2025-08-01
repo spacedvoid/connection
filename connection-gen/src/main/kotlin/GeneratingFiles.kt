@@ -63,8 +63,8 @@ class GeneratingFile(val generator: CodeGenerator, val packageName: String, val 
 	 */
 	override fun close() {
 		if(this.closed) return
-		this.out.close()
 		this.closed = true
+		this.out.close()
 	}
 
 	/**

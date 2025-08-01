@@ -162,4 +162,19 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 * Whether an element in this deque matches the given [element] is determined via [Any.equals].
 	 */
 	override fun remove(element: T): Boolean
+
+	/**
+	 * Returns whether the given object is equal to this deque.
+	 *
+	 * The given object is equal to this deque if the object is also a [Deque],
+	 * and the elements of the given deque are equal to the elements in this deque, by their iteration order.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns a hash code for this deque.
+	 *
+	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
+	 */
+	override fun hashCode(): Int
 }

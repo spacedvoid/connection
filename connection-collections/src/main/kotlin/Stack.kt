@@ -109,4 +109,19 @@ interface Stack<T>: MutableCollection<T> {
 	 * Whether an element in this stack matches the given [element] is determined via [Any.equals].
 	 */
 	override fun remove(element: T): Boolean
+
+	/**
+	 * Returns whether the given object is equal to this stack.
+	 *
+	 * The given object is equal to this stack if the object is also a [Stack],
+	 * and the elements of the given stack are equal to the elements in this stack, by their iteration order.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns a hash code for this stack.
+	 *
+	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
+	 */
+	override fun hashCode(): Int
 }
