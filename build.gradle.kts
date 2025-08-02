@@ -68,7 +68,6 @@ tasks {
 		description = "Assembles only the Dokka documentation jar."
 
 		dependsOn(dokkaGenerate)
-		mustRunAfter(dokkaGenerate)
 		archiveClassifier = "javadoc"
 		from(dokkaOutputDir)
 	}
