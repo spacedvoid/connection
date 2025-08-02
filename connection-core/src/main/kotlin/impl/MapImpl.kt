@@ -30,9 +30,25 @@ open class MapViewImpl<K, out V>(open val kotlin: kotlin.collections.Map<K, V>):
 
 	override val entries: SetView<kotlin.collections.Map.Entry<K, V>> = SetViewImpl(this.kotlin.entries)
 
-	override fun equals(other: Any?): Boolean = super.equals(other)
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is MapView<*, *>) return false
+		val thisIterator = this.entries.iterator()
+		val otherIterator = this.entries.iterator()
+		while(thisIterator.hasNext() && otherIterator.hasNext()) {
+			if(thisIterator.next() != otherIterator.next()) return false
+		}
+		return !(thisIterator.hasNext() || otherIterator.hasNext())
+	}
 
-	override fun hashCode(): Int = super.hashCode()
+	/**
+	 * Returns the hash code for this map.
+	 *
+	 * The hash code is computed based on the hash codes from the entries in this map, which are then based on the hash codes of the key and value.
+	 *
+	 * This implementation uses the same way from [java.util.AbstractMap.hashCode].
+	 */
+	override fun hashCode(): Int = this.entries.sumOf { it.hashCode() }
 
 	override fun toString(): String = "${this::class.qualifiedName}{entries=[${this.entries.joinToString { "{${it.key}=${it.value}}" }}]}"
 }
