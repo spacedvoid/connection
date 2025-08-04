@@ -11,7 +11,6 @@ import io.github.spacedvoid.connection.impl.QueueImpl
 import io.github.spacedvoid.connection.impl.StackImpl
 import java.util.TreeMap
 import kotlin.collections.asList as kotlinAsList
-import kotlin.collections.sortedSetOf as kotlinSortedSetOf
 
 /**
  * Returns an empty [List].
@@ -30,7 +29,7 @@ fun <T> listOf(vararg elements: T): List<T> = elements.kotlinAsList().asConnecti
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> mutableListOf(vararg elements: T): MutableList<T> = arrayListOf(*elements).asMutableConnection()
+fun <T> mutableListOf(vararg elements: T): MutableList<T> = elements.toMutableList()
 
 /**
  * Returns an empty set.
@@ -40,12 +39,12 @@ fun <T> setOf(): Set<T> = EmptySequencedSet
 /**
  * Creates a [Set] with the given [elements].
  */
-fun <T> setOf(vararg elements: T): Set<T> = hashSetOf(*elements).asConnection()
+fun <T> setOf(vararg elements: T): Set<T> = HashSet(elements.kotlinAsList()).asConnection()
 
 /**
  * Creates a [MutableSet] with the given [elements].
  */
-fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = hashSetOf(*elements).asMutableConnection()
+fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = HashSet(elements.kotlinAsList()).asMutableConnection()
 
 /**
  * Returns an empty sequenced set.
@@ -57,7 +56,8 @@ fun <T> sequencedSetOf(): SequencedSet<T> = EmptySequencedSet
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> = linkedSetOf(*elements).asConnection()
+fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> =
+	LinkedHashSet(elements.kotlinAsList()).asConnection()
 
 /**
  * Creates a [MutableSequencedSet] with the given [elements].
@@ -65,31 +65,32 @@ fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> = linkedSetOf(*eleme
  * The iteration order is defined as the encounter order of the given [elements],
  * and also the addition order of further elements.
  */
-fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> = linkedSetOf(*elements).asMutableConnection()
+fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> =
+	LinkedHashSet(elements.kotlinAsList()).asMutableConnection()
 
 /**
  * Creates a [NavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
  */
 fun <T: Comparable<T>> navigableSetOf(vararg elements: T): NavigableSet<T> =
-	kotlinSortedSetOf(naturalOrder(), *elements).asConnection()
+	java.util.TreeSet<T>(naturalOrder()).apply { addAll(elements) }.asConnection()
 
 /**
  * Creates a [NavigableSet] with the given [elements] using the [comparator].
  */
 fun <T> navigableSetOf(comparator: Comparator<in T>, vararg elements: T): NavigableSet<T> =
-	kotlinSortedSetOf(comparator, *elements).asConnection()
+	java.util.TreeSet(comparator).apply { addAll(elements) }.asConnection()
 
 /**
  * Creates a [MutableNavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
  */
 fun <T: Comparable<T>> mutableNavigableSetOf(vararg elements: T): MutableNavigableSet<T> =
-	kotlinSortedSetOf(naturalOrder(), *elements).asMutableConnection()
+	java.util.TreeSet<T>(naturalOrder()).apply { addAll(elements) }.asMutableConnection()
 
 /**
  * Creates a [MutableNavigableSet] with the given [elements] using the [comparator].
  */
 fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T): MutableNavigableSet<T> =
-	kotlinSortedSetOf(comparator, *elements).asMutableConnection()
+	java.util.TreeSet(comparator).apply { addAll(elements) }.asMutableConnection()
 
 /**
  * Returns an empty map.
@@ -100,12 +101,14 @@ fun <K, V> mapOf(): Map<K, V> = EmptySequencedMap as Map<K, V>
 /**
  * Creates a [Map] with the given [entries].
  */
-fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> = hashMapOf(*entries).asConnection()
+fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> =
+	HashMap.newHashMap<K, V>(entries.size).apply { putAll(entries) }.asConnection()
 
 /**
  * Creates a [MutableMap] with the given [entries].
  */
-fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> = hashMapOf(*entries).asMutableConnection()
+fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> =
+	HashMap.newHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
 
 /**
  * Returns an empty sequenced map.
@@ -118,7 +121,8 @@ fun <K, V> sequencedMapOf(): SequencedMap<K, V> = EmptySequencedMap as Sequenced
  *
  * The iteration order is defined as the encounter order.
  */
-fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> = linkedMapOf(*entries).asConnection()
+fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> =
+	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asConnection()
 
 /**
  * Creates a [MutableSequencedMap] with the given [entries].
@@ -126,7 +130,8 @@ fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> = link
  * The iteration order is defined as the encounter order of the given [entries],
  * and also the addition order of further entries.
  */
-fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> = linkedMapOf(*entries).asMutableConnection()
+fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> =
+	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
 
 /**
  * Creates a [NavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
@@ -159,21 +164,21 @@ fun <K, V> mutableNavigableMapOf(comparator: Comparator<in K>, vararg entries: P
  * the first element will be the bottom, and the last element will be the top.
  * This behavior is consistent with creating stacks with collections, such as [ArrayDeque]`(listOf(1, 2, 3))`.
  */
-fun <T> stackOf(vararg elements: T): Stack<T> = StackImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+fun <T> stackOf(vararg elements: T): Stack<T> = StackImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 /**
  * Creates a [Queue] with the given [elements].
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 /**
  * Creates a [Deque] with the given [elements].
  *
  * The iteration order is defined as the encounter order.
  */
-fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque<T>()).apply { addAll(elements) }
+fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 //TODO: Should enum collections implement Navigable-collection types, or at least Sequenced-collection types?
 
@@ -183,7 +188,8 @@ fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque<T
  * The iteration order is defined as the natural order of the enum type.
  */
 inline fun <reified T: Enum<T>> enumSetOf(vararg elements: T): Set<T> {
-	if(T::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the element type for enum sets")
+	// Might not be possible, but validating is never wrong.
+	require(T::class != Enum::class) { "Class kotlin.Enum cannot be the element type for enum sets" }
 	return java.util.EnumSet.noneOf(T::class.java).apply { addAll(elements) }.asConnection()
 }
 
@@ -193,7 +199,7 @@ inline fun <reified T: Enum<T>> enumSetOf(vararg elements: T): Set<T> {
  * The iteration order is defined as the natural order of the enum type.
  */
 inline fun <reified T: Enum<T>> mutableEnumSetOf(vararg elements: T): MutableSet<T> {
-	if(T::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the element type for enum sets")
+	require(T::class != Enum::class) { "Class kotlin.Enum cannot be the element type for enum sets" }
 	return java.util.EnumSet.noneOf(T::class.java).apply { addAll(elements) }.asMutableConnection()
 }
 
@@ -201,7 +207,7 @@ inline fun <reified T: Enum<T>> mutableEnumSetOf(vararg elements: T): MutableSet
  * Creates a specialized [Map] for enum entries.
  */
 inline fun <reified K: Enum<K>, V> enumMapOf(vararg entries: Pair<K, V>): Map<K, V> {
-	if(K::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the key type for enum maps")
+	require(K::class != Enum::class) { "Class kotlin.Enum cannot be the key type for enum maps" }
 	return java.util.EnumMap<K, V>(K::class.java).apply { putAll(entries) }.asConnection()
 }
 
@@ -209,6 +215,6 @@ inline fun <reified K: Enum<K>, V> enumMapOf(vararg entries: Pair<K, V>): Map<K,
  * Creates a specialized [MutableMap] for enum entries.
  */
 inline fun <reified K: Enum<K>, V> mutableEnumMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> {
-	if(K::class == Enum::class) throw IllegalArgumentException("class kotlin.Enum cannot be the key type for enum maps")
+	require(K::class != Enum::class) { "Class kotlin.Enum cannot be the key type for enum maps" }
 	return java.util.EnumMap<K, V>(K::class.java).apply { putAll(entries) }.asMutableConnection()
 }
