@@ -16,9 +16,9 @@ import kotlin.collections.groupBy as kotlinGroupBy
 fun <T> Iterable<T>.elementAt(index: Int): T = when(this) {
 	is ListView<T> -> get(index)
 	is kotlin.collections.List<T> -> get(index)
-	else -> {
+	else -> run {
 		var current = 0
-		for(e in this) if(current++ == index) e // ^when
+		for(e in this) if(current++ == index) return@run e
 		throw IndexOutOfBoundsException("Requested index was $index but found only $current elements")
 	}
 }

@@ -73,10 +73,10 @@ operator fun <T> ListView<T>.component5(): T = get(4)
 fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean = when(elements) {
 	is CollectionView<T> -> addAll(elements)
 	is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
-	else -> {
+	else -> run {
 		var result = false
 		for(e in elements) if(add(e)) result = true
-		result // ^when
+		return@run result
 	}
 }
 
