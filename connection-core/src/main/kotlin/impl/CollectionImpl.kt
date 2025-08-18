@@ -11,6 +11,8 @@ import io.github.spacedvoid.connection.Collection
 import io.github.spacedvoid.connection.MutableCollection
 import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 import io.github.spacedvoid.connection.utils.createSpliterator
+import io.github.spacedvoid.connection.utils.safeContains
+import io.github.spacedvoid.connection.utils.safeContainsAll
 import java.util.Spliterator
 
 open class CollectionViewImpl<out T>(open val kotlin: kotlin.collections.Collection<T>): CollectionView<T> {
@@ -23,9 +25,9 @@ open class CollectionViewImpl<out T>(open val kotlin: kotlin.collections.Collect
 
 	override fun isEmpty(): Boolean = this.kotlin.isEmpty()
 
-	override fun contains(element: @UnsafeVariance T): Boolean = this.kotlin.contains(element)
+	override fun contains(element: @UnsafeVariance T): Boolean = this.kotlin.safeContains(element)
 
-	override fun containsAll(collection: CollectionView<@UnsafeVariance T>): Boolean = this.kotlin.containsAll(KotlinCollectionImpl(collection))
+	override fun containsAll(collection: CollectionView<@UnsafeVariance T>): Boolean = this.kotlin.safeContainsAll(KotlinCollectionImpl(collection))
 
 	override fun equals(other: Any?): Boolean = super.equals(other)
 

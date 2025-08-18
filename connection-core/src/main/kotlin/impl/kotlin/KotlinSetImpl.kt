@@ -7,13 +7,14 @@
 package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
+import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class KotlinSetImpl<out T>(connection: SetView<T>): KotlinCollectionImpl<T>(connection), Set<T> {
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
 		if(other !is Set<*>) return false
 		@Suppress("UNCHECKED_CAST")
-		return this.size == other.size && containsAll(other)
+		return this.size == other.size && safeContainsAll(other)
 	}
 
 	override fun hashCode(): Int = sumOf { it.hashCode() }

@@ -9,6 +9,7 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.Set
+import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
 	/**
@@ -24,7 +25,7 @@ open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): S
 		if(this === other) return true
 		if(other !is SetView<*>) return false
 		@Suppress("UNCHECKED_CAST")
-		return size() == other.size() && containsAll(other as SetView<T>)
+		return size() == other.size() && safeContainsAll(other as SetView<T>)
 	}
 
 	/**
