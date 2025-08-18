@@ -46,7 +46,7 @@ fun <T> CollectionViewImpl<T>.createSpliterator(): Spliterator<T> {
 
 		override fun characteristics(): Int = c
 
-		override fun hasCharacteristics(characteristics: Int): Boolean = (c and characteristics) != 0
+		override fun hasCharacteristics(characteristics: Int): Boolean = (c and characteristics) == c
 
 		override fun getComparator(): java.util.Comparator<in T> =
 			if(this@createSpliterator is NavigableSetViewImpl<T>) this@createSpliterator.comparator else throw IllegalStateException("Collection is not sorted")
