@@ -94,7 +94,7 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
  * The supplied [MutableMap] instance will be available only from the [filler].
  * Behavior of the map outside the lambda will be undefined.
  */
-inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): SequencedMap<K, V> {
+inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
