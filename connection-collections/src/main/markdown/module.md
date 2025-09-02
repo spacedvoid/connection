@@ -33,9 +33,6 @@ Below are unsupported types because of various reasons, such as replaceable by a
 |--------------------------------------|--------------------------------------------|----------------------------------------------------------------------------------|
 | [java.util.SortedSet]                | [java.util.TreeSet]                        | `TreeSet().asMutableConnection()`                                                |
 | [java.util.SortedMap]                | [java.util.TreeMap]                        | `TreeMap().asMutableConnection()`                                                |
-| [java.util.concurrent.ConcurrentMap] | [java.util.concurrent.ConcurrentHashMap]   | `ConcurrentHashMap().asMutableConnection()`                                      |
-| [java.util.concurrent.BlockingQueue] | [java.util.concurrent.ArrayBlockingQueue]  | -                                                                                |
-| [java.util.concurrent.BlockingDeque] | [java.util.concurrent.LinkedBlockingDeque] | -                                                                                |
 | Type-safe collections                | [java.util.Collections.checkedList]        | `Collections.checkedList(ArrayList(), String::class.java).asMutableConnection()` |
 | [java.util.EnumSet]                  | [java.util.EnumSet.of]                     | `enumSetOf()`<sup>2</sup>                                                        |
 | [java.util.EnumMap]                  | [java.util.EnumMap]                        | `enumMapOf()`<sup>3</sup>                                                        |
@@ -95,6 +92,13 @@ To be easy, one can understand that element additions (mostly) do not define the
 (However, because these positional addition methods do have real-life usages,
 we are currently designing a proper intermediate collection type that allows such positional additions.
 Currently, only positional removals, such as [MutableSequencedCollection.removeFirst], are supported.)
+
+## Concurrent(thread-safe) collections
+
+Because the nature of Kotlin encourages the use of extension methods implemented with basic operations provided from the type,
+concurrent(thread-safe) collections do not work well with Connection.
+Since they usually provide methods to access and/or modify the collection atomically and with more assurance about thread-safety,
+just use the type as-is(not using the interface types) and don't use extension methods.
 
 ### Null-hostility
 
