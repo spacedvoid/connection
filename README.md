@@ -16,6 +16,8 @@ However, the collections are strictly separated into 4 kinds, based on their mut
 
 There are no *optional operations*; use a mutable collection at your own will.
 
+For a quickstart guide, go to our documentation(which sadly requires a manual build currently).
+
 ## Git structure
 
 This library uses the [Tip & Tail Model](https://openjdk.org/jeps/14) experimentally.
@@ -40,31 +42,6 @@ Therefore, releases from a tail branch must not increment the major or minor ver
 
 Releases can come from any branches, but for simplicity, most releases will come from the tip branch.
 Tail branches will only be created if necessary.
-
-## Importing
-
-The main package for the API is `io.github.spacedvoid.connection`.
-Although you can import everything one by one, since there are a lot of extension methods here,
-just star-importing the package might be preferable like
-```kotlin
-import io.github.spacedvoid.connection.*
-```
-
-The IDE might require additional configurations to preserve the star import.
-In IntelliJ IDEA, add the import to `Editor - Code Style - Kotlin - Imports - Packages to Use Imports with '*'`.
-
-If the names of the collections are resolved to Kotlin's collections even if the star import was added,
-you might need to manually add imports for such types.
-This is because [star imports have lower priority than default imports](https://youtrack.jetbrains.com/issue/KT-4374).
-See https://youtrack.jetbrains.com/issue/KT-40839 for the report of this behavior.
-
-Just as a suggestion, add Kotlin's relevant types and methods(not all of them!) to the *exclude-from-autocompletion* list of your IDE.
-For example, add `kotlin.collections.Collection` and `kotlin.collections.listOf` to the list, and qualify their usages or use an import alias.
-
-For IntelliJ IDEA, currently, there are no solutions because of
-https://youtrack.jetbrains.com/issue/KTIJ-12918/Some-of-the-Kotlin-packages-cannot-be-excluded-from-import-and-completion.
-Because `kotlin.collections` is imported by default,
-this prevents the setting `Editor - General - Auto Import - Exclude from auto-import and completion` to be used.
 
 ## Building
 

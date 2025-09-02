@@ -83,7 +83,12 @@ tasks {
 
 dokka {
 	dokkaPublications.html {
+		includes += file("src/main/markdown/modules.md")
 		outputDirectory = dokkaOutputDir
+	}
+
+	pluginsConfiguration.html {
+		customStyleSheets = file("src/main/css/styles.css")
 	}
 }
 

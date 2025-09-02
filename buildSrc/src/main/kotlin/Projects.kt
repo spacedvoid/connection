@@ -6,5 +6,9 @@ val Project.dokkaOutputDir: File
 	get() = rootProject.file("docs")
 
 operator fun ConfigurableFileCollection.plusAssign(file: File) {
-	setFrom(*this.from.toTypedArray(), file)
+	from(file)
+}
+
+fun ConfigurableFileCollection.assign(file: File) {
+	setFrom(file)
 }
