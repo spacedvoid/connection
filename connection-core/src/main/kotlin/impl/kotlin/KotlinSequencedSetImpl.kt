@@ -8,6 +8,7 @@ package io.github.spacedvoid.connection.impl.kotlin
 
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
+import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>): KotlinCollectionImpl<T>(connection), java.util.SequencedSet<T> {
 	/**
@@ -38,4 +39,12 @@ open class KotlinSequencedSetImpl<T>(private val connection: SequencedSetView<T>
 
 	override fun clear() =
 		if(this.connection is RemoveOnlySequencedSet<T>) this.connection.clear() else throw UnsupportedOperationException("clear")
+
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is Set<*>) return false
+		return this.size == other.size && safeContainsAll(other)
+	}
+
+	override fun hashCode(): Int = sumOf { it.hashCode() }
 }

@@ -24,8 +24,7 @@ open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): S
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
 		if(other !is SetView<*>) return false
-		@Suppress("UNCHECKED_CAST")
-		return size() == other.size() && safeContainsAll(other as SetView<T>)
+		return size() == other.size() && safeContainsAll(other)
 	}
 
 	/**

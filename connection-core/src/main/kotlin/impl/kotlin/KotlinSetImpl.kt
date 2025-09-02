@@ -13,7 +13,6 @@ open class KotlinSetImpl<out T>(connection: SetView<T>): KotlinCollectionImpl<T>
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
 		if(other !is Set<*>) return false
-		@Suppress("UNCHECKED_CAST")
 		return this.size == other.size && safeContainsAll(other)
 	}
 

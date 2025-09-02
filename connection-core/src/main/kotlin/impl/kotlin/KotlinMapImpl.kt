@@ -27,6 +27,21 @@ open class KotlinMapImpl<K, out V>(private val connection: MapView<K, V>): Map<K
 	override val values: Collection<V> = KotlinCollectionImpl(this.connection.values)
 
 	override val entries: Set<Map.Entry<K, V>> = KotlinSetImpl(this.connection.entries)
+
+	override fun equals(other: Any?): Boolean {
+		if(this === other) return true
+		if(other !is Map<*, *>) return false
+		val thisIterator = this.entries.iterator()
+		val otherIterator = this.entries.iterator()
+		while(thisIterator.hasNext() && otherIterator.hasNext()) {
+			if(thisIterator.next() != otherIterator.next()) return false
+		}
+		return !(thisIterator.hasNext() || otherIterator.hasNext())
+	}
+
+	override fun hashCode(): Int = this.entries.sumOf { it.hashCode() }
+
+	override fun toString(): String = "${this::class.qualifiedName}{entries=[${this.entries.joinToString { "{${it.key}=${it.value}}" }}]}"
 }
 
 open class KotlinMutableMapImpl<K, V>(private val connection: MutableMap<K, V>): KotlinMapImpl<K, V>(connection), kotlin.collections.MutableMap<K, V> {
