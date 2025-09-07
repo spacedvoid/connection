@@ -8,6 +8,7 @@ package io.github.spacedvoid.connection
 
 import kotlin.collections.asList as kotlinAsList
 import kotlin.collections.toList as kotlinToList
+import kotlin.collections.toMutableSet as kotlinToMutableSet
 import kotlin.collections.toSet as kotlinToSet
 
 /**
@@ -26,51 +27,73 @@ inline fun <reified T> CollectionView<T>.toTypedArray(): Array<T> {
  * The order is defined as the encounter order.
  */
 fun <K, V> MapView<out K, V>.toArray(): Array<Pair<K, V>> {
-	val iterator = this.entries.iterator()
-	return Array(size()) {
-		iterator.next().let { it.key to it.value }
-	}
+	val iterator = iterator()
+	return Array(size()) { iterator.next().toPair() }
 }
 
 /**
  * Copies all elements from this collection to a [LongArray], by their encounter order.
  */
-fun CollectionView<Long>.toLongArray(): LongArray = iterator().let { LongArray(size()) { _ -> it.next() } }
+fun CollectionView<Long>.toLongArray(): LongArray {
+	val iterator = iterator()
+	return LongArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [IntArray], by their encounter order.
  */
-fun CollectionView<Int>.toIntArray(): IntArray = iterator().let { IntArray(size()) { _ -> it.next() } }
+fun CollectionView<Int>.toIntArray(): IntArray {
+	val iterator = iterator()
+	return IntArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [ShortArray], by their encounter order.
  */
-fun CollectionView<Short>.toShortArray(): ShortArray = iterator().let { ShortArray(size()) { _ -> it.next() } }
+fun CollectionView<Short>.toShortArray(): ShortArray {
+	val iterator = iterator()
+	return ShortArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [ByteArray], by their encounter order.
  */
-fun CollectionView<Byte>.toByteArray(): ByteArray = iterator().let { ByteArray(size()) { _ -> it.next() } }
+fun CollectionView<Byte>.toByteArray(): ByteArray {
+	val iterator = iterator()
+	return ByteArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [DoubleArray], by their encounter order.
  */
-fun CollectionView<Double>.toDoubleArray(): DoubleArray = iterator().let { DoubleArray(size()) { _ -> it.next() } }
+fun CollectionView<Double>.toDoubleArray(): DoubleArray {
+	val iterator = iterator()
+	return DoubleArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [FloatArray], by their encounter order.
  */
-fun CollectionView<Float>.toFloatArray(): FloatArray = iterator().let { FloatArray(size()) { _ -> it.next() } }
+fun CollectionView<Float>.toFloatArray(): FloatArray {
+	val iterator = iterator()
+	return FloatArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [CharArray], by their encounter order.
  */
-fun CollectionView<Char>.toCharArray(): CharArray = iterator().let { CharArray(size()) { _ -> it.next() } }
+fun CollectionView<Char>.toCharArray(): CharArray {
+	val iterator = iterator()
+	return CharArray(size()) { iterator.next() }
+}
 
 /**
  * Copies all elements from this collection to a [BooleanArray], by their encounter order.
  */
-fun CollectionView<Boolean>.toBooleanArray(): BooleanArray = iterator().let { BooleanArray(size()) { _ -> it.next() } }
+fun CollectionView<Boolean>.toBooleanArray(): BooleanArray {
+	val iterator = iterator()
+	return BooleanArray(size()) { iterator.next() }
+}
 
 /**
  * Wraps an array to a list.
@@ -273,44 +296,44 @@ fun BooleanArray.toSet(): Set<Boolean> = kotlinToSet().asConnection()
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun <T> Array<out T>.toMutableSet(): MutableSet<T> = asList().toMutableSet()
+fun <T> Array<out T>.toMutableSet(): MutableSet<T> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun DoubleArray.toMutableSet(): MutableSet<Double> = asList().toMutableSet()
+fun DoubleArray.toMutableSet(): MutableSet<Double> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun FloatArray.toMutableSet(): MutableSet<Float> = asList().toMutableSet()
+fun FloatArray.toMutableSet(): MutableSet<Float> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun LongArray.toMutableSet(): MutableSet<Long> = asList().toMutableSet()
+fun LongArray.toMutableSet(): MutableSet<Long> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun IntArray.toMutableSet(): MutableSet<Int> = asList().toMutableSet()
+fun IntArray.toMutableSet(): MutableSet<Int> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun ShortArray.toMutableSet(): MutableSet<Short> = asList().toMutableSet()
+fun ShortArray.toMutableSet(): MutableSet<Short> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun ByteArray.toMutableSet(): MutableSet<Byte> = asList().toMutableSet()
+fun ByteArray.toMutableSet(): MutableSet<Byte> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun CharArray.toMutableSet(): MutableSet<Char> = asList().toMutableSet()
+fun CharArray.toMutableSet(): MutableSet<Char> = kotlinToMutableSet().asMutableConnection()
 
 /**
  * Creates a mutable set that contains all elements from the array.
  */
-fun BooleanArray.toMutableSet(): MutableSet<Boolean> = asList().toMutableSet()
+fun BooleanArray.toMutableSet(): MutableSet<Boolean> = kotlinToMutableSet().asMutableConnection()
