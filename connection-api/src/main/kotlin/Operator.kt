@@ -70,7 +70,7 @@ operator fun <T> ListView<T>.component5(): T = get(4)
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean = when(elements) {
+fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean = when(elements) {
 	is CollectionView<T> -> addAll(elements)
 	is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
 	else -> run {
@@ -83,12 +83,12 @@ fun <T> MutableCollection<T>.addAll(elements: Iterable<T>): Boolean = when(eleme
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Array<out T>): Boolean = addAll(elements.asList())
+fun <T> MutableCollection<in T>.addAll(elements: Array<out T>): Boolean = addAll(elements.asList())
 
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<T>.addAll(elements: Sequence<T>): Boolean {
+fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
 	var result = false
 	for(e in elements) if(add(e)) result = true
 	return result
@@ -97,7 +97,7 @@ fun <T> MutableCollection<T>.addAll(elements: Sequence<T>): Boolean {
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<T>.removeAll(elements: Iterable<T>): Boolean = when(elements) {
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean = when(elements) {
 	is CollectionView<T> -> removeAll(elements)
 	is kotlin.collections.Collection<T> -> removeAll(elements.asViewConnection())
 	else -> removeAll(elements.toSet())
@@ -106,89 +106,89 @@ fun <T> RemoveOnlyCollection<T>.removeAll(elements: Iterable<T>): Boolean = when
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<T>.removeAll(elements: Array<out T>) {
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Array<out T>) {
 	removeAll(elements.toSet())
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<T>.removeAll(elements: Sequence<T>) {
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Sequence<T>) {
 	removeAll(elements.toSet())
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<T>.retainAll(elements: Iterable<T>) {
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Iterable<T>) {
 	retainAll(elements.toSet())
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<T>.retainAll(elements: Array<out T>) {
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Array<out T>) {
 	retainAll(elements.toSet())
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<T>.retainAll(elements: Sequence<T>) {
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Sequence<T>) {
 	retainAll(elements.toSet())
 }
 
 /**
  * Shortcut for [MutableCollection.add].
  */
-operator fun <T> MutableCollection<T>.plusAssign(element: T) {
+operator fun <T> MutableCollection<in T>.plusAssign(element: T) {
 	add(element)
 }
 
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Iterable<T>) {
+operator fun <T> MutableCollection<in T>.plusAssign(elements: Iterable<T>) {
 	addAll(elements)
 }
 
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Array<out T>) {
+operator fun <T> MutableCollection<in T>.plusAssign(elements: Array<out T>) {
 	addAll(elements)
 }
 
 /**
  * Shortcut for [addAll].
  */
-operator fun <T> MutableCollection<T>.plusAssign(elements: Sequence<T>) {
+operator fun <T> MutableCollection<in T>.plusAssign(elements: Sequence<T>) {
 	addAll(elements)
 }
 
 /**
  * Shortcut for [RemoveOnlyCollection.remove].
  */
-operator fun <T> RemoveOnlyCollection<T>.minusAssign(element: T) {
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(element: T) {
 	remove(element)
 }
 
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Iterable<T>) {
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Iterable<T>) {
 	removeAll(elements)
 }
 
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Array<out T>) = removeAll(elements)
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Array<out T>) = removeAll(elements)
 
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
 
 /**
  * Returns a list that contains the elements by their encounter order and then the given [element].
@@ -499,47 +499,47 @@ inline fun <T> MutableList<T>.replaceAll(transform: (T) -> T) {
 /**
  * Shortcut for [MutableMap.putAll].
  */
-fun <K, V> MutableMap<K, V>.putAll(entries: Iterable<Pair<K, V>>) {
+fun <K, V> MutableMap<in K, in V>.putAll(entries: Iterable<Pair<K, V>>) {
 	for((key, value) in entries) put(key, value)
 }
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-fun <K, V> MutableMap<K, V>.putAll(entries: Array<Pair<K, V>>) = putAll(entries.asList())
+fun <K, V> MutableMap<in K, in V>.putAll(entries: Array<Pair<K, V>>) = putAll(entries.asList())
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-fun <K, V> MutableMap<K, V>.putAll(entries: Sequence<Pair<K, V>>) {
+fun <K, V> MutableMap<in K, in V>.putAll(entries: Sequence<Pair<K, V>>) {
 	for((key, value) in entries) put(key, value)
 }
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-operator fun <K, V> MutableMap<K, V>.plusAssign(map: MapView<out K, V>) {
+operator fun <K, V> MutableMap<in K, in V>.plusAssign(map: MapView<out K, V>) {
 	putAll(map)
 }
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Iterable<Pair<K, V>>) {
+operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Iterable<Pair<K, V>>) {
 	putAll(entries)
 }
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Array<Pair<K, V>>) {
+operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Array<Pair<K, V>>) {
 	putAll(entries)
 }
 
 /**
  * Shortcut for [MutableMap.putAll].
  */
-operator fun <K, V> MutableMap<K, V>.plusAssign(entries: Sequence<Pair<K, V>>) {
+operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Sequence<Pair<K, V>>) {
 	putAll(entries)
 }
 
