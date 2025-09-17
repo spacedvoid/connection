@@ -17,7 +17,7 @@ import kotlin.collections.singleOrNull as kotlinSingleOrNull
 /**
  * Shortcut for `!isEmpty()`.
  */
-fun CollectionView<*>.isNotEmpty() = !isEmpty()
+fun CollectionView<*>.isNotEmpty(): Boolean = !isEmpty()
 
 /**
  * Returns a range for `0` to [size][CollectionView.size]` - 1`.
@@ -65,15 +65,16 @@ operator fun <T> ListView<T>.component5(): T = get(4)
 /**
  * Shortcut for [MutableCollection.addAll].
  */
-fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean = when(elements) {
-	is CollectionView<T> -> addAll(elements)
-	is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
-	else -> run {
-		var result = false
-		for(e in elements) if(add(e)) result = true
-		return@run result
+fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean =
+	when(elements) {
+		is CollectionView<T> -> addAll(elements)
+		is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
+		else -> run {
+			var result = false
+			for(e in elements) if(add(e)) result = true
+			return@run result
+		}
 	}
-}
 
 /**
  * Shortcut for [MutableCollection.addAll].
@@ -101,37 +102,27 @@ fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean = w
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Array<out T>) {
-	removeAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Array<out T>): Boolean =	removeAll(elements.toSet())
 
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Sequence<T>) {
-	removeAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Sequence<T>): Boolean = removeAll(elements.toSet())
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Iterable<T>) {
-	retainAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Iterable<T>): Boolean = retainAll(elements.toSet())
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Array<out T>) {
-	retainAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Array<out T>): Boolean = retainAll(elements.toSet())
 
 /**
  * Shortcut for [RemoveOnlyCollection.retainAll].
  */
-fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Sequence<T>) {
-	retainAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Sequence<T>): Boolean = retainAll(elements.toSet())
 
 /**
  * Shortcut for [MutableCollection.add].
@@ -178,12 +169,16 @@ operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Iterable<T>) {
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Array<out T>) = removeAll(elements)
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Array<out T>) {
+	removeAll(elements)
+}
 
 /**
  * Shortcut for [removeAll].
  */
-operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Sequence<T>) = removeAll(elements)
+operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Sequence<T>) {
+	removeAll(elements)
+}
 
 /**
  * Returns a list that contains the elements by their encounter order and then the given [element].
@@ -362,11 +357,12 @@ fun <T> Iterable<T>.single(): T = when(this) {
  * Throws [NoSuchElementException] if this collection is empty,
  * or [IllegalArgumentException] if this collection has more than one element.
  */
-fun <T> SequencedCollectionView<T>.single(): T = when(size()) {
-	0 -> throw NoSuchElementException("Collection is empty")
-	1 -> first()
-	else -> throw IllegalArgumentException("Collection has more than one element")
-}
+fun <T> SequencedCollectionView<T>.single(): T =
+	when(size()) {
+		0 -> throw NoSuchElementException("Collection is empty")
+		1 -> first()
+		else -> throw IllegalArgumentException("Collection has more than one element")
+	}
 
 /**
  * Returns the only element of this collection, or `null` if this collection is empty or has more than one element.

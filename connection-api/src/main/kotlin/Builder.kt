@@ -35,7 +35,7 @@ inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() ->
 	}
 
 	val result = MutableListImpl<T>(ArrayList(initialCapacity)).apply(filler)
-	return if(result.isNotEmpty()) ListImpl(result.kotlin) else listOf()
+	return if(result.isEmpty()) listOf() else ListImpl(result.kotlin)
 }
 
 
@@ -52,7 +52,7 @@ inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> U
 	}
 
 	val result = MutableSetImpl<T>(HashSet.newHashSet(initialCapacity)).apply(filler)
-	return if(result.isNotEmpty()) SetImpl(result.kotlin) else setOf()
+	return if(result.isEmpty()) setOf() else SetImpl(result.kotlin)
 }
 
 /**
@@ -68,7 +68,7 @@ inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSeque
 	}
 
 	val result = MutableSequencedSetImpl<T>(LinkedHashSet(initialCapacity)).apply(filler)
-	return if(result.isNotEmpty()) SequencedSetImpl(result.kotlin) else sequencedSetOf()
+	return if(result.isEmpty()) sequencedSetOf() else SequencedSetImpl(result.kotlin)
 }
 
 /**
@@ -84,7 +84,7 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
 	}
 
 	val result = MutableMapImpl<K, V>(HashMap.newHashMap(initialCapacity)).apply(filler)
-	return if(result.isNotEmpty()) MapImpl(result.kotlin) else mapOf()
+	return if(result.isEmpty()) mapOf() else MapImpl(result.kotlin)
 }
 
 /**
@@ -100,5 +100,5 @@ inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableSe
 	}
 
 	val result = MutableSequencedMapImpl<K, V>(LinkedHashMap.newLinkedHashMap(initialCapacity)).apply(filler)
-	return if(result.isNotEmpty()) SequencedMapImpl(result.kotlin) else sequencedMapOf()
+	return if(result.isEmpty()) sequencedMapOf() else SequencedMapImpl(result.kotlin)
 }

@@ -239,9 +239,8 @@ inline fun <T, V> Iterable<T>.associateWith(transform: (T) -> V): Map<T, V> = bu
 }
 
 @PublishedApi
-internal fun <T> Iterable<T>.sizeOrDefault(default: Int): Int =
-	when(this) {
-		is CollectionView<T> -> size()
-		is kotlin.collections.Collection<T> -> this.size
-		else -> default
-	}
+internal fun <T> Iterable<T>.sizeOrDefault(default: Int): Int = when(this) {
+	is CollectionView<T> -> size()
+	is kotlin.collections.Collection<T> -> this.size
+	else -> default
+}

@@ -184,7 +184,7 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 			/**
 			 * The adapters for this typekind.
 			 */
-			val adapters = Adapters()
+			val adapters: Adapters = Adapters()
 
 			/**
 			 * Allows access to the [type][ConnectionType] of this typekind.
