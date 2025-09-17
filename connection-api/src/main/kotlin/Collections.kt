@@ -4,17 +4,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-@file:OptIn(ExperimentalContracts::class)
-
 package io.github.spacedvoid.connection
 
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+import kotlin.collections.first
+import kotlin.collections.last
 import kotlin.random.Random
-import kotlin.collections.first as kotlinFirst
 import kotlin.collections.firstOrNull as kotlinFirstOrNull
-import kotlin.collections.last as kotlinLast
 import kotlin.collections.lastOrNull as kotlinLastOrNull
 import kotlin.collections.single as kotlinSingle
 import kotlin.collections.singleOrNull as kotlinSingleOrNull
@@ -275,7 +270,7 @@ operator fun <T> ListView<T>.times(n: Int): List<T> = buildList(size() * n) {
  */
 fun <T> Iterable<T>.first(): T = when(this) {
 	is SequencedCollectionView<T> -> first()
-	is kotlin.collections.List<T> -> kotlinFirst()
+	is kotlin.collections.List<T> -> first()
 	else -> run {
 		val iterator = iterator()
 		return@run if(iterator.hasNext()) iterator.next() else throw NoSuchElementException("Collection is empty")
@@ -288,7 +283,7 @@ fun <T> Iterable<T>.first(): T = when(this) {
  */
 fun <T> Iterable<T>.last(): T = when(this) {
 	is SequencedCollectionView<T> -> last()
-	is kotlin.collections.List<T> -> kotlinLast()
+	is kotlin.collections.List<T> -> last()
 	else -> run {
 		val iterator = iterator()
 		if(!iterator.hasNext()) throw NoSuchElementException("Collection is empty")
@@ -494,165 +489,4 @@ fun <T> Iterable<T>.shuffled(random: Random = Random.Default): List<T> = buildLi
 inline fun <T> MutableList<T>.replaceAll(transform: (T) -> T) {
 	val iterator = iterator()
 	for(e in iterator) iterator.set(transform(e))
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Iterable<Pair<K, V>>) {
-	for((key, value) in entries) put(key, value)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Array<Pair<K, V>>) = putAll(entries.asList())
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Sequence<Pair<K, V>>) {
-	for((key, value) in entries) put(key, value)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(map: MapView<out K, V>) {
-	putAll(map)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Iterable<Pair<K, V>>) {
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Array<Pair<K, V>>) {
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Sequence<Pair<K, V>>) {
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(map: MapView<out K, V>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(map)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Iterable<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Array<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Sequence<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
-}
-
-/**
- * Returns `true` if this map is not empty, `false` otherwise.
- */
-fun MapView<*, *>.isNotEmpty(): Boolean = !isEmpty()
-
-/**
- * Shortcut for [MapView.containsKey].
- */
-operator fun <K> MapView<K, *>.contains(key: K): Boolean = containsKey(key)
-
-/**
- * Shortcut for `this.entries.iterator`.
- */
-operator fun <K, V> MapView<out K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()
-
-/**
- * Returns the iterator for this map's [entries][MutableMap.entries].
- */
-operator fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<kotlin.collections.MutableMap.MutableEntry<K, V>> = this.entries.iterator()
-
-/**
- * Performs the given [action] on this map's [entries][MapView.entries].
- */
-inline fun <K, V> MapView<out K, V>.forEach(action: (kotlin.collections.Map.Entry<K, V>) -> Unit) {
-	for(e in this.entries) action(e)
-}
-
-/**
- * Returns the value of the entry associated with the given [key].
- * Throws [NoSuchElementException] if no entries have the [key].
- */
-@Suppress("UNCHECKED_CAST")
-@JvmName("getNullableValue")
-fun <K, V> MapView<K, V>.getValue(key: K): V =
-	get(key) ?: if(key in this) null as V else throw NoSuchElementException("Value for key $key is not present")
-
-/**
- * Returns the value of the entry associated with the given [key].
- * Throws [NoSuchElementException] if no entries have the [key].
- */
-fun <K, V: Any> MapView<K, V>.getValue(key: K): V = get(key) ?: throw NoSuchElementException("Value for key $key is not present")
-
-/**
- * Returns the value of the entry associated with the given [key],
- * or returns and puts a new entry with the [defaultValue].
- */
-@Suppress("UNCHECKED_CAST")
-@JvmName("getOrPutNullable")
-inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
-	contract {
-		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
-	}
-
-	return get(key) ?: if(key in this) null as V else defaultValue().also { put(key, it) }
-}
-
-/**
- * Returns the value of the entry associated with the given [key],
- * or returns and puts a new entry with the [defaultValue].
- */
-inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
-	contract {
-		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
-	}
-
-	return get(key) ?: defaultValue().also { put(key, it) }
-}
-
-/**
- * Shortcut for [MutableMap.put].
- */
-operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
-	put(key, value)
-}
-
-/**
- * Replaces all values in this map with the [transform] of each entry.
- */
-inline fun <K, V> MutableMap<K, V>.replaceAll(transform: (kotlin.collections.Map.Entry<K, V>) -> V) {
-	for(e in this) e.setValue(transform(e))
 }
