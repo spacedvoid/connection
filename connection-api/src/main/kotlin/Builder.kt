@@ -67,7 +67,7 @@ inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSeque
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
 
-	val result = MutableSequencedSetImpl<T>(LinkedHashSet(initialCapacity)).apply(filler)
+	val result = MutableSequencedSetImpl<T>(LinkedHashSet.newLinkedHashSet(initialCapacity)).apply(filler)
 	return if(result.isEmpty()) sequencedSetOf() else SequencedSetImpl(result.kotlin)
 }
 
