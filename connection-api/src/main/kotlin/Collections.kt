@@ -70,6 +70,7 @@ fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean =
 		is CollectionView<T> -> addAll(elements)
 		is kotlin.collections.Collection<T> -> addAll(elements.asViewConnection())
 		else -> run {
+			// Do not use `addAll(elements.toList())`: cyclic dependency from `Iterable<T>.toList()`
 			var result = false
 			for(e in elements) if(add(e)) result = true
 			return@run result
@@ -85,6 +86,7 @@ fun <T> MutableCollection<in T>.addAll(elements: Array<out T>): Boolean = addAll
  * Shortcut for [MutableCollection.addAll].
  */
 fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
+	// Do not use `addAll(elements.toList())`: cyclic dependency from `Sequence<T>.toList()`
 	var result = false
 	for(e in elements) if(add(e)) result = true
 	return result
@@ -93,11 +95,12 @@ fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
  */
-fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean = when(elements) {
-	is CollectionView<T> -> removeAll(elements)
-	is kotlin.collections.Collection<T> -> removeAll(elements.asViewConnection())
-	else -> removeAll(elements.toSet())
-}
+fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean =
+	when(elements) {
+		is CollectionView<T> -> removeAll(elements)
+		is kotlin.collections.Collection<T> -> removeAll(elements.asViewConnection())
+		else -> removeAll(elements.toSet())
+	}
 
 /**
  * Shortcut for [RemoveOnlyCollection.removeAll].
@@ -405,7 +408,11 @@ fun <T> CollectionView<T>.randomOrNull(random: Random = Random.Default): T? =
 fun <T: Comparable<T>> MutableList<T>.sort() {
 	val array = toTypedArray<Comparable<T>>()
 	array.sort()
-	for(i in array.indices) set(i, array[i] as T)
+	val iterator = iterator()
+	for(e in array) {
+		iterator.next()
+		iterator.set(e as T)
+	}
 }
 
 /**
@@ -424,7 +431,11 @@ fun <T: Comparable<T>> MutableList<T>.sortDescending() = sort(reverseOrder())
 fun <T> MutableList<T>.sort(comparator: Comparator<in T>) {
 	val array = toTypedArray<Any?>() as Array<T>
 	array.sortWith(comparator)
-	for(i in array.indices) set(i, array[i])
+	val iterator = iterator()
+	for(e in array) {
+		iterator.next()
+		iterator.set(e)
+	}
 }
 
 /**
