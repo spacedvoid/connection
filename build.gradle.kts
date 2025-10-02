@@ -88,7 +88,7 @@ dokka {
 	}
 
 	pluginsConfiguration.html {
-		customStyleSheets = file("src/main/css/styles.css")
+		customStyleSheets += file("src/main/css/styles.css")
 	}
 }
 

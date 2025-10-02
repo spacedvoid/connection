@@ -22,11 +22,6 @@ interface Stack<T>: MutableCollection<T> {
 	override fun iterator(): MutableIterator<T>
 
 	/**
-	 * Returns the size of this stack.
-	 */
-	override fun size(): Int
-
-	/**
 	 * Returns `true` if this stack is empty, `false` otherwise.
 	 */
 	override fun isEmpty(): Boolean

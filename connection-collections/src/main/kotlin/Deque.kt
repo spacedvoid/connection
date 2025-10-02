@@ -21,11 +21,6 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	override fun iterator(): MutableIterator<T>
 
 	/**
-	 * Returns the size of this deque.
-	 */
-	override fun size(): Int
-
-	/**
 	 * Returns `true` if this deque is empty, `false` otherwise.
 	 */
 	override fun isEmpty(): Boolean

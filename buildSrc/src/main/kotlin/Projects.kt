@@ -8,7 +8,3 @@ val Project.dokkaOutputDir: File
 operator fun ConfigurableFileCollection.plusAssign(file: File) {
 	from(file)
 }
-
-fun ConfigurableFileCollection.assign(file: File) {
-	setFrom(file)
-}
