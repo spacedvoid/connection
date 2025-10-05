@@ -65,6 +65,10 @@ fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> =
  * The iteration order is defined as the encounter order of the given [elements],
  * and also the addition order of further elements.
  */
+@Deprecated(
+	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
+	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(elements) }", "java.util.LinkedHashSet")
+)
 fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> =
 	LinkedHashSet(elements.kotlinAsList()).asMutableConnection()
 
@@ -130,6 +134,10 @@ fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> =
  * The iteration order is defined as the encounter order of the given [entries],
  * and also the addition order of further entries.
  */
+@Deprecated(
+	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashMap instead.",
+	ReplaceWith("LinkedHashMap<K, V>().asMutableConnection().apply { putAll(entries) }", "java.util.LinkedHashMap")
+)
 fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> =
 	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
 

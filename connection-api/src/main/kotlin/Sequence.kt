@@ -34,6 +34,10 @@ fun <T> Sequence<T>.toSequencedSet(): SequencedSet<T> = buildSequencedSet { addA
 /**
  * Returns a mutable sequenced set that collects the elements from this sequence, in the iteration order.
  */
+@Deprecated(
+	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
+	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet")
+)
 fun <T> Sequence<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
 
 /**
