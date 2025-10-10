@@ -94,14 +94,18 @@ interface Queue<T>: MutableCollection<T> {
 	 * Returns whether the given object is equal to this queue.
 	 *
 	 * The given object is equal to this queue if the object is also a [Queue],
-	 * and the elements of the given queue are equal to the elements in this queue, by their iteration order.
+	 * the two queues have the same size,
+	 * and this queue contains equal elements with the given queue in the same iteration order.
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns a hash code for this queue.
 	 *
-	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * fold(1) { r, e -> r * 31 + e.hashCode() }
+	 * ```
 	 */
 	override fun hashCode(): Int
 }

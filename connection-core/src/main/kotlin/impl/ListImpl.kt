@@ -30,33 +30,9 @@ open class ListViewImpl<out T>(
 
 	override fun lastIndexOf(element: @UnsafeVariance T): Int = this.kotlin.lastIndexOf(element)
 
-	/**
-	 * Returns whether the given object is equal to this list.
-	 *
-	 * The given object is equal to this list if the object is a [ListView],
-	 * and the elements of the given list equals to the elements in this list, regarding the order.
-	 *
-	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractList.equals].
-	 */
-	override fun equals(other: Any?): Boolean {
-		if(this === other) return true
-		if(other !is ListView<*>) return false
-		val thisIterator = iterator()
-		val otherIterator = other.iterator()
-		while(thisIterator.hasNext() && otherIterator.hasNext()) {
-			if(thisIterator.next() != otherIterator.next()) return false
-		}
-		return !(thisIterator.hasNext() || otherIterator.hasNext())
-	}
+	override fun equals(other: Any?): Boolean = listLikeEquals<ListView<*>>(other)
 
-	/**
-	 * Returns a hash code for this list.
-	 *
-	 * The hash is computed based on the contained objects' hash codes, regarding the order.
-	 *
-	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractList.hashCode]
-	 */
-	override fun hashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }
+	override fun hashCode(): Int = listLikeHashCode()
 }
 
 open class ListImpl<out T>(override val kotlin: kotlin.collections.List<T>): List<T>, ListViewImpl<T>(kotlin) {
@@ -100,3 +76,16 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun clear() = this.kotlin.clear()
 }
+
+internal inline fun <reified T: CollectionView<*>> CollectionView<*>.listLikeEquals(other: Any?): Boolean {
+	if(this === other) return true
+	if(other !is T) return false
+	val thisIterator = iterator()
+	val otherIterator = other.iterator()
+	while(thisIterator.hasNext() && otherIterator.hasNext()) {
+		if(thisIterator.next() != otherIterator.next()) return false
+	}
+	return !(thisIterator.hasNext() || otherIterator.hasNext())
+}
+
+internal fun CollectionView<*>.listLikeHashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }

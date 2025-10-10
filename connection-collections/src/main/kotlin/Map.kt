@@ -72,15 +72,19 @@ interface MapView<K, out V> {
 	 * Returns whether the given object is equal to this map.
 	 *
 	 * The given object is equal to this map if the object is a [MapView],
+	 * the two maps have the same size,
 	 * and all entries in this map are equal to the entries in the given map, in terms of both keys and values.
+	 * This is equivalent with `this.entries.equals(other.entries)`.
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns the hash code for this map.
 	 *
-	 * The hash code is computed based on the hash codes from the entries in this map,
-	 * which are then based on the hash codes of the key and value.
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * this.entries.sumOf { (k, v) -> k.hashCode() xor v.hashCode() }
+	 * ```
 	 */
 	override fun hashCode(): Int
 }

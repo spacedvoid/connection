@@ -109,14 +109,18 @@ interface Stack<T>: MutableCollection<T> {
 	 * Returns whether the given object is equal to this stack.
 	 *
 	 * The given object is equal to this stack if the object is also a [Stack],
-	 * and the elements of the given stack are equal to the elements in this stack, by their iteration order.
+	 * the two stacks have the same size,
+	 * and this stack contains equal elements with the given stack in the same iteration order.
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns a hash code for this stack.
 	 *
-	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * fold(1) { r, e -> r * 31 + e.hashCode() }
+	 * ```
 	 */
 	override fun hashCode(): Int
 }

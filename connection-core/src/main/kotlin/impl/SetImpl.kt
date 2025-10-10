@@ -12,28 +12,12 @@ import io.github.spacedvoid.connection.Set
 import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
-	/**
-	 * Returns whether the given object is equal to this set.
-	 *
-	 * The given object is equal to this set if the given object is a [SetView],
-	 * this set contains all elements from the given set,
-	 * and the given set contains all elements from this set.
-	 *
-	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractSet.equals].
-	 */
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
 		if(other !is SetView<*>) return false
 		return size() == other.size() && safeContainsAll(other)
 	}
 
-	/**
-	 * Returns the hash code for this set.
-	 *
-	 * The hash code is computed based on the contained objects' hash codes.
-	 *
-	 * This implementation uses the Java way, which is documented and implemented in [java.util.AbstractSet.hashCode].
-	 */
 	override fun hashCode(): Int = sumOf { it.hashCode() }
 }
 

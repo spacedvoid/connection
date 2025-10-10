@@ -66,18 +66,13 @@ open class KotlinNavigableMapImpl<K, V>(private val connection: NavigableMapView
 	override fun lastKey(): K? = this.connection.lastKey()
 }
 
-private data class ImmutableEntry<K, V>(override val key: K, override val value: V): Map.Entry<K, V> {
+private class ImmutableEntry<K, V>(override val key: K, override val value: V): Map.Entry<K, V> {
 	override fun equals(other: Any?): Boolean {
-		if(this == other) return true
+		if(this === other) return true
 		if(other !is Map.Entry<*, *>) return false
 		return this.key == other.key && this.value == other.value
 	}
 
-	/**
-	 * Returns a hash code value for the object.
-	 *
-	 * This implementation uses the same way from [java.util.AbstractMap.SimpleEntry.hashCode].
-	 */
 	override fun hashCode(): Int = this.key.hashCode() xor this.value.hashCode()
 }
 

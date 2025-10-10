@@ -162,14 +162,18 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 * Returns whether the given object is equal to this deque.
 	 *
 	 * The given object is equal to this deque if the object is also a [Deque],
-	 * and the elements of the given deque are equal to the elements in this deque, by their iteration order.
+	 * the two deques have the same size,
+	 * and this deque contains equal elements with the given deque in the same iteration order.
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns a hash code for this deque.
 	 *
-	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * fold(1) { r, e -> r * 31 + e.hashCode() }
+	 * ```
 	 */
 	override fun hashCode(): Int
 }

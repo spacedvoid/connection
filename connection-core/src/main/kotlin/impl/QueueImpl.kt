@@ -17,23 +17,7 @@ open class QueueImpl<T>(override val kotlin: java.util.Queue<T>): Queue<T>, Muta
 
 	override fun poll(): T? = this.kotlin.poll()
 
-	override fun equals(other: Any?): Boolean {
-		if(this === other) return true
-		if(other !is Queue<*>) return false
-		val thisIterator = iterator()
-		val otherIterator = other.iterator()
-		while(thisIterator.hasNext() && otherIterator.hasNext()) {
-			if(thisIterator.next() != otherIterator.next()) return false
-		}
-		return !(thisIterator.hasNext() && otherIterator.hasNext())
-	}
+	override fun equals(other: Any?): Boolean = listLikeEquals<Queue<*>>(other)
 
-	/**
-	 * Returns a hash code for this queue.
-	 *
-	 * The hash is computed based on the contained objects' hash codes, by their iteration order.
-	 *
-	 * This implementation uses the same way from [java.util.AbstractList.hashCode]
-	 */
-	override fun hashCode(): Int = fold(1) { r, e -> r * 31 + e.hashCode() }
+	override fun hashCode(): Int = listLikeHashCode()
 }

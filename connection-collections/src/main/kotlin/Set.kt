@@ -38,16 +38,19 @@ interface SetView<out T>: CollectionView<T> {
 	/**
 	 * Returns whether the given object is equal to this set.
 	 *
-	 * The given object is equal to this set if the given object is a [SetView],
-	 * this set contains all elements from the given set,
-	 * and the given set contains all elements from this set.
+	 * The given object is equal to this set if the object is a [SetView],
+	 * the two sets have the same size,
+	 * and this set contains all elements from the given set.
 	 */
 	override fun equals(other: Any?): Boolean
 
 	/**
 	 * Returns the hash code for this set.
 	 *
-	 * The hash code is computed based on the contained objects' hash codes.
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * sumOf { it.hashCode() }
+	 * ```
 	 */
 	override fun hashCode(): Int
 }

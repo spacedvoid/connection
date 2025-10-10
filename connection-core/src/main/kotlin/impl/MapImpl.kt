@@ -41,14 +41,7 @@ open class MapViewImpl<K, out V>(open val kotlin: kotlin.collections.Map<K, V>):
 		return !(thisIterator.hasNext() || otherIterator.hasNext())
 	}
 
-	/**
-	 * Returns the hash code for this map.
-	 *
-	 * The hash code is computed based on the hash codes from the entries in this map, which are then based on the hash codes of the key and value.
-	 *
-	 * This implementation uses the same way from [java.util.AbstractMap.hashCode].
-	 */
-	override fun hashCode(): Int = this.entries.sumOf { it.hashCode() }
+	override fun hashCode(): Int = this.entries.sumOf { (k, v) -> k.hashCode() xor v.hashCode() }
 
 	override fun toString(): String = "${this::class.qualifiedName}{entries=[${this.entries.joinToString { "{${it.key}=${it.value}}" }}]}"
 }
