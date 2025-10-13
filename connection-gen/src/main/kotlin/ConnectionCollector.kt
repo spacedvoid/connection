@@ -12,6 +12,7 @@ import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.IMMUTABLE
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.MUTABLE
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind.VIEW
 import io.github.spacedvoid.connection.gen.dsl.KotlinType
+import io.github.spacedvoid.connection.gen.dsl.invoke
 
 /**
  * The main DSL for the Connection generator.

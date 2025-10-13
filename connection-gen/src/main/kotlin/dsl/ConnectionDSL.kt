@@ -22,13 +22,13 @@ annotation class DslInternal
 /**
  * Allows objects to be configured with a DSL style.
  */
-interface Configurable {
-	/**
-	 * Configures the object.
-	 * The receiver of the [configuration] is same as the object used to configure.
-	 */
-	operator fun <T: Configurable> T.invoke(configuration: T.() -> Unit) = this.configuration()
-}
+interface Configurable
+
+/**
+ * Configures the object.
+ * The receiver of the [configuration] is same as the object used to configure.
+ */
+operator fun <T: Configurable> T.invoke(configuration: T.() -> Unit) = this.configuration()
 
 /**
  * Class used for Kotlin representations of Connections.
