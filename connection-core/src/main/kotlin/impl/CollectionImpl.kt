@@ -27,7 +27,7 @@ open class CollectionViewImpl<out T>(open val kotlin: kotlin.collections.Collect
 
 	override fun contains(element: @UnsafeVariance T): Boolean = this.kotlin.safeContains(element)
 
-	override fun containsAll(collection: CollectionView<@UnsafeVariance T>): Boolean = this.kotlin.safeContainsAll(KotlinCollectionImpl(collection))
+	override fun containsAll(collection: CollectionView<@UnsafeVariance T>): Boolean = this.kotlin.safeContainsAll(collection.asKotlin())
 
 	override fun equals(other: Any?): Boolean = super.equals(other)
 
@@ -43,9 +43,9 @@ open class RemoveOnlyCollectionImpl<T>(override val kotlin: kotlin.collections.M
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)
 
-	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(collection.asKotlin())
 
-	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(collection.asKotlin())
 
 	override fun clear() = this.kotlin.clear()
 }
@@ -53,5 +53,8 @@ open class RemoveOnlyCollectionImpl<T>(override val kotlin: kotlin.collections.M
 open class MutableCollectionImpl<T>(override val kotlin: kotlin.collections.MutableCollection<T>): RemoveOnlyCollectionImpl<T>(kotlin), MutableCollection<T> {
 	override fun add(element: T): Boolean = this.kotlin.add(element)
 
-	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(collection.asKotlin())
 }
+
+internal fun <T> CollectionView<T>.asKotlin(): kotlin.collections.Collection<T> =
+	if(this is CollectionViewImpl<T>) this.kotlin else KotlinCollectionImpl(this)

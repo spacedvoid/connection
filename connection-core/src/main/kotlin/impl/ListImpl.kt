@@ -11,7 +11,6 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.List
 import io.github.spacedvoid.connection.MutableList
-import io.github.spacedvoid.connection.impl.kotlin.KotlinCollectionImpl
 
 open class ListViewImpl<out T>(
 	@property:Suppress("PROPERTY_TYPE_MISMATCH_ON_OVERRIDE") override val kotlin: kotlin.collections.List<T>
@@ -54,7 +53,7 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun add(index: Int, element: T) = this.kotlin.add(index, element)
 
-	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(KotlinCollectionImpl(collection))
+	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(collection.asKotlin())
 
 	override fun addFirst(element: T) = this.kotlin.addFirst(element)
 
@@ -70,9 +69,9 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun removeLast(): T = this.kotlin.removeLast()
 
-	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(KotlinCollectionImpl(collection))
+	override fun removeAll(collection: CollectionView<T>): Boolean = this.kotlin.removeAll(collection.asKotlin())
 
-	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(KotlinCollectionImpl(collection))
+	override fun retainAll(collection: CollectionView<T>): Boolean = this.kotlin.retainAll(collection.asKotlin())
 
 	override fun clear() = this.kotlin.clear()
 }
