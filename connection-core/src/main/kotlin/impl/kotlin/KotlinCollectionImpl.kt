@@ -9,8 +9,6 @@ package io.github.spacedvoid.connection.impl.kotlin
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableCollection
 import io.github.spacedvoid.connection.impl.CollectionViewImpl
-import io.github.spacedvoid.connection.utils.safeContains
-import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class KotlinCollectionImpl<out T>(private val connection: CollectionView<T>): Collection<T> {
 	override fun iterator(): Iterator<T> = this.connection.iterator()
@@ -20,9 +18,9 @@ open class KotlinCollectionImpl<out T>(private val connection: CollectionView<T>
 
 	override fun isEmpty(): Boolean = this.connection.isEmpty()
 
-	override fun contains(element: @UnsafeVariance T): Boolean = this.connection.safeContains(element)
+	override fun contains(element: @UnsafeVariance T): Boolean = this.connection.contains(element)
 
-	override fun containsAll(elements: Collection<@UnsafeVariance T>): Boolean = this.connection.safeContainsAll(CollectionViewImpl(elements))
+	override fun containsAll(elements: Collection<@UnsafeVariance T>): Boolean = this.connection.containsAll(CollectionViewImpl(elements))
 
 	override fun toString(): String = "${this::class.qualifiedName}{elements=[${joinToString()}]}"
 }

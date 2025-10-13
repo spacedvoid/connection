@@ -9,13 +9,13 @@ package io.github.spacedvoid.connection.impl
 import io.github.spacedvoid.connection.*
 import io.github.spacedvoid.connection.MutableSet
 import io.github.spacedvoid.connection.Set
-import io.github.spacedvoid.connection.utils.safeContainsAll
 
 open class SetViewImpl<out T>(override val kotlin: kotlin.collections.Set<T>): SetView<T>, CollectionViewImpl<T>(kotlin) {
+	@Suppress("UNCHECKED_CAST")
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
 		if(other !is SetView<*>) return false
-		return size() == other.size() && safeContainsAll(other)
+		return size() == other.size() && containsAll(other as SetView<T>)
 	}
 
 	override fun hashCode(): Int = sumOf { it.hashCode() }

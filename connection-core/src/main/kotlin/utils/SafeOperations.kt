@@ -6,8 +6,6 @@
 
 package io.github.spacedvoid.connection.utils
 
-import io.github.spacedvoid.connection.*
-
 /**
  * Equivalent with [contains][Collection.contains], but returns `false` when catching a [ClassCastException] or a [NullPointerException].
  */
@@ -31,37 +29,9 @@ fun <T> Collection<T>.safeContains(element: T): Boolean =
 	}
 
 /**
- * Equivalent with [contains][CollectionView.contains], but returns `false` when catching a [ClassCastException] or a [NullPointerException].
- */
-fun <T> CollectionView<T>.safeContains(element: T): Boolean =
-	try {
-		contains(element)
-	}
-	catch(_: ClassCastException) {
-		false
-	}
-	catch(_: NullPointerException) {
-		false
-	}
-
-/**
  * Equivalent with [containsAll][Collection.containsAll], but returns `false` when catching a [ClassCastException] or a [NullPointerException].
  */
 fun Collection<*>.safeContainsAll(collection: Collection<*>): Boolean =
-	try {
-		this.containsAll(collection)
-	}
-	catch(_: ClassCastException) {
-		false
-	}
-	catch(_: NullPointerException) {
-		false
-	}
-
-/**
- * Equivalent with [containsAll][CollectionView.containsAll], but returns `false` when catching a [ClassCastException] or a [NullPointerException].
- */
-fun CollectionView<*>.safeContainsAll(collection: CollectionView<*>): Boolean =
 	try {
 		this.containsAll(collection)
 	}
