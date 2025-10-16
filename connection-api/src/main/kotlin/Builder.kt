@@ -23,6 +23,21 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
+ * Dynamically builds an immutable list.
+ *
+ * The supplied [MutableList] instance will be available only from the [filler].
+ * Behavior of the list outside the lambda will be undefined.
+ */
+inline fun <T> buildList(filler: MutableList<T>.() -> Unit): List<T> {
+	contract {
+		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
+	}
+
+	val result = MutableListImpl<T>(ArrayList()).apply(filler)
+	return if(result.isEmpty()) listOf() else ListImpl(result.kotlin)
+}
+
+/**
  * Dynamically builds an immutable list with an expected capacity.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
@@ -38,6 +53,20 @@ inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() ->
 	return if(result.isEmpty()) listOf() else ListImpl(result.kotlin)
 }
 
+/**
+ * Dynamically builds an immutable set.
+ *
+ * The supplied [MutableSet] instance will be available only from the [filler].
+ * Behavior of the set outside the lambda will be undefined.
+ */
+inline fun <T> buildSet(filler: MutableSet<T>.() -> Unit): Set<T> {
+	contract {
+		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
+	}
+
+	val result = MutableSetImpl<T>(HashSet()).apply(filler)
+	return if(result.isEmpty()) setOf() else SetImpl(result.kotlin)
+}
 
 /**
  * Dynamically builds an immutable set with an expected capacity.
@@ -53,6 +82,21 @@ inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> U
 
 	val result = MutableSetImpl<T>(HashSet.newHashSet(initialCapacity)).apply(filler)
 	return if(result.isEmpty()) setOf() else SetImpl(result.kotlin)
+}
+
+/**
+ * Dynamically builds an immutable sequenced set.
+ *
+ * The supplied [MutableSet] instance will be available only from the [filler].
+ * Behavior of the set outside the lambda will be undefined.
+ */
+inline fun <T> buildSequencedSet(filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
+	contract {
+		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
+	}
+
+	val result = MutableSequencedSetImpl<T>(LinkedHashSet()).apply(filler)
+	return if(result.isEmpty()) sequencedSetOf() else SequencedSetImpl(result.kotlin)
 }
 
 /**
@@ -72,6 +116,21 @@ inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSeque
 }
 
 /**
+ * Dynamically builds an immutable map.
+ *
+ * The supplied [MutableMap] instance will be available only from the [filler].
+ * Behavior of the map outside the lambda will be undefined.
+ */
+inline fun <K, V> buildMap(filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
+	contract {
+		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
+	}
+
+	val result = MutableMapImpl<K, V>(HashMap()).apply(filler)
+	return if(result.isEmpty()) mapOf() else MapImpl(result.kotlin)
+}
+
+/**
  * Dynamically builds an immutable map with an expected capacity.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
@@ -85,6 +144,21 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
 
 	val result = MutableMapImpl<K, V>(HashMap.newHashMap(initialCapacity)).apply(filler)
 	return if(result.isEmpty()) mapOf() else MapImpl(result.kotlin)
+}
+
+/**
+ * Dynamically builds an immutable sequenced map.
+ *
+ * The supplied [MutableMap] instance will be available only from the [filler].
+ * Behavior of the map outside the lambda will be undefined.
+ */
+inline fun <K, V> buildSequencedMap(filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
+	contract {
+		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
+	}
+
+	val result = MutableSequencedMapImpl<K, V>(LinkedHashMap()).apply(filler)
+	return if(result.isEmpty()) sequencedMapOf() else SequencedMapImpl(result.kotlin)
 }
 
 /**
