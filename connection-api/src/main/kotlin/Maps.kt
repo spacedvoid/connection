@@ -15,50 +15,8 @@ import kotlin.contracts.contract
 /**
  * Shortcut for [MutableMap.putAll].
  */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Iterable<Pair<K, V>>) {
-	for((key, value) in entries) put(key, value)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Array<Pair<K, V>>) {
-	putAll(entries.asList())
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-fun <K, V> MutableMap<in K, in V>.putAll(entries: Sequence<Pair<K, V>>) {
-	for((key, value) in entries) put(key, value)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
 operator fun <K, V> MutableMap<in K, in V>.plusAssign(map: MapView<K, V>) {
 	putAll(map)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Iterable<Pair<K, V>>) {
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Array<Pair<K, V>>) {
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Sequence<Pair<K, V>>) {
-	putAll(entries)
 }
 
 /**
@@ -67,30 +25,6 @@ operator fun <K, V> MutableMap<in K, in V>.plusAssign(entries: Sequence<Pair<K, 
 operator fun <K, V> MapView<out K, V>.plus(map: MapView<K, V>): Map<K, V> = buildMap {
 	putAll(this@plus)
 	putAll(map)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Iterable<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Array<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
-}
-
-/**
- * Shortcut for [MutableMap.putAll].
- */
-operator fun <K, V> MapView<out K, V>.plus(entries: Sequence<Pair<K, V>>): Map<K, V> = buildMap {
-	putAll(this@plus)
-	putAll(entries)
 }
 
 /**
@@ -123,17 +57,19 @@ inline fun <K, V> MapView<out K, V>.forEach(action: (kotlin.collections.Map.Entr
 /**
  * Returns the value of the entry associated with the given [key].
  * Throws [NoSuchElementException] if no entries have the [key].
+ *
+ * @see getOrElse
  */
-@Suppress("UNCHECKED_CAST")
 @JvmName("getNullableValue")
-fun <K, V> MapView<K, V>.getValue(key: K): V =
-	get(key) ?: if(key in this) null as V else throw NoSuchElementException("Value for key $key is not present")
+fun <K, V> MapView<K, V>.getValue(key: K): V = getOrElse(key) { throw NoSuchElementException("Value for key $key is not present") }
 
 /**
  * Returns the value of the entry associated with the given [key].
  * Throws [NoSuchElementException] if no entries have the [key].
+ *
+ * @see getOrElse
  */
-fun <K, V: Any> MapView<K, V>.getValue(key: K): V = get(key) ?: throw NoSuchElementException("Value for key $key is not present")
+fun <K, V: Any> MapView<K, V>.getValue(key: K): V = getOrElse(key) { throw NoSuchElementException("Value for key $key is not present") }
 
 /**
  * Returns the value of the entry associated with the given [key],
@@ -159,6 +95,35 @@ inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V):
 	}
 
 	return get(key) ?: defaultValue().also { put(key, it) }
+}
+
+/**
+ * Returns the value of the entry associated with the given [key], or returns the [defaultValue].
+ *
+ * This method can be used as an alternative for [getValue] to customize the exception type or its message.
+ */
+@JvmName("getNullableOrElse")
+@Suppress("UNCHECKED_CAST")
+inline fun <K, V> MapView<K, V>.getOrElse(key: K, defaultValue: () -> V): V {
+	contract {
+		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+	}
+
+	return get(key) ?: if(key in this) null as V else defaultValue()
+}
+
+/**
+ * Returns the value of the entry associated with the given [key], or returns the [defaultValue].
+ *
+ * This method can be used as an alternative for [getValue] to customize the exception type or its message.
+ */
+@Suppress("UNCHECKED_CAST")
+inline fun <K, V: Any> MapView<K, V>.getOrElse(key: K, defaultValue: () -> V): V {
+	contract {
+		callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+	}
+
+	return get(key) ?: defaultValue()
 }
 
 /**
