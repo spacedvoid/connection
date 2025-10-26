@@ -8,7 +8,9 @@ package io.github.spacedvoid.connection
 
 /**
  * A sequenced map view that defines the iteration order of the entries based on a [Comparator].
- * The entries are sorted with the [comparator] based on their keys.
+ *
+ * The iteration order is the ascending order, based on their [keys][java.util.Map.Entry.comparingByKey];
+ * any entry is less than the entries that come ofter.
  *
  * The [comparator] must satisfy `comparator.compare(a, b) == 0` if and only if `a.equals(b)`,
  * which is also called as *consistent with equals*.
@@ -16,7 +18,7 @@ package io.github.spacedvoid.connection
  */
 interface NavigableMapView<K, out V>: SequencedMapView<K, V> {
 	/**
-	 * The comparator used to sort the entries in this map.
+	 * The comparator used to determine the iteration order.
 	 */
 	val comparator: Comparator<in K>
 
@@ -80,7 +82,7 @@ interface NavigableMapView<K, out V>: SequencedMapView<K, V> {
 /**
  * An immutable navigable map.
  */
-interface NavigableMap<K, out V>: SequencedMap<K, V>, NavigableMapView<K, V> {
+interface NavigableMap<K, out V>: NavigableMapView<K, V>, SequencedMap<K, V> {
 	override fun reversed(): NavigableMap<K, V>
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): NavigableMap<K, V>
@@ -99,7 +101,7 @@ interface NavigableMap<K, out V>: SequencedMap<K, V>, NavigableMapView<K, V> {
 /**
  * A mutable navigable map.
  */
-interface MutableNavigableMap<K, V>: MutableSequencedMap<K, V>, NavigableMapView<K, V> {
+interface MutableNavigableMap<K, V>: NavigableMapView<K, V>, MutableSequencedMap<K, V> {
 	override fun reversed(): MutableNavigableMap<K, V>
 
 	override fun subMap(from: K, to: K, fromInclusive: Boolean, toInclusive: Boolean): MutableNavigableMap<K, V>
@@ -108,12 +110,43 @@ interface MutableNavigableMap<K, V>: MutableSequencedMap<K, V>, NavigableMapView
 
 	override fun tailMap(after: K, inclusive: Boolean): MutableNavigableMap<K, V>
 
+	/**
+	 * Associates the given [key] with the [value].
+	 * Returns `null` if no entries have the [key], or the old value of the entry with the [key].
+	 *
+	 * The existing entry's key is not replaced when the entry has the given [key].
+	 */
+	override fun put(key: K, value: V): V?
+
+	/**
+	 * Copies all entries from the given [map] to this map.
+	 *
+	 * The key of an entry in this map is not replaced when a copied entry has the same key.
+	 */
+	override fun putAll(map: MapView<out K, V>)
+
+	/**
+	 * Returns a collection that reflects the keys that this map contains.
+	 *
+	 * Changes to the collection are reflected in this map, and vice versa.
+	 *
+	 * The iteration order of the keys in the collection is equal to this map's [entries].
+	 */
 	override val keys: RemoveOnlyNavigableSet<K>
 
+	/**
+	 * Returns a collection that reflects the values that this map contains.
+	 *
+	 * Changes to the collection are reflected in this map, and vice versa.
+	 *
+	 * The iteration order of the values in the collection is equal to this map's [entries].
+	 */
 	override val values: RemoveOnlySequencedCollection<V>
 
 	/**
 	 * Returns a collection that reflects the entries that this map contains.
+	 *
+	 * Changes to the collection are reflected in this map, and vice versa.
 	 */
 	override val entries: RemoveOnlySequencedSet<MutableMap.MutableEntry<K, V>>
 }

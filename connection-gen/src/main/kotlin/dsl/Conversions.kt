@@ -32,7 +32,7 @@ class Conversions @DslInternal constructor(): Configurable {
 
 /**
  * Represents a conversion.
- * `null` properties will be replaced with default values, which might cause compilation errors.
+ * Unless noted otherwise, `null` properties will be replaced with default values.
  */
 @ConnectionDSL
 data class Conversion @DslInternal constructor(var name: String? = null, var docs: String? = null): Configurable

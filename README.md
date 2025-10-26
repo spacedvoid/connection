@@ -43,9 +43,15 @@ Therefore, releases from a tail branch must not increment the major or minor ver
 Releases can come from any branches, but for simplicity, most releases will come from the tip branch.
 Tail branches will only be created if necessary.
 
-## Building
+## Editing and building
 
-Run:
+Because this project uses a source code generator, it requires an initial compilation to resolve errors before editing:
+
+```
+gradlew compileKotlin
+```
+
+To build, run:
 
 ```
 gradlew build
@@ -73,12 +79,12 @@ gradlew :dokkaGenerate
 
 - `v0.2.0`:
   - [ ] Linked collections, which are a subtype of `SequencedCollection` that supports `addFirst` and `addLast`
-  - [ ] Indexed collections, which are a type between `SequencedCollection` and `List` that allows to customize the index type (other than `Int`)
-  - [ ] One-line operators for maps(such as `compute` or `replaceAll`)
   - [ ] Do not throw exceptions when creating a submap of `NavigableMap`
 
 - Not scheduled
   - [ ] Simpler ways to express intervals for `subList` and `subSet`
+  - [ ] Transform usages of Connection types to Kotlin collection types when compiling, alike mapped Java types in Kotlin
+  - [ ] Allow all Connection types to be a receiver for appropriate extension methods in Kotlin, such as `Iterable.map`
 
 ## License
 

@@ -25,7 +25,7 @@ kotlin {
 tasks {
 	val apiJar by registering(Jar::class) {
 		group = "Build"
-		description = "Assembles only the API binary jar."
+		description = "Assembles the API binary jar."
 
 		archiveAppendix = "api"
 		from(project(":connection-api").sourceSets["main"].output)
@@ -44,7 +44,7 @@ tasks {
 
 	val apiSourcesJar by registering(Jar::class) {
 		group = "Build"
-		description = "Assembles only the API source jar."
+		description = "Assembles the API source jar."
 
 		archiveAppendix = "api"
 		archiveClassifier = "sources"
@@ -54,7 +54,7 @@ tasks {
 
 	val coreSourcesJar by registering(Jar::class) {
 		group = "Build"
-		description = "Assembles only the core source jar."
+		description = "Assembles the core source jar."
 
 		archiveAppendix = "core"
 		archiveClassifier = "sources"
@@ -65,9 +65,9 @@ tasks {
 
 	val dokkaJar by registering(Jar::class) {
 		group = "Build"
-		description = "Assembles only the Dokka documentation jar."
-
+		description = "Assembles the Dokka documentation jar."
 		dependsOn(dokkaGenerate)
+
 		archiveClassifier = "javadoc"
 		from(dokkaOutputDir)
 	}

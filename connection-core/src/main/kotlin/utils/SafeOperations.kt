@@ -18,13 +18,13 @@ fun <T> Collection<T>.safeContains(element: T): Boolean =
 		 * The given element is prohibited to be in this collection because of its type.
 		 * While this may become problematic when using with collections-inside-collections
 		 * (or anything that does not consider types in [Any.equals]),
-		 * collections were never intended to be compared with equality anyway.
+		 * collections were never intended to be compared with equality except for tests anyway.
 		 * And these safe operations should return `false` if the result cannot be determined, simply because "we don't know".
 		 */
 		false
 	}
 	catch(_: NullPointerException) {
-		// The given is a `null` that this collection prohibits(therefore does not contain).
+		// The given element is a `null` that this collection prohibits(therefore does not contain).
 		false
 	}
 

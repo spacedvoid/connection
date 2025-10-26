@@ -13,14 +13,21 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
- * Shortcut for [MutableMap.putAll].
+ * Copies all entries from the given [map] to this map.
+ *
+ * The key of an entry in this map is not replaced when a copied entry has the same key.
+ *
+ * This method is equivalent with [putAll][MutableMap.putAll].
  */
 operator fun <K, V> MutableMap<in K, in V>.plusAssign(map: MapView<K, V>) {
 	putAll(map)
 }
 
 /**
- * Shortcut for [MutableMap.putAll].
+ * Creates a new map by collecting all entries from this map and the given [map].
+ *
+ * Values from this map are replaced by the values from the given [map] associated with the same key.
+ * Keys from this map are not affected.
  */
 operator fun <K, V> MapView<out K, V>.plus(map: MapView<K, V>): Map<K, V> = buildMap {
 	putAll(this@plus)
@@ -29,16 +36,19 @@ operator fun <K, V> MapView<out K, V>.plus(map: MapView<K, V>): Map<K, V> = buil
 
 /**
  * Returns `true` if this map is not empty, `false` otherwise.
+ *
+ * A map is not empty if its [size][MapView.size] is not `0`:
+ * therefore, this method is equivalent with `size() != 0`.
  */
 fun MapView<*, *>.isNotEmpty(): Boolean = !isEmpty()
 
 /**
- * Shortcut for [MapView.containsKey].
+ * Returns `true` if an entry has the given [key], `false` otherwise.
  */
 operator fun <K> MapView<K, *>.contains(key: K): Boolean = containsKey(key)
 
 /**
- * Shortcut for `this.entries.iterator`.
+ * Returns the iterator for this map's [entries][MapView.entries].
  */
 operator fun <K, V> MapView<out K, V>.iterator(): Iterator<kotlin.collections.Map.Entry<K, V>> = this.entries.iterator()
 
@@ -73,7 +83,7 @@ fun <K, V: Any> MapView<K, V>.getValue(key: K): V = getOrElse(key) { throw NoSuc
 
 /**
  * Returns the value of the entry associated with the given [key],
- * or returns and puts a new entry with the [defaultValue].
+ * or puts a new entry and returns its value using the [defaultValue].
  */
 @Suppress("UNCHECKED_CAST")
 @JvmName("getOrPutNullable")
@@ -87,7 +97,7 @@ inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
 
 /**
  * Returns the value of the entry associated with the given [key],
- * or returns and puts a new entry with the [defaultValue].
+ * or puts a new entry and returns its value using the [defaultValue].
  */
 inline fun <K, V: Any> MutableMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
 	contract {
@@ -127,7 +137,12 @@ inline fun <K, V: Any> MapView<K, V>.getOrElse(key: K, defaultValue: () -> V): V
 }
 
 /**
- * Shortcut for [MutableMap.put].
+ * Associates the given [key] with the [value].
+ * Returns `null` if no entries have the [key], or the old value of the entry with the [key].
+ *
+ * The existing entry's key is not replaced when the entry has the given [key].
+ *
+ * This method is equivalent with [put][MutableMap.put].
  */
 operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
 	put(key, value)
@@ -135,6 +150,8 @@ operator fun <K, V> MutableMap<K, V>.set(key: K, value: V) {
 
 /**
  * Replaces all values in this map with the [transform] of each entry.
+ *
+ * The [transform] is applied to the entries by their encounter order.
  */
 inline fun <K, V> MutableMap<K, V>.replaceAll(transform: (kotlin.collections.Map.Entry<K, V>) -> V) {
 	for(e in this) e.setValue(transform(e))

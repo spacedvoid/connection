@@ -17,6 +17,9 @@ import java.util.Spliterator
 interface Deque<T>: MutableSequencedCollection<T> {
 	/**
 	 * Returns a new iterator, iterating from head to tail.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	override fun iterator(): MutableIterator<T>
 
@@ -123,9 +126,7 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this deque ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this deque is modified while it is in use.
 	 */
 	@StreamSupport
@@ -145,7 +146,7 @@ interface Deque<T>: MutableSequencedCollection<T> {
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [collection] to the tail of this deque, by their encounter order.
+	 * Adds all elements from the given [collection] to the tail of this deque by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
 	override fun addAll(collection: CollectionView<T>): Boolean

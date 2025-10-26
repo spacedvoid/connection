@@ -15,25 +15,27 @@ import kotlin.collections.single as kotlinSingle
 import kotlin.collections.singleOrNull as kotlinSingleOrNull
 
 /**
- * Shortcut for `!isEmpty()`.
+ * Returns `true` if this collection is not empty, `false` otherwise.
+ *
+ * A collection is not empty if its [size][CollectionView.size] is not `0`:
+ * therefore, this method is equivalent with `size() != 0`.
  */
 fun CollectionView<*>.isNotEmpty(): Boolean = !isEmpty()
 
 /**
- * Returns a range for `0` to [size][CollectionView.size]` - 1`.
+ * Returns a range for `0` to [size()][CollectionView.size]` - 1`, inclusive.
  */
 val CollectionView<*>.indices: IntRange
 	get() = 0..<size()
 
 /**
- * Returns the index of the last element, or `-1` if this list is empty.
+ * Returns the index of the [last][ListView.last] element, or `-1` if this list is empty.
  */
 val ListView<*>.lastIndex: Int
 	get() = size() - 1
 
 /**
  * Returns the first element of this list.
- *
  * Throws [IndexOutOfBoundsException] if this list has no elements.
  */
 operator fun <T> ListView<T>.component1(): T = get(0)
@@ -63,7 +65,8 @@ operator fun <T> ListView<T>.component4(): T = get(3)
 operator fun <T> ListView<T>.component5(): T = get(4)
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Adds the given [elements] to this collection by their encounter order.
+ * Returns `true` if the addition changed this collection, `false` otherwise.
  */
 fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean =
 	when(elements) {
@@ -78,12 +81,16 @@ fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean =
 	}
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Adds the given [elements] to this collection by their iteration order.
+ * Returns `true` if the addition changed this collection, `false` otherwise.
  */
 fun <T> MutableCollection<in T>.addAll(elements: Array<out T>): Boolean = addAll(elements.asList())
 
 /**
- * Shortcut for [MutableCollection.addAll].
+ * Adds the given [elements] to this collection by their iteration order.
+ * Returns `true` if the addition changed this collection, `false` otherwise.
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
 	// Do not use `addAll(elements.toList())`: cyclic dependency from `Sequence<T>.toList()`
@@ -93,7 +100,10 @@ fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
 }
 
 /**
- * Shortcut for [RemoveOnlyCollection.removeAll].
+ * Removes all elements from this collection that are also one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean =
 	when(elements) {
@@ -103,88 +113,119 @@ fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Iterable<T>): Boolean =
 	}
 
 /**
- * Shortcut for [RemoveOnlyCollection.removeAll].
+ * Removes all elements from this collection that are also one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Array<out T>): Boolean =	removeAll(elements.toSet())
 
 /**
- * Shortcut for [RemoveOnlyCollection.removeAll].
+ * Removes all elements from this collection that are also one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 fun <T> RemoveOnlyCollection<in T>.removeAll(elements: Sequence<T>): Boolean = removeAll(elements.toSet())
 
 /**
- * Shortcut for [RemoveOnlyCollection.retainAll].
+ * Removes all elements from this collection that are not one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Iterable<T>): Boolean = retainAll(elements.toSet())
 
 /**
- * Shortcut for [RemoveOnlyCollection.retainAll].
+ * Removes all elements from this collection that are not one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Array<out T>): Boolean = retainAll(elements.toSet())
 
 /**
- * Shortcut for [RemoveOnlyCollection.retainAll].
+ * Removes all elements from this collection that are not one of the given [elements].
+ * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 fun <T> RemoveOnlyCollection<in T>.retainAll(elements: Sequence<T>): Boolean = retainAll(elements.toSet())
 
 /**
- * Shortcut for [MutableCollection.add].
+ * Adds the given [element] to this collection.
  */
 operator fun <T> MutableCollection<in T>.plusAssign(element: T) {
 	add(element)
 }
 
 /**
- * Shortcut for [addAll].
+ * Adds the given [elements] to this collection by their encounter order.
  */
 operator fun <T> MutableCollection<in T>.plusAssign(elements: Iterable<T>) {
 	addAll(elements)
 }
 
 /**
- * Shortcut for [addAll].
+ * Adds the given [elements] to this collection by their iteration order.
  */
 operator fun <T> MutableCollection<in T>.plusAssign(elements: Array<out T>) {
 	addAll(elements)
 }
 
 /**
- * Shortcut for [addAll].
+ * Adds the given [elements] to this collection by their iteration order.
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 operator fun <T> MutableCollection<in T>.plusAssign(elements: Sequence<T>) {
 	addAll(elements)
 }
 
 /**
- * Shortcut for [RemoveOnlyCollection.remove].
+ * Removes a single occurrence of the given [element] from this collection.
+ *
+ * Whether an element in this collection matches the given [element] is determined via [Any.equals].
  */
 operator fun <T> RemoveOnlyCollection<in T>.minusAssign(element: T) {
 	remove(element)
 }
 
 /**
- * Shortcut for [removeAll].
+ * Removes all elements from this collection that are also contained in the given [elements].
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Iterable<T>) {
 	removeAll(elements)
 }
 
 /**
- * Shortcut for [removeAll].
+ * Removes all elements from this collection that are also contained in the given [elements].
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
  */
 operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Array<out T>) {
 	removeAll(elements)
 }
 
 /**
- * Shortcut for [removeAll].
+ * Removes all elements from this collection that are also contained in the given [elements].
+ *
+ * Whether an element in this collection matches an element in the given [elements] is determined via [Any.equals].
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 operator fun <T> RemoveOnlyCollection<in T>.minusAssign(elements: Sequence<T>) {
 	removeAll(elements)
 }
 
 /**
- * Returns a list that contains the elements by their encounter order and then the given [element].
+ * Collects all elements to a list by their encounter order, followed by the given [element].
  */
 operator fun <T> Iterable<T>.plus(element: T): List<T> = buildList {
 	addAll(this@plus)
@@ -192,7 +233,7 @@ operator fun <T> Iterable<T>.plus(element: T): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
+ * Collects all elements to a list by their encounter order, followed by the given [elements] by their encounter order.
  */
 operator fun <T> Iterable<T>.plus(elements: Iterable<T>): List<T> = buildList {
 	addAll(this@plus)
@@ -200,7 +241,7 @@ operator fun <T> Iterable<T>.plus(elements: Iterable<T>): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
+ * Collects all elements to a list by their encounter order, followed by the given [elements] by their iteration order.
  */
 operator fun <T> Iterable<T>.plus(elements: Array<out T>): List<T> = buildList {
 	addAll(this@plus)
@@ -208,7 +249,9 @@ operator fun <T> Iterable<T>.plus(elements: Array<out T>): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order and then the given [elements] by their encounter order.
+ * Collects all elements to a list by their encounter order, followed by the given [elements] by their iteration order.
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 operator fun <T> Iterable<T>.plus(elements: Sequence<T>): List<T> = buildList {
 	addAll(this@plus)
@@ -216,7 +259,7 @@ operator fun <T> Iterable<T>.plus(elements: Sequence<T>): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order, but without the first occurrence of the given [element].
+ * Collects all elements to a list by their encounter order, excluding the first occurrence of the given [element].
  *
  * Whether an element matches the given [element] is determined via [Any.equals].
  */
@@ -226,7 +269,7 @@ operator fun <T> Iterable<T>.minus(element: T): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ * Collects all elements to a list by their encounter order, excluding the elements that are also one of the given [elements].
  *
  * Whether an element matches another element is determined via [Any.equals].
  */
@@ -236,7 +279,7 @@ operator fun <T> Iterable<T>.minus(elements: Iterable<T>): List<T> = buildList {
 }
 
 /**
- * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ * Collects all elements to a list by their encounter order, excluding the elements that are also one of the given [elements].
  *
  * Whether an element matches another element is determined via [Any.equals].
  */
@@ -246,9 +289,11 @@ operator fun <T> Iterable<T>.minus(elements: Array<out T>): List<T> = buildList 
 }
 
 /**
- * Returns a list that contains the elements by their encounter order, but without the elements that are also contained in the given [elements].
+ * Collects all elements to a list by their encounter order, excluding the elements that are also one of the given [elements].
  *
  * Whether an element matches another element is determined via [Any.equals].
+ *
+ * The result of this operation when the given sequence is infinite is undefined.
  */
 operator fun <T> Iterable<T>.minus(elements: Sequence<T>): List<T> = buildList {
 	addAll(this@minus)
@@ -256,14 +301,14 @@ operator fun <T> Iterable<T>.minus(elements: Sequence<T>): List<T> = buildList {
 }
 
 /**
- * Returns a new list that repeats the contents of this list [n] times in their order.
+ * Returns a list that repeats the elements of this list [n] times.
  */
 operator fun <T> ListView<T>.times(n: Int): List<T> = buildList(size() * n) {
 	repeat(n) { addAll(this@times) }
 }
 
 /**
- * Returns the first element by their encounter order.
+ * Returns the first element by the encounter order.
  * Throws [NoSuchElementException] if this collection is empty.
  */
 fun <T> Iterable<T>.first(): T = when(this) {
@@ -276,7 +321,7 @@ fun <T> Iterable<T>.first(): T = when(this) {
 }
 
 /**
- * Returns the last element by their encounter order.
+ * Returns the last element by the encounter order.
  * Throws [NoSuchElementException] if this collection is empty.
  */
 fun <T> Iterable<T>.last(): T = when(this) {
@@ -292,7 +337,7 @@ fun <T> Iterable<T>.last(): T = when(this) {
 }
 
 /**
- * Returns the first element of this collection, or `null` if this collection is empty.
+ * Returns the first element by the encounter order, or `null` if no elements were found.
  */
 fun <T> Iterable<T>.firstOrNull(): T? = when(this) {
 	is SequencedCollectionView<T> -> firstOrNull()
@@ -304,7 +349,7 @@ fun <T> Iterable<T>.firstOrNull(): T? = when(this) {
 }
 
 /**
- * Returns the last element of this collection, or `null` if this collection is empty.
+ * Returns the last element by the encounter order, or `null` if no elements were found.
  */
 fun <T> Iterable<T>.lastOrNull(): T? = when(this) {
 	is SequencedCollectionView<T> -> lastOrNull()
@@ -339,9 +384,9 @@ inline fun <T> SequencedCollectionView<T>.lastOrNull(predicate: (T) -> Boolean):
 inline fun <T> SequencedCollectionView<T>.findLast(predicate: (T) -> Boolean): T? = lastOrNull(predicate)
 
 /**
- * Returns the only element of this collection.
- * Throws [NoSuchElementException] if this collection is empty,
- * or [IllegalArgumentException] if this collection has more than one element.
+ * Returns the only element.
+ * Throws [NoSuchElementException] if no elements were found,
+ * or [IllegalArgumentException] if more than one element were found.
  */
 fun <T> Iterable<T>.single(): T = when(this) {
 	is SequencedCollectionView<T> -> single()
@@ -368,7 +413,7 @@ fun <T> SequencedCollectionView<T>.single(): T =
 	}
 
 /**
- * Returns the only element of this collection, or `null` if this collection is empty or has more than one element.
+ * Returns the only element, or `null` if none or more than one element was found.
  */
 fun <T> Iterable<T>.singleOrNull(): T? = when(this) {
 	is SequencedCollectionView<T> -> singleOrNull()
@@ -388,21 +433,20 @@ fun <T> Iterable<T>.singleOrNull(): T? = when(this) {
 fun <T> SequencedCollectionView<T>.singleOrNull(): T? = if(size() == 1) first() else null
 
 /**
- * Returns a random element from the collection, or throws [NoSuchElementException] if the collection is empty.
+ * Returns a random element from this collection.
+ * Throws [NoSuchElementException] if this collection is empty.
  */
 fun <T> CollectionView<T>.random(random: Random = Random.Default): T =
 	if(isEmpty()) throw NoSuchElementException("Collection is empty") else elementAt(random.nextInt(size()))
 
 /**
- * Returns a random element from the collection, or `null` if the collection is empty.
+ * Returns a random element from this collection, or `null` if this collection is empty.
  */
 fun <T> CollectionView<T>.randomOrNull(random: Random = Random.Default): T? =
 	if(isEmpty()) null else elementAt(random.nextInt(size()))
 
 /**
- * Performs a stable sort on the elements in this list in-place.
- *
- * The [natural ordering][naturalOrder] is used.
+ * Performs a stable sort on this list in-place, using the [natural order][naturalOrder].
  */
 @Suppress("UNCHECKED_CAST")
 fun <T: Comparable<T>> MutableList<T>.sort() {
@@ -416,16 +460,12 @@ fun <T: Comparable<T>> MutableList<T>.sort() {
 }
 
 /**
- * Performs a stable reversed sort on the elements in this list in-place.
- *
- * The [reverse ordering][reverseOrder] is used.
+ * Performs a stable sort on this list in-place, using the [reverse order][reverseOrder].
  */
 fun <T: Comparable<T>> MutableList<T>.sortDescending() = sort(reverseOrder())
 
 /**
- * Performs a stable sort on the elements in this list in-place.
- *
- * The given [comparator] is used.
+ * Performs a stable sort on this list in-place, using the given [comparator].
  */
 @Suppress("UNCHECKED_CAST")
 fun <T> MutableList<T>.sort(comparator: Comparator<in T>) {
@@ -439,9 +479,7 @@ fun <T> MutableList<T>.sort(comparator: Comparator<in T>) {
 }
 
 /**
- * Returns a stable sorted list with the elements in this list.
- *
- * The [natural ordering][naturalOrder] is used.
+ * Returns a stable sorted list from the elements based on the encounter order, using the [natural order][naturalOrder].
  */
 fun <T: Comparable<T>> Iterable<T>.sorted(): List<T> = buildList {
 	addAll(this@sorted)
@@ -449,9 +487,7 @@ fun <T: Comparable<T>> Iterable<T>.sorted(): List<T> = buildList {
 }
 
 /**
- * Returns a stable reverse sorted list from the elements in this list.
- *
- * The [reverse ordering][reverseOrder] is used.
+ * Returns a stable sorted list from the elements based on the encounter order, using the [reverse order][reverseOrder].
  */
 fun <T: Comparable<T>> Iterable<T>.sortedDescending(): List<T> = buildList {
 	addAll(this@sortedDescending)
@@ -459,9 +495,7 @@ fun <T: Comparable<T>> Iterable<T>.sortedDescending(): List<T> = buildList {
 }
 
 /**
- * Returns a stable sorted list from the elements in this list.
- *
- * The given [comparator] is used.
+ * Returns a stable sorted list from the elements based on the encounter order, using the given [comparator].
  */
 fun <T> Iterable<T>.sorted(comparator: Comparator<in T>): List<T> = buildList {
 	addAll(this@sorted)
@@ -469,7 +503,7 @@ fun <T> Iterable<T>.sorted(comparator: Comparator<in T>): List<T> = buildList {
 }
 
 /**
- * Shuffles the list in-place, using the given [random] generator.
+ * Shuffles this list in-place based on the encounter order, using the given [random] generator.
  *
  * This implementation uses the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
  */
@@ -481,7 +515,7 @@ fun <T> MutableList<T>.shuffle(random: Random = Random.Default) {
 }
 
 /**
- * Returns a list that shuffles the elements from their encounter order, using the given [random] generator.
+ * Returns a shuffled list from the elements based on the encounter order, using the given [random] generator.
  *
  * This implementation uses the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
  */
@@ -491,7 +525,7 @@ fun <T> Iterable<T>.shuffled(random: Random = Random.Default): List<T> = buildLi
 }
 
 /**
- * Replaces all elements in this list with the [transform] of each element.
+ * Replaces all elements in this list with the [transform] of each element, applied by their encounter order.
  */
 inline fun <T> MutableList<T>.replaceAll(transform: (T) -> T) {
 	val iterator = iterator()

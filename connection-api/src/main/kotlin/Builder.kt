@@ -23,10 +23,9 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
- * Dynamically builds an immutable list.
+ * Builds an immutable list as according to the [filler].
  *
- * The supplied [MutableList] instance will be available only from the [filler].
- * Behavior of the list outside the lambda will be undefined.
+ * Behavior of the [MutableList] and the resulting list when using the [MutableList] outside the lambda is undefined.
  */
 inline fun <T> buildList(filler: MutableList<T>.() -> Unit): List<T> {
 	contract {
@@ -38,11 +37,10 @@ inline fun <T> buildList(filler: MutableList<T>.() -> Unit): List<T> {
 }
 
 /**
- * Dynamically builds an immutable list with an expected capacity.
+ * Builds an immutable list as according to the [filler], with an expected element count.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
- * The supplied [MutableList] instance will be available only from the [filler].
- * Behavior of the list outside the lambda will be undefined.
+ * Behavior of the [MutableList] and the resulting list when using the [MutableList] outside the lambda is undefined.
  */
 inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() -> Unit): List<T> {
 	contract {
@@ -54,10 +52,9 @@ inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() ->
 }
 
 /**
- * Dynamically builds an immutable set.
+ * Builds an immutable set as according to the [filler].
  *
- * The supplied [MutableSet] instance will be available only from the [filler].
- * Behavior of the set outside the lambda will be undefined.
+ * Behavior of the [MutableSet] and the resulting set when using the [MutableSet] outside the lambda is undefined.
  */
 inline fun <T> buildSet(filler: MutableSet<T>.() -> Unit): Set<T> {
 	contract {
@@ -69,11 +66,10 @@ inline fun <T> buildSet(filler: MutableSet<T>.() -> Unit): Set<T> {
 }
 
 /**
- * Dynamically builds an immutable set with an expected capacity.
+ * Builds an immutable set as according to the [filler], with an expected element count.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
- * The supplied [MutableSet] instance will be available only from the [filler].
- * Behavior of the set outside the lambda will be undefined.
+ * Behavior of the [MutableSet] and the resulting set when using the [MutableSet] outside the lambda is undefined.
  */
 inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> Unit): Set<T> {
 	contract {
@@ -85,10 +81,11 @@ inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> U
 }
 
 /**
- * Dynamically builds an immutable sequenced set.
+ * Builds an immutable sequenced set as according to the [filler].
  *
- * The supplied [MutableSet] instance will be available only from the [filler].
- * Behavior of the set outside the lambda will be undefined.
+ * Behavior of the [MutableSequencedSet] and the resulting set when using the [MutableSequencedSet] outside the lambda is undefined.
+ *
+ * Behavior of the [MutableSequencedSet] and the resulting set will be equivalent with using a [LinkedHashSet].
  */
 inline fun <T> buildSequencedSet(filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
 	contract {
@@ -100,11 +97,12 @@ inline fun <T> buildSequencedSet(filler: MutableSequencedSet<T>.() -> Unit): Seq
 }
 
 /**
- * Dynamically builds an immutable sequenced set with an expected capacity.
+ * Builds an immutable sequenced set as according to the [filler], with an expected element count.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
- * The supplied [MutableSet] instance will be available only from the [filler].
- * Behavior of the set outside the lambda will be undefined.
+ * Behavior of the [MutableSequencedSet] and the resulting set when using the [MutableSequencedSet] outside the lambda is undefined.
+ *
+ * Behavior of the [MutableSequencedSet] and the resulting set will be equivalent with using a [LinkedHashSet].
  */
 inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
 	contract {
@@ -116,10 +114,9 @@ inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSeque
 }
 
 /**
- * Dynamically builds an immutable map.
+ * Builds an immutable map as according to the [filler].
  *
- * The supplied [MutableMap] instance will be available only from the [filler].
- * Behavior of the map outside the lambda will be undefined.
+ * Behavior of the [MutableMap] and the resulting map when using the [MutableMap] outside the lambda is undefined.
  */
 inline fun <K, V> buildMap(filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
 	contract {
@@ -131,11 +128,10 @@ inline fun <K, V> buildMap(filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
 }
 
 /**
- * Dynamically builds an immutable map with an expected capacity.
+ * Builds an immutable map as according to the [filler], with an expected entry count.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
- * The supplied [MutableMap] instance will be available only from the [filler].
- * Behavior of the map outside the lambda will be undefined.
+ * Behavior of the [MutableMap] and the resulting map when using the [MutableMap] outside the lambda is undefined.
  */
 inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
 	contract {
@@ -147,10 +143,11 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
 }
 
 /**
- * Dynamically builds an immutable sequenced map.
+ * Builds an immutable sequenced map as according to the [filler].
  *
- * The supplied [MutableMap] instance will be available only from the [filler].
- * Behavior of the map outside the lambda will be undefined.
+ * Behavior of the [MutableSequencedMap] and the resulting map when using the [MutableSequencedMap] outside the lambda is undefined.
+ *
+ * Behavior of the [MutableSequencedMap] and the resulting map will be equivalent with using an insertion-ordered [LinkedHashMap].
  */
 inline fun <K, V> buildSequencedMap(filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {
@@ -162,11 +159,12 @@ inline fun <K, V> buildSequencedMap(filler: MutableSequencedMap<K, V>.() -> Unit
 }
 
 /**
- * Dynamically builds an immutable sequenced map with an expected capacity.
+ * Builds an immutable sequenced map as according to the [filler], with an expected entry count.
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
- * The supplied [MutableMap] instance will be available only from the [filler].
- * Behavior of the map outside the lambda will be undefined.
+ * Behavior of the [MutableSequencedMap] and the resulting map when using the [MutableSequencedMap] outside the lambda is undefined.
+ *
+ * Behavior of the [MutableSequencedMap] and the resulting map will be equivalent with using an insertion-ordered [LinkedHashMap].
  */
 inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {

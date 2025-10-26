@@ -10,14 +10,17 @@ import java.util.Spliterator
 
 /**
  * An LIFO(last in, first out) collection, commonly named as a [stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)).
- * Elements are always added to the top of this stack, and removal is only supported for the topmost element.
+ * Elements are added and removed from the top of the stack.
  *
  * Because a [sequenced collection][SequencedCollectionView] implicitly requires it to be [reversible][SequencedCollectionView.reversed],
- * this stack does not inherit from [MutableSequencedCollection].
+ * stacks do not inherit from [MutableSequencedCollection].
  */
 interface Stack<T>: MutableCollection<T> {
 	/**
 	 * Returns a new iterator, iterating from top to bottom.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	override fun iterator(): MutableIterator<T>
 
@@ -78,9 +81,7 @@ interface Stack<T>: MutableCollection<T> {
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this stack ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this stack is modified while it is in use.
 	 */
 	@StreamSupport
