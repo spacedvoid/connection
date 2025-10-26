@@ -55,10 +55,6 @@ open class MutableListImpl<T>(override val kotlin: kotlin.collections.MutableLis
 
 	override fun addAll(collection: CollectionView<T>): Boolean = this.kotlin.addAll(collection.asKotlin())
 
-	override fun addFirst(element: T) = this.kotlin.addFirst(element)
-
-	override fun addLast(element: T) = this.kotlin.addLast(element)
-
 	override fun set(index: Int, element: T): T = this.kotlin.set(index, element)
 
 	override fun remove(element: T): Boolean = this.kotlin.remove(element)

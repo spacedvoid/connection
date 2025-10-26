@@ -9,13 +9,13 @@ package io.github.spacedvoid.connection
 import java.util.Spliterator
 
 /**
- * A collection view that only stores one instance per element.
+ * A collection view that only stores one element among equal objects.
  *
- * This is equivalent to a mathematical set, where no two objects stored in this set are [equal][Any.equals] to each other.
+ * This is equivalent to a mathematical set, where no two elements in this set are equal to each other.
  *
- * The behavior of the set when mutable elements are used, when their mutation affects the result of [Any.equals], is undefined.
+ * The behavior of this set when mutable elements are used, and their mutation affects the result of [Any.equals], is undefined.
  *
- * All operations that check whether an element matches an instance is determined via [Any.equals].
+ * Whether an element matches another object is determined via [Any.equals].
  */
 interface SetView<out T>: CollectionView<T> {
 	/**
@@ -27,9 +27,7 @@ interface SetView<out T>: CollectionView<T> {
 	 * - [Spliterator.CONCURRENT]; or
 	 * - be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
@@ -58,7 +56,7 @@ interface SetView<out T>: CollectionView<T> {
 /**
  * An immutable set.
  */
-interface Set<out T>: Collection<T>, SetView<T> {
+interface Set<out T>: SetView<T>, Collection<T> {
 	/**
 	 * Returns a new spliterator for this collection.
 	 *
@@ -71,16 +69,14 @@ interface Set<out T>: Collection<T>, SetView<T> {
 /**
  * A mutable set that only supports element removal operations.
  */
-interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T> {
+interface RemoveOnlySet<T>: SetView<T>, RemoveOnlyCollection<T> {
 	/**
 	 * Returns a new spliterator for this set.
 	 *
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
@@ -90,25 +86,26 @@ interface RemoveOnlySet<T>: RemoveOnlyCollection<T>, SetView<T> {
 /**
  * A mutable set.
  *
- * When an element which already matches an instance in the set is added,
- * the contained instance is not replaced, and the set remains unchanged.
+ * When an object which already matches an element in the set is added,
+ * the contained element is not replaced, and the set remains unchanged.
  */
-interface MutableSet<T>: MutableCollection<T>, RemoveOnlySet<T> {
+interface MutableSet<T>: RemoveOnlySet<T>, MutableCollection<T> {
 	/**
-	 * Adds the given [element] to this set.
-	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 * Adds the given [element] to this set and returns `true` if it was not in this set,
+	 * returns `false` otherwise.
 	 *
-	 * When an element which already matches an instance in this set is added,
-	 * the contained instance is not replaced, and this set remains unchanged.
+	 * When the [element] already matches an element in this set,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 */
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [set] to this set.
-	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 * Adds all elements from the given [collection] to this set by their encounter order
+	 * if they were not in this set.
+	 * Returns `true` if any elements were added, `false` otherwise.
 	 *
-	 * When an element which already matches an instance in this set is added,
-	 * the contained instance is not replaced, and this set remains unchanged.
+	 * When an object which already matches an element in this set is added,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 */
 	override fun addAll(collection: CollectionView<T>): Boolean
 }

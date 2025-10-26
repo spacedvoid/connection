@@ -16,6 +16,9 @@ interface SequencedCollectionView<out T>: CollectionView<T> {
 	 * Returns a new iterator for this collection.
 	 *
 	 * The iteration order is defined by the specification, and is consistent.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	override fun iterator(): Iterator<T>
 
@@ -28,9 +31,7 @@ interface SequencedCollectionView<out T>: CollectionView<T> {
 	 * - [Spliterator.CONCURRENT]; or
 	 * - be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this collection ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
@@ -39,6 +40,7 @@ interface SequencedCollectionView<out T>: CollectionView<T> {
 	/**
 	 * Returns a reverse-ordered collection of this collection.
 	 *
+	 * The iteration order of the returned collection is the reverse of this collection.
 	 * Operations on the returned collection delegates to this collection.
 	 */
 	fun reversed(): SequencedCollectionView<T>
@@ -83,9 +85,7 @@ interface RemoveOnlySequencedCollection<T>: SequencedCollectionView<T>, RemoveOn
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this collection ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
@@ -131,7 +131,7 @@ interface MutableSequencedCollection<T>: RemoveOnlySequencedCollection<T>, Mutab
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [collection] to this collection.
+	 * Adds all elements from the given [collection] to this collection by their encounter order.
 	 * Returns `true` if the addition changed this collection, `false` otherwise.
 	 *
 	 * The additions are not strictly determined;

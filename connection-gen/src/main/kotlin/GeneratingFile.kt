@@ -13,7 +13,6 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
-import java.io.Writer
 import java.nio.charset.StandardCharsets
 
 /**
@@ -68,7 +67,7 @@ class GeneratingFile(val generator: CodeGenerator, val packageName: String, val 
 	}
 
 	/**
-	 * Alternative for [Writer.write].
+	 * Writes the given [content] to the output.
 	 */
 	operator fun plusAssign(content: String) {
 		this.out.write(content)

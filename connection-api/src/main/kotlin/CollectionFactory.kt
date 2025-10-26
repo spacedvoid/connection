@@ -13,21 +13,17 @@ import java.util.TreeMap
 import kotlin.collections.asList as kotlinAsList
 
 /**
- * Returns an empty [List].
+ * Returns an empty list.
  */
 fun <T> listOf(): List<T> = emptyList
 
 /**
- * Creates a [List] with the given [elements].
- *
- * The iteration order is defined as the encounter order.
+ * Returns a list with the given [elements].
  */
 fun <T> listOf(vararg elements: T): List<T> = elements.kotlinAsList().asConnection()
 
 /**
- * Creates a [MutableList] with the given [elements].
- *
- * The iteration order is defined as the encounter order.
+ * Returns a new mutable list with the given [elements].
  */
 fun <T> mutableListOf(vararg elements: T): MutableList<T> = elements.toMutableList()
 
@@ -37,12 +33,12 @@ fun <T> mutableListOf(vararg elements: T): MutableList<T> = elements.toMutableLi
 fun <T> setOf(): Set<T> = EmptySequencedSet
 
 /**
- * Creates a [Set] with the given [elements].
+ * Returns a set with the given [elements].
  */
 fun <T> setOf(vararg elements: T): Set<T> = HashSet(elements.kotlinAsList()).asConnection()
 
 /**
- * Creates a [MutableSet] with the given [elements].
+ * Returns a new mutable set with the given [elements].
  */
 fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = HashSet(elements.kotlinAsList()).asMutableConnection()
 
@@ -52,18 +48,17 @@ fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = HashSet(elements.kotli
 fun <T> sequencedSetOf(): SequencedSet<T> = EmptySequencedSet
 
 /**
- * Creates a [SequencedSet] with the given [elements].
+ * Returns a sequenced set with the given [elements].
  *
- * The iteration order is defined as the encounter order.
+ * The result is equivalent with adding all elements to a [LinkedHashSet].
  */
 fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> =
 	LinkedHashSet(elements.kotlinAsList()).asConnection()
 
 /**
- * Creates a [MutableSequencedSet] with the given [elements].
+ * Returns a new mutable sequenced set with the given [elements].
  *
- * The iteration order is defined as the encounter order of the given [elements],
- * and also the addition order of further elements.
+ * The result is equivalent with adding all elements to a [LinkedHashSet].
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
@@ -73,25 +68,25 @@ fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> =
 	LinkedHashSet(elements.kotlinAsList()).asMutableConnection()
 
 /**
- * Creates a [NavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
+ * Returns a navigable set with the given [elements], using the [natural order][naturalOrder].
  */
 fun <T: Comparable<T>> navigableSetOf(vararg elements: T): NavigableSet<T> =
 	java.util.TreeSet<T>(naturalOrder()).apply { addAll(elements) }.asConnection()
 
 /**
- * Creates a [NavigableSet] with the given [elements] using the [comparator].
+ * Returns a navigable set with the given [elements] using the [comparator].
  */
 fun <T> navigableSetOf(comparator: Comparator<in T>, vararg elements: T): NavigableSet<T> =
 	java.util.TreeSet(comparator).apply { addAll(elements) }.asConnection()
 
 /**
- * Creates a [MutableNavigableSet] with the given [elements], using the [natural ordering][naturalOrder].
+ * Returns a new mutable navigable set with the given [elements], using the [natural order][naturalOrder].
  */
 fun <T: Comparable<T>> mutableNavigableSetOf(vararg elements: T): MutableNavigableSet<T> =
 	java.util.TreeSet<T>(naturalOrder()).apply { addAll(elements) }.asMutableConnection()
 
 /**
- * Creates a [MutableNavigableSet] with the given [elements] using the [comparator].
+ * Returns a new mutable navigable set with the given [elements] using the [comparator].
  */
 fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T): MutableNavigableSet<T> =
 	java.util.TreeSet(comparator).apply { addAll(elements) }.asMutableConnection()
@@ -103,13 +98,13 @@ fun <T> mutableNavigableSetOf(comparator: Comparator<in T>, vararg elements: T):
 fun <K, V> mapOf(): Map<K, V> = EmptySequencedMap as Map<K, V>
 
 /**
- * Creates a [Map] with the given [entries].
+ * Returns a map with the given [entries].
  */
 fun <K, V> mapOf(vararg entries: Pair<K, V>): Map<K, V> =
 	HashMap.newHashMap<K, V>(entries.size).apply { putAll(entries) }.asConnection()
 
 /**
- * Creates a [MutableMap] with the given [entries].
+ * Returns a new mutable map with the given [entries].
  */
 fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> =
 	HashMap.newHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
@@ -121,18 +116,17 @@ fun <K, V> mutableMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> =
 fun <K, V> sequencedMapOf(): SequencedMap<K, V> = EmptySequencedMap as SequencedMap<K, V>
 
 /**
- * Creates a [SequencedMap] with the given [entries].
+ * Returns a sequenced map with the given [entries].
  *
- * The iteration order is defined as the encounter order.
+ * The result is equivalent with adding all entries to an insertion-ordered [LinkedHashMap].
  */
 fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> =
 	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asConnection()
 
 /**
- * Creates a [MutableSequencedMap] with the given [entries].
+ * Returns a new mutable sequenced map with the given [entries].
  *
- * The iteration order is defined as the encounter order of the given [entries],
- * and also the addition order of further entries.
+ * The result is equivalent with adding all entries to an insertion-ordered [LinkedHashMap].
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashMap instead.",
@@ -142,56 +136,56 @@ fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMa
 	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
 
 /**
- * Creates a [NavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
+ * Returns a navigable map with the given [entries], using the [natural order][naturalOrder].
  */
 fun <K: Comparable<K>, V> navigableMapOf(vararg entries: Pair<K, V>): NavigableMap<K, V> =
 	TreeMap<K, V>(naturalOrder()).apply { putAll(entries) }.asConnection()
 
 /**
- * Creates a [NavigableMap] with the given [entries] using the [comparator].
+ * Returns a navigable map with the given [entries] using the [comparator].
  */
 fun <K, V> navigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): NavigableMap<K, V> =
 	TreeMap<K, V>(comparator).apply { putAll(entries) }.asConnection()
 
 /**
- * Creates a [MutableNavigableMap] with the given [entries], using the [natural ordering][naturalOrder].
+ * Returns a new mutable navigable map with the given [entries], using the [natural order][naturalOrder].
  */
 fun <K: Comparable<K>, V> mutableNavigableMapOf(vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
 	TreeMap<K, V>(naturalOrder()).apply { putAll(entries) }.asMutableConnection()
 
 /**
- * Creates a [MutableNavigableMap] with the given [entries] using the [comparator].
+ * Returns a new mutable navigable map with the given [entries] using the [comparator].
  */
 fun <K, V> mutableNavigableMapOf(comparator: Comparator<in K>, vararg entries: Pair<K, V>): MutableNavigableMap<K, V> =
 	TreeMap<K, V>(comparator).apply { putAll(entries) }.asMutableConnection()
 
 /**
- * Creates a [Stack] with the given [elements].
+ * Returns a stack with the given [elements].
  *
- * The iteration order is defined as the reversed encounter order;
+ * The iteration order is defined as the reversed encounter order:
  * the first element will be the bottom, and the last element will be the top.
- * This behavior is consistent with creating stacks with collections, such as [ArrayDeque]`(listOf(1, 2, 3))`.
+ * This behavior is consistent with creating stacks using collections, such as `ArrayDeque(listOf(1, 2, 3))`.
  */
 fun <T> stackOf(vararg elements: T): Stack<T> = StackImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 /**
- * Creates a [Queue] with the given [elements].
+ * Returns a queue with the given [elements].
  *
- * The iteration order is defined as the encounter order.
+ * The head will be the first element, and the tail will be the last element.
  */
 fun <T> queueOf(vararg elements: T): Queue<T> = QueueImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 /**
- * Creates a [Deque] with the given [elements].
+ * Returns a deque with the given [elements].
  *
- * The iteration order is defined as the encounter order.
+ * The head will be the first element, and the tail will be the last element.
  */
 fun <T> dequeOf(vararg elements: T): Deque<T> = DequeImpl(java.util.ArrayDeque(elements.kotlinAsList()))
 
 //TODO: Should enum collections implement Navigable-collection types, or at least Sequenced-collection types?
 
 /**
- * Creates a specialized [Set] for enum entries.
+ * Returns a specialized set for enum entries.
  *
  * The iteration order is defined as the natural order of the enum type.
  */
@@ -202,7 +196,7 @@ inline fun <reified T: Enum<T>> enumSetOf(vararg elements: T): Set<T> {
 }
 
 /**
- * Creates a specialized [MutableSet] for enum entries.
+ * Returns a new specialized mutable set for enum entries.
  *
  * The iteration order is defined as the natural order of the enum type.
  */
@@ -212,7 +206,9 @@ inline fun <reified T: Enum<T>> mutableEnumSetOf(vararg elements: T): MutableSet
 }
 
 /**
- * Creates a specialized [Map] for enum entries.
+ * Returns a new specialized mutable map for enum entry keys.
+ *
+ * The iteration order is defined as the natural order of the enum type.
  */
 inline fun <reified K: Enum<K>, V> enumMapOf(vararg entries: Pair<K, V>): Map<K, V> {
 	require(K::class != Enum::class) { "Class kotlin.Enum cannot be the key type for enum maps" }
@@ -220,7 +216,9 @@ inline fun <reified K: Enum<K>, V> enumMapOf(vararg entries: Pair<K, V>): Map<K,
 }
 
 /**
- * Creates a specialized [MutableMap] for enum entries.
+ * Returns a new specialized mutable map for enum entry keys.
+ *
+ * The iteration order is defined as the natural order of the enum type.
  */
 inline fun <reified K: Enum<K>, V> mutableEnumMapOf(vararg entries: Pair<K, V>): MutableMap<K, V> {
 	require(K::class != Enum::class) { "Class kotlin.Enum cannot be the key type for enum maps" }

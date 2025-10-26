@@ -9,18 +9,21 @@ package io.github.spacedvoid.connection
 import java.util.Spliterator
 
 /**
- * A sequenced collection view that supports element retrieval by indexes.
+ * A sequenced collection view that stores elements by indexes.
  * The index ranges from `0` to [size]` - 1`, inclusive.
  *
  * Although there are no specification-level restrictions for the maximum size of the list,
- * this API restricts the retrieval of elements outside the non-negative integer index.
- * Element addition, removal, modification, or access operations outside such index may throw any type of exceptions.
+ * this API restricts the index range to be a non-negative [Int].
+ * Element addition, removal, modification, or access operations outside such range may cause undefined behavior.
  */
 interface ListView<out T>: SequencedCollectionView<T> {
 	/**
 	 * Returns a new iterator for this list.
 	 *
 	 * The iteration order is based on the index.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	override operator fun iterator(): ListIterator<T>
 
@@ -33,9 +36,7 @@ interface ListView<out T>: SequencedCollectionView<T> {
 	 * - [Spliterator.CONCURRENT]; or
 	 * - be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this collection ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this collection is modified while it is in use.
 	 */
 	@StreamSupport
@@ -45,10 +46,13 @@ interface ListView<out T>: SequencedCollectionView<T> {
 	 * Returns a new iterator for this list, starting from the given [index].
 	 * Throws [IndexOutOfBoundsException] if the [index] is negative or greater than this list's size.
 	 *
-	 * The first call to [ListIterator.next] returns the value at the given [index],
-	 * while [ListIterator.previous] returns the value at [index]` - 1`, if exists.
+	 * The first call to [ListIterator.next] will return the value at the given [index],
+	 * while [ListIterator.previous] will return the value at [index]` - 1`, if exists.
 	 *
 	 * The iteration order is based on the index.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	fun iterator(index: Int): ListIterator<T>
 
@@ -62,8 +66,8 @@ interface ListView<out T>: SequencedCollectionView<T> {
 	 *
 	 * Operations on the returned list is delegated to this list.
 	 *
-	 * The behavior of the returned list when this list is *structurally modified*(that is, changing the size of this list)
-	 * by operations on this list is not defined.
+	 * The behavior of the returned list is not defined when
+	 * this list is *structurally modified*(that is, changing the size of this list) by operations on this list.
 	 */
 	fun subList(startInclusive: Int, endExclusive: Int): ListView<T>
 
@@ -134,9 +138,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this list ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this list is modified while it is in use.
 	 */
 	@StreamSupport
@@ -149,7 +151,7 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	override fun subList(startInclusive: Int, endExclusive: Int): MutableList<T>
 
 	/**
-	 * Adds the given [element] to the end of this list, and returns `true`.
+	 * Adds the given [element] to the end of this list and returns `true`.
 	 *
 	 * This method is equivalent with `add(size(), element)`.
 	 */
@@ -158,6 +160,8 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	/**
 	 * Inserts the given [element] to the given [index].
 	 * Throws [IndexOutOfBoundsException] if the [index] is negative or greater than this list's size.
+	 *
+	 * The original element at the [index] will be moved to [index]` + 1`, and so on.
 	 */
 	fun add(index: Int, element: T)
 
@@ -172,14 +176,14 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	 *
 	 * This method is equivalent with `add(0, element)`.
 	 */
-	fun addFirst(element: T)
+	fun addFirst(element: T) = add(0, element)
 
 	/**
 	 * Adds the [element] to the end of this list.
 	 *
 	 * This method is equivalent with [add].
 	 */
-	fun addLast(element: T)
+	fun addLast(element: T) = add(element)
 
 	/**
 	 * Replaces the element at the [index] with the given [element], and returns the old element.
@@ -188,14 +192,14 @@ interface MutableList<T>: ListView<T>, MutableSequencedCollection<T> {
 	operator fun set(index: Int, element: T): T
 
 	/**
-	 * Removes the first occurrence of the given [element], which has the lowest index.
+	 * Removes a single occurrence of the given [element] that has the lowest index.
 	 *
 	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
 	 */
 	override fun remove(element: T): Boolean
 
 	/**
-	 * Removes and returns the element at the [index].
+	 * Removes and returns the element at the given [index].
 	 * Throws [IndexOutOfBoundsException] if the [index] is out of range.
 	 */
 	fun removeAt(index: Int): T

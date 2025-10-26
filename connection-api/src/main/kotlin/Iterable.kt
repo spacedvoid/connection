@@ -10,8 +10,8 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.collections.groupBy as kotlinGroupBy
 
 /**
- * Returns the [index]-th element based on the encounter order.
- * Throws [IndexOutOfBoundsException] if less than [index] elements were found.
+ * Returns the [index]-th element by the encounter order.
+ * Throws [IndexOutOfBoundsException] if less than or equal to [index] elements were found.
  */
 fun <T> Iterable<T>.elementAt(index: Int): T = when(this) {
 	is ListView<T> -> get(index)
@@ -24,8 +24,10 @@ fun <T> Iterable<T>.elementAt(index: Int): T = when(this) {
 }
 
 /**
- * Removes all elements from this collection that matches the given [predicate].
+ * Removes all elements that match the given [predicate].
  * Returns `true` if any elements were removed, `false` otherwise.
+ *
+ * The [predicate] is applied to the elements by their encounter order.
  */
 inline fun <T> MutableIterable<T>.removeAll(predicate: (T) -> Boolean): Boolean {
 	val iterator = iterator()
@@ -40,15 +42,22 @@ inline fun <T> MutableIterable<T>.removeAll(predicate: (T) -> Boolean): Boolean 
 }
 
 /**
- * Returns a list that contains the elements after the [transform], in their encounter order.
+ * Collects the results of applying the [transform] to each element by their encounter order.
+ *
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are collected by their corresponding elements' encounter order.
  */
 inline fun <T, U> Iterable<T>.map(transform: (T) -> U): List<U> = buildList(sizeOrDefault(10)) {
 	for(e in this@map) add(transform(e))
 }
 
 /**
- * Returns a list that contains the elements after the [transform] in their encounter order,
- * additionally providing an [Int] representing the encounter number of the element.
+ * Collects the results of applying the [transform] to each element, additionally providing the encounter number of each element.
+ *
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are collected by their corresponding elements' encounter order.
  */
 inline fun <T, U> Iterable<T>.mapIndexed(transform: (index: Int, T) -> U): List<U> = buildList(sizeOrDefault(10)) {
 	var index = 0
@@ -56,12 +65,17 @@ inline fun <T, U> Iterable<T>.mapIndexed(transform: (index: Int, T) -> U): List<
 }
 
 /**
- * Returns a list that contains the elements provided through the [accumulator].
+ * Collects the elements provided through the [accumulator] applied to each element.
  *
- * The [accumulator] provides a sink, accessible with [MultiMapScope.yield] and [MultiMapScope.yieldAll].
- * The list will contain the elements in the invocation order of the sink.
+ * Alike [sequence], the [accumulator] provides a [sink][MultiMapScope]
+ * accessible with [yield][MultiMapScope.yield] and [yieldAll][MultiMapScope.yieldAll].
+ * However, the accumulation is not lazy, so the behavior of this operation when an infinite [Sequence] is provided is undefined.
  *
- * Note that unlike [SequenceScope], the accumulation is not lazy.
+ * This operation preserves the encounter order:
+ * the [accumulator] is applied to the elements by their encounter order,
+ * and the elements provided to the sink are (unpacked and) collected by their corresponding elements' encounter order.
+ *
+ * Behavior of the [MultiMapScope] and the resulting list when using the [MultiMapScope] outside the [accumulator] is undefined.
  */
 inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit): List<U> = buildList {
 	val acceptor = object: MultiMapScope<U> {
@@ -84,43 +98,53 @@ inline fun <T, U> Iterable<T>.mapMulti(accumulator: MultiMapScope<U>.(T) -> Unit
  * Class to wrap sinks of [mapMulti].
  *
  * The usage is similar to [SequenceScope]; use [yield] and [yieldAll] to provide elements to the sink.
- * However, note that the accumulation is not lazy.
+ * However, the accumulation is not lazy, so the behavior of this operation when an infinite sequence is provided is undefined.
  */
 interface MultiMapScope<T> {
 	/**
-	 * Provides a single element to the sink.
+	 * Provides the given [element] to the sink.
 	 */
 	fun yield(element: T)
 
 	/**
-	 * Provides multiple elements to the sink, in their encounter order.
+	 * Provides the given [elements] to the sink, by their encounter order.
 	 */
 	fun yieldAll(elements: Iterator<T>)
 
 	/**
-	 * Provides multiple elements to the sink, in their encounter order.
+	 * Provides the given [elements] to the sink, by their encounter order.
 	 */
 	fun yieldAll(elements: Iterable<T>) = yieldAll(elements.iterator())
 
 	/**
-	 * Provides multiple elements to the sink, in their encounter order.
+	 * Provides the given [elements] to the sink, by their encounter order.
+	 *
+	 * The behavior of this operation when the given sequence is infinite is undefined.
 	 */
 	fun yieldAll(elements: Sequence<T>) = yieldAll(elements.iterator())
 }
 
 /**
- * Returns a list that contains the unpacked elements after the [transform], in their encounter order.
+ * Unpacks and collects the results of applying the [transform] to each element.
  *
- * The resulting [Iterable] will be collected into the resulting list in their encounter order.
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are unpacked and collected by their corresponding elements' encounter order.
+ * The encounter order of the elements from each [Iterable] will also be preserved.
  */
 inline fun <T, U> Iterable<T>.flatMap(transform: (T) -> Iterable<U>): List<U> = buildList {
 	for(e in this@flatMap) addAll(transform(e))
 }
 
 /**
- * Returns a list that contains the unpacked elements after the [transform], in their encounter order.
+ * Unpacks and collects the results of applying the [transform] to each element.
  *
- * The resulting [Sequence] will be collected into the resulting list in their encounter order.
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are unpacked and collected by their corresponding elements' encounter order.
+ * The encounter order of the elements from each [Sequence] will also be preserved.
+ *
+ * The behavior of this operation when an infinite sequence is provided is undefined.
  */
 @JvmName("flatMapSequence")
 @OptIn(ExperimentalTypeInference::class)
@@ -130,10 +154,13 @@ inline fun <T, U> Iterable<T>.flatMap(transform: (T) -> Sequence<U>): List<U> = 
 }
 
 /**
- * Returns a list that contains the unpacked elements after the [transform] in their encounter order,
- * additionally providing an [Int] representing the encounter number of the element.
+ * Unpacks and collects the results of applying the [transform] to each element,
+ * additionally providing the encounter number of each element.
  *
- * The resulting [Iterable] will be collected into the resulting list in their encounter order.
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are unpacked and collected by their corresponding elements' encounter order.
+ * The encounter order of the elements from each [Iterable] will also be preserved.
  */
 inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Iterable<U>): List<U> = buildList {
 	var index = 0
@@ -141,10 +168,15 @@ inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Itera
 }
 
 /**
- * Returns a list that contains the unpacked elements after the [transform] in their encounter order,
- * additionally providing an [Int] representing the encounter number of the element.
+ * Unpacks and collects the results of applying the [transform] to each element,
+ * additionally providing the encounter number of each element.
  *
- * The resulting [Sequence] will be collected into the resulting list in their encounter order.
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are unpacked and collected by their corresponding elements' encounter order.
+ * The encounter order of the elements from each [Sequence] will also be preserved.
+ *
+ * The behavior of this operation when an infinite sequence is provided is undefined.
  */
 @JvmName("flatMapIndexedSequence")
 @OptIn(ExperimentalTypeInference::class)
@@ -155,22 +187,33 @@ inline fun <T, U> Iterable<T>.flatMapIndexed(transform: (index: Int, T) -> Seque
 }
 
 /**
- * Returns a list that contains the elements after the [transform] except for `null`, in their encounter order.
+ * Collects the results, except for `null`, of applying the [transform] to each element.
+ *
+ * This operation preserves the encounter order:
+ * the [transform] is applied to the elements by their encounter order,
+ * and the mapped elements are collected by their corresponding elements' encounter order.
  */
 inline fun <T, U: Any> Iterable<T>.mapNotNull(transform: (T) -> U?): List<U> = buildList {
 	for(e in this@mapNotNull) transform(e)?.let { add(it) }
 }
 
 /**
- * Returns a list that contains only the elements that match the given [predicate], in their encounter order.
+ * Collects only the elements that match the given [predicate].
+ *
+ * This operation preserves the encounter order:
+ * the [predicate] is applied to the elements by their encounter order,
+ * and the remaining elements after the filter are collected by their encounter order.
  */
 inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> = buildList {
 	for(e in this@filter) if(predicate(e)) add(e)
 }
 
 /**
- * Returns a list that contains only the elements that match the given [predicate] in their encounter order,
- * additionally providing an [Int] representing the encounter number of the element.
+ * Collects only the elements that match the given [predicate], additionally providing the encounter number of each element.
+ *
+ * This operation preserves the encounter order:
+ * the [predicate] is applied to the elements by their encounter order,
+ * and the remaining elements after the filter are collected by their encounter order.
  */
 inline fun <T> Iterable<T>.filterIndexed(predicate: (index: Int, T) -> Boolean): List<T> = buildList {
 	var index = 0
@@ -178,16 +221,20 @@ inline fun <T> Iterable<T>.filterIndexed(predicate: (index: Int, T) -> Boolean):
 }
 
 /**
- * Returns a list that contains only the elements that are instances of [U], in their encounter order.
+ * Collects only the elements that are instances of [U].
+ *
+ * This operation preserves the encounter order.
  */
 inline fun <reified U> Iterable<*>.filterIsInstance(): List<U> = buildList {
 	for(e in this@filterIsInstance) if(e is U) add(e)
 }
 
 /**
- * Groups the elements based on the extracted key from each element.
+ * Groups the elements based on the extracted key from applying the [keySelector] to each element.
  *
- * The lists will contain the elements in their encounter order.
+ * This operation preserves the encounter order:
+ * the [keySelector] is applied to the elements by their encounter order,
+ * and each [List] will preserve the encounter order.
  */
 inline fun <T, K> Iterable<T>.groupBy(keySelector: (T) -> K): Map<K, List<T>> {
 	val grouped = kotlinGroupBy(keySelector)
@@ -197,20 +244,19 @@ inline fun <T, K> Iterable<T>.groupBy(keySelector: (T) -> K): Map<K, List<T>> {
 }
 
 /**
- * Filters out any [equal][Any.equals] elements.
+ * Collects the elements after filtering out any [equal][Any.equals] elements.
  *
- * The result will be computed as if this was a fold operation, based on a sequenced set;
- * for each equal element, only the first encountered instance will be collected into the resulting list,
- * and elements will be collected by their encounter order.
+ * For each equal element, only the first encountered instance will be collected into the list,
+ * and the elements' encounter order will be preserved.
  */
 fun <T> Iterable<T>.distinct(): List<T> = toSequencedSet().toList()
 
 /**
- * Filters out any [equal][Any.equals] elements, based on the extracted key.
+ * Collects the elements after filtering out any [equal][Any.equals] elements,
+ * based on the extracted key from applying the [keySelector] to each element.
  *
- * The result will be computed as if this was a fold operation, based on a sequenced set;
- * for each element with equal keys, only the first encountered instance will be collected into the resulting list,
- * and elements will be collected by their encounter order.
+ * For each element with equal keys, only the first encountered instance will be collected into the resulting list,
+ * and the elements' encounter order will be preserved.
  */
 inline fun <T, K> Iterable<T>.distinctBy(keySelector: (T) -> K): List<T> = buildList {
 	val set = mutableSetOf<K>()
@@ -218,24 +264,38 @@ inline fun <T, K> Iterable<T>.distinctBy(keySelector: (T) -> K): List<T> = build
 }
 
 /**
- * Returns a map that collects the entries after the [transform] of each element.
+ * Collects the entries to a map from applying the [transform] to each element.
+ *
+ * This operation preserves the encounter order:
+ * the [transform] will be applied to the elements by their encounter order,
+ * and if multiple entries have the same key, the last entry by the encounter order will be used.
  */
 inline fun <T, K, V> Iterable<T>.associate(transform: (T) -> Pair<K, V>): Map<K, V> = buildMap(sizeOrDefault(12)) {
 	for(e in this@associate) transform(e).let { put(it.first, it.second) }
 }
 
 /**
- * Returns a map that collects the entries by associating the [transform] of each element as the key and the element as the value.
+ * Collects the entries to a map where keys are the extracted keys from applying the [keySelector] to each element,
+ * and values are the element themselves.
+ *
+ * This operation preserves the encounter order:
+ * the [keySelector] will be applied to the elements by their encounter order,
+ * and if multiple entries have the same key, the last entry by the encounter order will be used.
  */
-inline fun <T, K> Iterable<T>.associateBy(transform: (T) -> K): Map<K, T> = buildMap(sizeOrDefault(12)) {
-	for(e in this@associateBy) put(transform(e), e)
+inline fun <T, K> Iterable<T>.associateBy(keySelector: (T) -> K): Map<K, T> = buildMap(sizeOrDefault(12)) {
+	for(e in this@associateBy) put(keySelector(e), e)
 }
 
 /**
- * Returns a map that collects the entries by associating the element as the key and the [transform] of each element as the value.
+ * Collects the entries to a map where keys are the element themselves,
+ * and values are the extracted values from applying the [valueSelector] to each element.
+ *
+ * This operation preserves the encounter order:
+ * the [valueSelector] will be applied to the elements by their encounter order,
+ * and if multiple entries have the same key, the last entry by the encounter order will be used.
  */
-inline fun <T, V> Iterable<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap(sizeOrDefault(12)) {
-	for(e in this@associateWith) put(e, transform(e))
+inline fun <T, V> Iterable<T>.associateWith(valueSelector: (T) -> V): Map<T, V> = buildMap(sizeOrDefault(12)) {
+	for(e in this@associateWith) put(e, valueSelector(e))
 }
 
 @PublishedApi

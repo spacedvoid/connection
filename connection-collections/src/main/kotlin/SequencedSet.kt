@@ -21,15 +21,32 @@ interface SequencedSetView<out T>: SequencedCollectionView<T>, SetView<T> {
 	 * - [Spliterator.CONCURRENT]; or
 	 * - be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): SequencedSetView<T>
+
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is also a [SetView],
+	 * this set contains all elements in the given set,
+	 * and the given set also contains all elements in this set.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * sumOf { it.hashCode() }
+	 * ```
+	 */
+	override fun hashCode(): Int
 }
 
 /**
@@ -45,6 +62,25 @@ interface SequencedSet<out T>: SequencedCollection<T>, Set<T>, SequencedSetView<
 	override fun spliterator(): Spliterator<@UnsafeVariance T>
 
 	override fun reversed(): SequencedSet<T>
+
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is also a [SetView],
+	 * this set contains all elements in the given set,
+	 * and the given set also contains all elements in this set.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * sumOf { it.hashCode() }
+	 * ```
+	 */
+	override fun hashCode(): Int
 }
 
 /**
@@ -57,15 +93,40 @@ interface RemoveOnlySequencedSet<T>: RemoveOnlySequencedCollection<T>, RemoveOnl
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.DISTINCT] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
 	override fun spliterator(): Spliterator<T>
 
 	override fun reversed(): RemoveOnlySequencedSet<T>
+
+	/**
+	 * Removes a single occurrence of the given [element] from this collection.
+	 * Returns `true` if an element was removed, `false` otherwise.
+	 *
+	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
+	 */
+	override fun remove(element: T): Boolean
+
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is also a [SetView],
+	 * this set contains all elements in the given set,
+	 * and the given set also contains all elements in this set.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * sumOf { it.hashCode() }
+	 * ```
+	 */
+	override fun hashCode(): Int
 }
 
 /**
@@ -76,24 +137,51 @@ interface MutableSequencedSet<T>: MutableSequencedCollection<T>, MutableSet<T>, 
 
 	/**
 	 * Adds the given [element] to this set.
-	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 * Returns `true` if this addition changed this set, `false` otherwise.
 	 *
-	 * When an element which already matches an instance in this set is added,
-	 * the contained instance is not replaced, and this set remains unchanged.
+	 * When the [element] already matches an element in this set,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 *
 	 * The addition is not strictly determined; it may add to the first, last, or any position.
 	 */
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [set] to this set.
-	 * Returns `true` if the addition changed this set, `false` otherwise.
+	 * Adds all elements from the given [collection] to this set by their encounter order.
+	 * Returns `true` if this addition changed this set, `false` otherwise.
 	 *
-	 * When an element which already matches an instance in this set is added,
-	 * the contained instance is not replaced, and this set remains unchanged.
+	 * When an object which already matches an element in this set is added,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 *
 	 * The additions are not strictly determined;
 	 * it may add to the first, last, or any position, even for consecutive elements in the given [collection].
 	 */
 	override fun addAll(collection: CollectionView<T>): Boolean
+
+	/**
+	 * Removes a single occurrence of the given [element] from this collection.
+	 * Returns `true` if an element was removed, `false` otherwise.
+	 *
+	 * Whether an element in this collection matches the given [element] is determined via [Any.equals].
+	 */
+	override fun remove(element: T): Boolean
+
+	/**
+	 * Returns whether the given object is equal to this set.
+	 *
+	 * The given object is equal to this set if the given object is also a [SetView],
+	 * this set contains all elements in the given set,
+	 * and the given set also contains all elements in this set.
+	 */
+	override fun equals(other: Any?): Boolean
+
+	/**
+	 * Returns the hash code for this set.
+	 *
+	 * For consistency between implementations, the result must be equal to
+	 * ```kotlin
+	 * sumOf { it.hashCode() }
+	 * ```
+	 */
+	override fun hashCode(): Int
 }

@@ -10,7 +10,7 @@ import java.util.Spliterator
 
 /**
  * An FIFO(first in, first out) collection, commonly named as a [queue](https://en.wikipedia.org/wiki/Queue_(abstract_data_type)).
- * Elements are always added to the tail of this queue, and always removed from the head.
+ * Elements are added to the tail of this queue and removed from the head.
  *
  * Unlike how [java.util.Collections.asLifoQueue] does, this collection does not inherit from [Stack], strictly being an FIFO collection.
  *
@@ -20,6 +20,9 @@ import java.util.Spliterator
 interface Queue<T>: MutableCollection<T> {
 	/**
 	 * Returns a new iterator, iterating from head to tail.
+	 *
+	 * The iterator may, but is not required to, throw [ConcurrentModificationException]
+	 * if this collection is modified while it is in use.
 	 */
 	override fun iterator(): MutableIterator<T>
 
@@ -45,7 +48,7 @@ interface Queue<T>: MutableCollection<T> {
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [collection] to this queue, by their encounter order.
+	 * Adds all elements from the given [collection] to this queue by their encounter order.
 	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
 	override fun addAll(collection: CollectionView<T>): Boolean
@@ -74,9 +77,7 @@ interface Queue<T>: MutableCollection<T> {
 	 * The characteristics [Spliterator.SIZED] and [Spliterator.ORDERED] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this queue ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this queue is modified while it is in use.
 	 */
 	@StreamSupport

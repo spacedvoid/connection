@@ -35,12 +35,23 @@ import io.github.spacedvoid.connection.*
 
 Finally, just continue typing as usual;
 just note that `List`, `Set`, and `Map` are purely immutable, and cannot be assigned from `MutableList`, `MutableSet`, or `MutableMap` instances.
-Use collection types that end with `-View` to assign both immutable and mutable collections, such as `ListView`, `SetView`, and `MapView`.
+Use collection types that end with `View` to assign both immutable and mutable collections, such as `ListView`, `SetView`, and `MapView`.
 
 If you're from Java, you can still use sequenced and navigable collections.
 
 For a more deep-dive into what Connection offers,
 start with our <a href="./connection-collections/io.github.spacedvoid.connection/index.html">collection types and kinds</a>.
+
+For compatibility with Kotlin's collection types, Connection has extensions to create adapters between the types.<br />
+If the collection will be used as an immutable collection, use `.asConnection()`.<br />
+If the collection will be used as a mutable collection, use `.asMutableConnection()`.<br />
+If you don't know, or you'll just query the elements from the collection, use `.asViewConnection()`.<br />
+Adapters for Connection to Kotlin's collections are always `.asKotlin()`.
+
+For more information about these adapters and extension methods,
+see our <a href="./connection-api/io.github.spacedvoid.connection/index.html">dedicated page</a>.
+
+---
 
 Because most collection type names clash with Kotlin's collection types,
 you'll often need to manually select Connection's type from the autocompletion list.
@@ -65,12 +76,3 @@ kotlin.collections.MutableMap
 This setting won't work because of <a href="https://youtrack.jetbrains.com/issue/KTIJ-12918">https://youtrack.jetbrains.com/issue/KTIJ-12918</a>:
 sadly, you'll need to manually select from the autocompletion list each time you write the type.
 </details>
-
-For compatibility with Kotlin's collection types, Connection has extensions to create adapters between the types.<br />
-If the collection will be used as an immutable collection, use `.asConnection()`.<br />
-If the collection will be used as a mutable collection, use `.asMutableConnection()`.<br />
-If you don't know, or you'll just query the elements from the collection, use `.asViewConnection()`.<br />
-Adapters for Connection to Kotlin's collections are always `.asKotlin()`.
-
-For more information about these adapters and extension methods,
-see our <a href="./connection-api/io.github.spacedvoid.connection/index.html">dedicated page</a>.

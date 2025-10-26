@@ -13,7 +13,6 @@ import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import io.github.spacedvoid.connection.gen.AdapterGenerator.generatePerType
 import io.github.spacedvoid.connection.gen.dsl.Adapter
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration.ConnectionType.ConnectionTypeKind
@@ -52,9 +51,6 @@ object AdapterGenerator {
 		}
 	}
 
-	/**
-	 * Collection of [GeneratingFile] to maintain between iterations of [generatePerType].
-	 */
 	private class AdapterFiles(generator: CodeGenerator): AutoCloseable {
 		val colAsCon: GeneratingFile = GeneratingFile(generator, "io.github.spacedvoid.connection", "CollectionAsConnection").also {
 			it += """
@@ -73,11 +69,6 @@ object AdapterGenerator {
 			""".trimIndent()
 		}
 
-		/**
-		 * Closes all streams.
-		 *
-		 * Has no effect when the streams are already closed.
-		 */
 		override fun close() {
 			this.colAsCon.close()
 			this.conAsCol.close()
@@ -93,32 +84,29 @@ object AdapterGenerator {
 	private fun defaultColAsConDocs(kind: ConnectionKind): String = when(kind) {
 		ConnectionKind.VIEW -> """
 			/**
-			 * Returns a collection view that delegates to the Kotlin collection.
+			 * Returns a collection view that delegates to this Kotlin collection.
 			 */
 		""".trimIndent()
 		ConnectionKind.IMMUTABLE -> """
 			/**
-			 * Returns an immutable collection that delegates to the Kotlin collection.
+			 * Returns an immutable collection that delegates to this Kotlin collection.
 			 *
-			 * @apiNote
 			 * Do not use this extension unless it is absolutely sure that it is an immutable collection, or will never be modified elsewhere.
-			 * The [Iterator] might throw [ConcurrentModificationException] if the collection is modified.
+			 * Some operations might throw [ConcurrentModificationException] if this collection is modified.
 			 */
 		""".trimIndent()
 		ConnectionKind.REMOVE_ONLY -> """
 			/**
-			 * Returns a remove-only collection that delegates to the Kotlin collection.
+			 * Returns a remove-only collection that delegates to this Kotlin collection.
 			 *
-			 * @apiNote	
 			 * Do not use this extension unless it is absolutely sure that it is a remove-only collection.
 			 * Some operations might throw [UnsupportedOperationException].
 			 */
 		""".trimIndent()
 		ConnectionKind.MUTABLE -> """
 			/**
-			 * Returns a mutable collection that delegates to the Kotlin collection.
+			 * Returns a mutable collection that delegates to this Kotlin collection.
 			 *
-			 * @apiNote
 			 * Do not use this extension unless it is absolutely sure that it is a mutable collection.
 			 * Some operations might throw [UnsupportedOperationException].
 			 */

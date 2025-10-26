@@ -7,32 +7,48 @@
 package io.github.spacedvoid.connection
 
 /**
- * Returns a list that collects the elements from this sequence, in the iteration order.
+ * Collects all elements from this sequence to a list by their iteration order.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 fun <T> Sequence<T>.toList(): List<T> = buildList { addAll(this@toList) }
 
 /**
- * Returns a mutable list that collects the elements from this sequence, in the iteration order.
+ * Collects all elements from this sequence to a mutable list by their iteration order.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 fun <T> Sequence<T>.toMutableList(): MutableList<T> = mutableListOf<T>().apply { addAll(this@toMutableList) }
 
 /**
- * Returns a set that collects the elements from this sequence.
+ * Collects all elements from this sequence to a set by their iteration order.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 fun <T> Sequence<T>.toSet(): Set<T> = buildSet { addAll(this@toSet) }
 
 /**
- * Returns a mutable set that collects the elements from this sequence.
+ * Collects all elements from this sequence to a mutable set by their iteration order.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 fun <T> Sequence<T>.toMutableSet(): MutableSet<T> = mutableSetOf<T>().apply { addAll(this@toMutableSet) }
 
 /**
- * Returns a sequenced set that collects the elements from this sequence, in the iteration order.
+ * Collects all elements from this sequence to a sequenced set by their iteration order.
+ *
+ * This operation is equivalent with adding all elements to a [LinkedHashSet].
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 fun <T> Sequence<T>.toSequencedSet(): SequencedSet<T> = buildSequencedSet { addAll(this@toSequencedSet) }
 
 /**
- * Returns a mutable sequenced set that collects the elements from this sequence, in the iteration order.
+ * Collects all elements from this sequence to a mutable sequenced set by their iteration order.
+ *
+ * This operation is equivalent with adding all elements to a [LinkedHashSet].
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
@@ -41,22 +57,36 @@ fun <T> Sequence<T>.toSequencedSet(): SequencedSet<T> = buildSequencedSet { addA
 fun <T> Sequence<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
 
 /**
- * Returns a map that collects the entries after the [transform] of each element from this sequence.
+ * Collects the entries to a map from applying the [transform] to each element by their encounter order.
+ *
+ * If multiple entries have the same key, the last one will be used.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
 inline fun <T, K, V> Sequence<T>.associate(transform: (T) -> Pair<K, V>): Map<K, V> = buildMap {
 	for(e in this@associate) transform(e).let { put(it.first, it.second) }
 }
 
 /**
- * Returns a map that collects the entries by associating the [transform] of each element as the key and the element as the value.
+ * Collects the entries to a map where keys are the extracted keys from applying the [keySelector] to each element by their encounter order,
+ * and values are the element themselves.
+ *
+ * If multiple entries have the same key, the last one will be used.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
-inline fun <T, K> Sequence<T>.associateBy(transform: (T) -> K): Map<K, T> = buildMap {
-	for(e in this@associateBy) put(transform(e), e)
+inline fun <T, K> Sequence<T>.associateBy(keySelector: (T) -> K): Map<K, T> = buildMap {
+	for(e in this@associateBy) put(keySelector(e), e)
 }
 
 /**
- * Returns a map that collects the entries by associating the element as the key and the [transform] of each element as the value.
+ * Collects the entries to a map where keys are the element themselves,
+ * and values are the extracted values from applying the [valueSelector] to each element by their encounter order.
+ *
+ * If multiple entries have the same key, the last one will be used.
+ *
+ * The behavior of this operation when this sequence is infinite is undefined.
  */
-inline fun <T, V> Sequence<T>.associateWith(transform: (T) -> V): Map<T, V> = buildMap {
-	for(e in this@associateWith) put(e, transform(e))
+inline fun <T, V> Sequence<T>.associateWith(valueSelector: (T) -> V): Map<T, V> = buildMap {
+	for(e in this@associateWith) put(e, valueSelector(e))
 }

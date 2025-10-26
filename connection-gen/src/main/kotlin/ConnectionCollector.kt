@@ -38,8 +38,7 @@ fun ConnectionGeneration.collect() {
 						/**
 						 * Returns a Kotlin collection that delegates to this collection.
 						 *
-						 * @apiNote
-						 * This extension exists since [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
+						 * This extension exists because [kotlin.collections.List] does not inherit from [java.util.SequencedCollection].
 						 */
 					""".trimIndent()
 				}
@@ -82,20 +81,14 @@ fun ConnectionGeneration.collect() {
 	collectionNamed("Stack") {
 		kind(MUTABLE) {
 			name = "Stack"
-			adapters.asKotlin.default = null
-			adapters.asConnection.default = null
-
-			kotlinType<java.util.Deque<*>>()
+			kotlin = null
 		}
 	}
 
 	collectionNamed("Queue") {
 		kind(MUTABLE) {
 			name = "Queue"
-			adapters.asKotlin.default = null
-			adapters.asConnection.default = null
-
-			kotlinType<java.util.Queue<*>>()
+			kotlin = null
 		}
 	}
 

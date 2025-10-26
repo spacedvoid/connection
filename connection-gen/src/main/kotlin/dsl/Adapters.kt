@@ -8,6 +8,8 @@
 
 package io.github.spacedvoid.connection.gen.dsl
 
+import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration.ConnectionType.ConnectionTypeKind
+
 /**
  * Contains *adapters*, which convert collections between Connection and Kotlin.
  */
@@ -54,10 +56,16 @@ class Adapters @DslInternal constructor(): Configurable {
 
 /**
  * Represents an adapter.
- * `null` properties will be replaced with default values from [ConnectionTypeKind][ConnectionGeneration.ConnectionType.ConnectionTypeKind], which might cause compilation errors.
+ * Unless noted otherwise, `null` properties will be replaced with default values.
  *
- * @param [unchecked] Controls whether the collection object needs unchecked casting.
- *                    Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
+ * @property [kotlin]
+ * The corresponding Kotlin collection type.
+ * If `null`, the default value will be [ConnectionTypeKind.kotlin], but if that is also `null` and [isExtra] is `true`,
+ * an [IllegalArgumentException] will be thrown at compile time.
+ *
+ * @property [unchecked]
+ * Controls whether the collection object needs unchecked casting.
+ * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
  */
 @ConnectionDSL
 data class Adapter @DslInternal constructor(var kotlin: KotlinType? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false, @property:DslInternal val isExtra: Boolean): Configurable

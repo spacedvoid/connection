@@ -11,6 +11,8 @@ import java.util.Spliterator
 /**
  * A sequenced set view that defines the iteration order of the elements based on a [Comparator].
  *
+ * The iteration order is the ascending order; any element is less than the elements that come ofter.
+ *
  * The [comparator] must satisfy `comparator.compare(a, b) == 0` if and only if `a.equals(b)`,
  * which is also called as *consistent with equals*.
  * Otherwise, the behavior of this collection is undefined.
@@ -25,9 +27,7 @@ interface NavigableSetView<out T>: SequencedSetView<T> {
 	 * - [Spliterator.CONCURRENT]; or
 	 * - be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
@@ -36,35 +36,35 @@ interface NavigableSetView<out T>: SequencedSetView<T> {
 	override fun reversed(): NavigableSetView<T>
 
 	/**
-	 * The comparator used to sort the elements in this collection.
+	 * The comparator used to determine the iteration order.
 	 */
 	val comparator: Comparator<in @UnsafeVariance T>
 
 	/**
-	 * Returns a subset of this collection, in the given range.
+	 * Returns a subset of this set, in the given range.
 	 * Throws [IllegalArgumentException] if [from] is higher than [to],
 	 * or if this set has a restricted range and [from] or [to] lies outside the range.
 	 *
-	 * Operations on the returned collection is delegated to this collection.
-	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 * Operations on the returned set is delegated to this set.
+	 * Adding elements to the returned set throws [IllegalArgumentException] if the element is outside the range.
 	 */
 	fun subSet(from: @UnsafeVariance T, to: @UnsafeVariance T, fromInclusive: Boolean, toInclusive: Boolean): NavigableSetView<T>
 
 	/**
-	 * Returns a subset of this collection, based on the given element.
+	 * Returns a subset of this set, based on the given element.
 	 * Throws [IllegalArgumentException] if this set has a restricted range and [before] lies outside the range.
 	 *
-	 * Operations on the returned collection is delegated to this collection.
-	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 * Operations on the returned set is delegated to this set.
+	 * Adding elements to the returned set throws [IllegalArgumentException] if the element is outside the range.
 	 */
 	fun headSet(before: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T>
 
 	/**
-	 * Returns a subset of this collection, based on the given element.
+	 * Returns a subset of this set, based on the given element.
 	 * Throws [IllegalArgumentException] if this set has a restricted range and [after] lies outside the range.
 	 *
-	 * Operations on the returned collection is delegated to this collection.
-	 * Adding elements to the returned collection throws [IllegalArgumentException] if the element is outside the range.
+	 * Operations on the returned set is delegated to this set.
+	 * Adding elements to the returned set throws [IllegalArgumentException] if the element is outside the range.
 	 */
 	fun tailSet(after: @UnsafeVariance T, inclusive: Boolean): NavigableSetView<T>
 
@@ -111,9 +111,7 @@ interface RemoveOnlyNavigableSet<T>: RemoveOnlySequencedSet<T>, NavigableSetView
 	 * The characteristics [Spliterator.SIZED], [Spliterator.DISTINCT], [Spliterator.ORDERED] and [Spliterator.SORTED] are reported by default.
 	 * Also, the spliterator must either report [Spliterator.CONCURRENT] or be *[late-binding][Spliterator]*.
 	 *
-	 * The spliterator does not report [Spliterator.CONCURRENT]
-	 * unless the implementation of this set ensures such.
-	 * When the spliterator does not report such, it may, but is not required to,
+	 * If the spliterator does not report [Spliterator.CONCURRENT], it may, but is not required to,
 	 * throw [ConcurrentModificationException] if this set is modified while it is in use.
 	 */
 	@StreamSupport
@@ -141,14 +139,20 @@ interface MutableNavigableSet<T>: MutableSequencedSet<T>, RemoveOnlyNavigableSet
 	override fun tailSet(after: T, inclusive: Boolean): MutableNavigableSet<T>
 
 	/**
-	 * Adds the given [element] to this collection.
-	 * Returns `true` if the addition changed this collection, `false` otherwise.
+	 * Adds the given [element] to the end of this set.
+	 * Returns `true` if this addition changed this set, `false` otherwise.
+	 *
+	 * When the [element] already matches an element in this set,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 */
 	override fun add(element: T): Boolean
 
 	/**
-	 * Adds all elements from the given [collection] to this collection.
-	 * Returns `true` if the addition changed this collection, `false` otherwise.
+	 * Adds all elements from the given [collection] to the end of this set by their encounter order.
+	 * Returns `true` if this addition changed this set, `false` otherwise.
+	 *
+	 * When an object which already matches an element in this set is added,
+	 * the contained element is not replaced, and this set remains unchanged.
 	 */
 	override fun addAll(collection: CollectionView<T>): Boolean
 }

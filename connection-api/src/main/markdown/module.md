@@ -6,11 +6,11 @@ Contains operations for Connection.
 
 Main package for Connection.
 
-## Adapters
+## Adapter methods
 
-Adapters are extension methods that convert between Kotlin collections and Connection.
+Adapter methods are extensions that wrap collections between Kotlin and Connection.
 
-Adapters that convert Kotlin collections to Connection are:
+Adapters that wrap Kotlin collections to Connection are:
 
 | Target kind | Extension method         |
 |-------------|--------------------------|
@@ -25,7 +25,7 @@ And for Connection to Kotlin:
 |-------------|------------------|
 | Any         | [asKotlin]       |
 
-These adapters are delegations, where operations on the resulting collection modifies the original collection.
+Operations on the resulting collection will be delegated the original collection.
 
 <details>
 <summary>Additional adapters</summary>
@@ -36,40 +36,39 @@ These adapters are delegations, where operations on the resulting collection mod
 
 </details>
 
-### Adapters are user-dependent
+### Adapters are just adapters
 
 Do note that adapter methods cannot verify whether the originating collection is really a collection of the type or kind.
-For example, in the following snippet:
+For example:
 
 ```kotlin
-val kotlinCollection = hashMapOf<String, Any>().keys
-val right = kotlinCollection.asRemoveOnlyConnection()
-// val wrong = kotlinCollection.asMutableConnection() 
+val isThisFullyMutable = hashMapOf<String, Any>().keys.asMutableConnection()
 ```
 
-When adding elements to `wrong`, [UnsupportedOperationException] might be thrown,
+Because keysets typically disallow the usage of [MutableCollection.add],
+they will throw [UnsupportedOperationException][kotlin.UnsupportedOperationException],
 which shouldn't be happening according to the specification of Connection(no optional operations).
-If you are not highly certain of how the collection will be handled,
-***always*** convert the collection to the corresponding connection kind, or just use [asViewConnection].
 
-Exceptions are similar to the following:
+***Always*** convert the collection to the corresponding connection kind
+unless you are highly certain at how the collection will be handled:
 
 ```kotlin
 val connection = arrayListOf("a", "b", "c").asConnection()
 ```
 
-Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward, one can safely apply [asConnection] to the collection.
+Because the created [ArrayList][kotlin.collections.ArrayList] will never be directly used afterward,
+one can safely apply [asConnection] to the collection.
 
 ## Conversions
 
-The following extensions convert collections between kinds, maintaining the same type:
+The following extensions wrap collections between kinds, maintaining the same type:
 
 | From → To          | Extension method |
 |--------------------|------------------|
 | View → View        | [asView]         |
 | View → Remove-only | [asRemoveOnly]   |
 
-These conversions are delegations, where operations on the resulting collection delegates to the original collection.
+Operations on the resulting collection will be delegated to the original collection.
 
 Note that although simple assignments to superkinds are available, these conversions exist to prevent downcasting.
 For example:
@@ -82,32 +81,22 @@ val typeSafe: ListView<String> = collection.asView()
 (typeSafe as MutableList<*>).clear() // kotlin.TypeCastException: class ListView cannot be cast to class MutableList
 ```
 
-[snapshot] is a special case; it copies the elements to an immutable collection, maintaining the type.
-
-The following extensions change both the type and kind:
-
-| From → To        | Extension method            |
-|------------------|-----------------------------|
-| View → Mutable   | `toMutable<CollectionType>` |
-| View → Immutable | `to<CollectionType>`        |
-
-<details>
-<summary>Full list of type conversions</summary>
-
-| To             | Immutable        | Mutable                 |
-|----------------|------------------|-------------------------|
-| [List]         | [toList]         | [toMutableList]         |
-| [Set]          | [toSet]          | [toMutableSet]          |
-| [SequencedSet] | [toSequencedSet] | [toMutableSequencedSet] |
-| [NavigableSet] | [toNavigableSet] | [toMutableNavigableSet] |
-| [SequencedMap] | [toSequencedMap] | [toMutableSequencedMap] |
-| [NavigableMap] | [toNavigableMap] | [toMutableNavigableMap] |
-
-</details>
-
-These conversions are copies, where operations on the resulting collection does not affect the original collection.
+Also, [snapshot] copies the elements to an immutable collection, maintaining the type.
 
 ## Operator methods
 
-Most extension methods that involve or return collection types from `kotlin.collections` or `kotlin.sequences` are also introduced here,
-such as [map], [sort], and [asList]. 
+Most extension methods from `kotlin.collections` or `kotlin.sequences` that involve collection types are also here,
+such as [map], [sort], and [asList].
+
+Unless noted otherwise, operations that accept lambdas will
+- exit immediately when the lambda throws an exception, and relay it to the caller
+- invoke the lambda in the same thread that the operation was invoked; and
+- assume no other thread calls the lambda.
+
+## Element ordering
+
+By default, if an operation works on a source of elements(such as [Iterable][kotlin.Iterable] or `vararg`)
+that has a defined iteration order, the elements will be processed by that order.
+Also, if an operation collects the elements from a source to another collection,
+the resulting collection will maintain the encounter order of the elements,
+regardless of whether the elements were filtered out, mapped to another element, or been unpacked from a collection.

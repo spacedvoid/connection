@@ -50,13 +50,13 @@ object ConversionGenerator {
 
 	private val defaultViewDoc = """
 		/**
-		 * Returns a collection view, converted from this collection.
+		 * Returns a view collection that delegates to this collection, prohibiting all mutation operations.
 		 */
 	""".trimIndent()
 
 	private val defaultRemoveOnlyDoc = """
 		/**
-		 * Returns a remove-only collection, converted from this collection.
+		 * Returns a remove-only collection that delegates to this collection, prohibiting element addition operations.
 		 */
 	""".trimIndent()
 
