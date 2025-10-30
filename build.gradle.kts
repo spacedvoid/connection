@@ -22,63 +22,53 @@ kotlin {
 	jvmToolchain(21)
 }
 
-tasks {
-	val apiJar by registering(Jar::class) {
-		group = "Build"
-		description = "Assembles the API binary jar."
+val apiJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	group = "Build"
+	description = "Assembles the API binary jar."
 
-		archiveAppendix = "api"
-		from(project(":connection-api").sourceSets["main"].output)
-		from(project(":connection-collections").sourceSets["main"].output)
-	}
+	archiveAppendix = "api"
+	from(project(":connection-api").sourceSets["main"].output)
+	from(project(":connection-collections").sourceSets["main"].output)
+}
 
-	val coreJar by registering(Jar::class) {
-		group = "Build"
-		description = "Assembles the core binary jar."
+val coreJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	group = "Build"
+	description = "Assembles the core binary jar."
 
-		archiveAppendix = "core"
-		from(project(":connection-api").sourceSets["main"].output)
-		from(project(":connection-collections").sourceSets["main"].output)
-		from(project(":connection-core").sourceSets["main"].output)
-	}
+	archiveAppendix = "core"
+	from(project(":connection-api").sourceSets["main"].output)
+	from(project(":connection-collections").sourceSets["main"].output)
+	from(project(":connection-core").sourceSets["main"].output)
+}
 
-	val apiSourcesJar by registering(Jar::class) {
-		group = "Build"
-		description = "Assembles the API source jar."
+val apiSourcesJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	group = "Build"
+	description = "Assembles the API source jar."
 
-		archiveAppendix = "api"
-		archiveClassifier = "sources"
-		from(project(":connection-api").sourceSets["main"].allSource)
-		from(project(":connection-collections").sourceSets["main"].allSource)
-	}
+	archiveAppendix = "api"
+	archiveClassifier = "sources"
+	from(project(":connection-api").sourceSets["main"].allSource)
+	from(project(":connection-collections").sourceSets["main"].allSource)
+}
 
-	val coreSourcesJar by registering(Jar::class) {
-		group = "Build"
-		description = "Assembles the core source jar."
+val coreSourcesJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	group = "Build"
+	description = "Assembles the core source jar."
 
-		archiveAppendix = "core"
-		archiveClassifier = "sources"
-		from(project(":connection-api").sourceSets["main"].allSource)
-		from(project(":connection-collections").sourceSets["main"].allSource)
-		from(project(":connection-core").sourceSets["main"].allSource)
-	}
+	archiveAppendix = "core"
+	archiveClassifier = "sources"
+	from(project(":connection-api").sourceSets["main"].allSource)
+	from(project(":connection-collections").sourceSets["main"].allSource)
+	from(project(":connection-core").sourceSets["main"].allSource)
+}
 
-	val dokkaJar by registering(Jar::class) {
-		group = "Build"
-		description = "Assembles the Dokka documentation jar."
-		dependsOn(dokkaGenerate)
+val dokkaJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	group = "Build"
+	description = "Assembles the Dokka documentation jar."
+	dependsOn(tasks.dokkaGenerate)
 
-		archiveClassifier = "javadoc"
-		from(dokkaOutputDir)
-	}
-
-	artifacts {
-		archives(apiJar)
-		archives(coreJar)
-		archives(apiSourcesJar)
-		archives(coreSourcesJar)
-		archives(dokkaJar)
-	}
+	archiveClassifier = "javadoc"
+	from(dokkaOutputDir)
 }
 
 dokka {
