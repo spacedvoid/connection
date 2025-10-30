@@ -79,7 +79,7 @@ gradlew :dokkaGenerate
 
 - `v0.2.0`:
   - [ ] Linked collections, which are a subtype of `SequencedCollection` that supports `addFirst` and `addLast`
-  - [ ] Do not throw exceptions when creating a submap of `NavigableMap`
+  - [ ] Add range information for navigable collections
 
 - Not scheduled
   - [ ] Simpler ways to express intervals for `subList` and `subSet`
