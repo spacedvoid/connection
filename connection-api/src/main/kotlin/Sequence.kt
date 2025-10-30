@@ -52,8 +52,10 @@ fun <T> Sequence<T>.toSequencedSet(): SequencedSet<T> = buildSequencedSet { addA
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
-	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet")
+	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet"),
+	DeprecationLevel.ERROR
 )
+@Suppress("DEPRECATION_ERROR")
 fun <T> Sequence<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
 
 /**

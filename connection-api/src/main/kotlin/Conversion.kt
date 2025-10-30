@@ -92,8 +92,10 @@ fun <T> Iterable<T>.toMutableSet(): MutableSet<T> = mutableSetOf<T>().apply { ad
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
-	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet")
+	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet"),
+	DeprecationLevel.ERROR
 )
+@Suppress("DEPRECATION_ERROR")
 fun <T> Iterable<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
 
 /**
@@ -118,8 +120,10 @@ fun <K, V> MapView<out K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf<K, 
  */
 @Deprecated(
 	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashMap instead.",
-	ReplaceWith("LinkedHashMap<K, V>().asMutableConnection().apply { putAll(this@toSequencedSet) }", "java.util.LinkedHashMap")
+	ReplaceWith("LinkedHashMap<K, V>().asMutableConnection().apply { putAll(this@toSequencedSet) }", "java.util.LinkedHashMap"),
+	DeprecationLevel.ERROR
 )
+@Suppress("DEPRECATION_ERROR")
 fun <K, V> MapView<out K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf<K, V>().apply { putAll(this@toMutableSequencedMap) }
 
 /**
