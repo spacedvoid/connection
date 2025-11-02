@@ -66,17 +66,17 @@ interface Deque<T>: MutableSequencedCollection<T> {
 
 	/**
 	 * Adds all elements from the given [collection] to the head of this deque, by their encounter order.
-	 * Returns `true` if any elements were added, `false` otherwise.
 	 */
-	fun addAllFirst(collection: CollectionView<T>): Boolean
+	fun addAllFirst(collection: CollectionView<T>)
 
 	/**
 	 * Adds all elements from the given [collection] to the tail of this deque, by their encounter order.
-	 * Returns `true` if any elements were added, `false` otherwise.
 	 *
 	 * This method is equivalent with [addAll].
 	 */
-	fun addAllLast(collection: CollectionView<T>): Boolean = addAll(collection)
+	fun addAllLast(collection: CollectionView<T>) {
+		addAll(collection)
+	}
 
 	/**
 	 * Removes and returns the head of this deque.
