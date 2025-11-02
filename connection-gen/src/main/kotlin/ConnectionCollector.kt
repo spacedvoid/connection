@@ -24,7 +24,7 @@ fun ConnectionGeneration.collect() {
 
 	val sequencedCol = collectionNamed("SequencedCollection") {
 		allKinds {
-			kotlinType<java.util.SequencedCollection<*>>()
+			kotlin = KotlinType<java.util.SequencedCollection<*>>()
 		}
 	}
 
@@ -32,7 +32,9 @@ fun ConnectionGeneration.collect() {
 		standardKinds()
 		kind(VIEW) {
 			adapters.asKotlin {
-				create(to = sequencedCol.kind(VIEW).kotlin!!, name = "asSequencedKotlin") {
+				create {
+					name = "asSequencedKotlin"
+					kotlin = sequencedCol.kind(VIEW).kotlin!!
 					unchecked = true
 					docs = """
 						/**
@@ -52,13 +54,13 @@ fun ConnectionGeneration.collect() {
 
 	collectionNamed("SequencedSet") {
 		allKinds {
-			kotlinType<java.util.SequencedSet<*>>()
+			kotlin = KotlinType<java.util.SequencedSet<*>>()
 		}
 	}
 
 	collectionNamed("NavigableSet") {
 		allKinds {
-			kotlinType<java.util.NavigableSet<*>>()
+			kotlin = KotlinType<java.util.NavigableSet<*>>()
 		}
 	}
 
@@ -68,13 +70,13 @@ fun ConnectionGeneration.collect() {
 
 	mapNamed("SequencedMap") {
 		standardKinds {
-			kotlinType<java.util.SequencedMap<*, *>>()
+			kotlin = KotlinType<java.util.SequencedMap<*, *>>()
 		}
 	}
 
 	mapNamed("NavigableMap") {
 		standardKinds {
-			kotlinType<java.util.NavigableMap<*, *>>()
+			kotlin = KotlinType<java.util.NavigableMap<*, *>>()
 		}
 	}
 
@@ -95,22 +97,19 @@ fun ConnectionGeneration.collect() {
 	collectionNamed("Deque") {
 		kind(MUTABLE) {
 			name = "Deque"
+			kotlin = KotlinType<java.util.Deque<*>>()
 			adapters.asKotlin.default = null
-
-			kotlinType<java.util.Deque<*>>()
 		}
 	}
 }
 
-private inline fun <reified T: Any> ConnectionGeneration.ConnectionType.ConnectionTypeKind.kotlinType(configuration: KotlinType.() -> Unit = {}) {
-	kotlin = KotlinType(T::class.simpleName!!, T::class.java.packageName).apply(configuration)
-}
+private inline fun <reified T: Any> KotlinType(): KotlinType = KotlinType(T::class.simpleName!!, T::class.java.packageName)
 
 private inline fun ConnectionGeneration.ConnectionType.allKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
-	kinds(*allConnectionKinds, configuration = configuration)
+	allConnectionKinds.forEach { kind(it, configuration) }
 
 private inline fun ConnectionGeneration.ConnectionType.standardKinds(configuration: ConnectionGeneration.ConnectionType.ConnectionTypeKind.() -> Unit = {}) =
-	kinds(*standardKinds, configuration = configuration)
+	standardKinds.forEach { kind(it, configuration) }
 
 private val allConnectionKinds = ConnectionKind.entries.toTypedArray()
 

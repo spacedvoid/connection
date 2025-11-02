@@ -24,9 +24,8 @@ class Adapters @DslInternal constructor(): Configurable {
 		 * The default adapter generated for all kinds.
 		 *
 		 * Assign `null` to not generate the default adapter.
-		 * The behavior of the generator when assigning another adapter is not defined.
 		 */
-		var default: Adapter? = Adapter(isExtra = false)
+		var default: Adapter? = Adapter()
 
 		/**
 		 * Contains any other custom adapters created by the DSL.
@@ -37,8 +36,8 @@ class Adapters @DslInternal constructor(): Configurable {
 		/**
 		 * Creates a new adapter, different from the [default] adapter.
 		 */
-		inline fun create(name: String, to: KotlinType, configuration: Adapter.() -> Unit = {}): Adapter =
-			Adapter(to, name, isExtra = true).apply {
+		inline fun create(configuration: Adapter.() -> Unit = {}): Adapter =
+			Adapter().apply {
 				configuration()
 				this@AdapterCollection.extra += this
 			}
@@ -60,12 +59,18 @@ class Adapters @DslInternal constructor(): Configurable {
  *
  * @property [kotlin]
  * The corresponding Kotlin collection type.
- * If `null`, the default value will be [ConnectionTypeKind.kotlin], but if that is also `null` and [isExtra] is `true`,
- * an [IllegalArgumentException] will be thrown at compile time.
+ * If `null`, the default value will be [ConnectionTypeKind.kotlin],
+ * but if it is also `null` and this is an [extra][Adapters.AdapterCollection.extra] adapter,
+ * an [IllegalArgumentException] will be thrown.
  *
  * @property [unchecked]
  * Controls whether the collection object needs unchecked casting.
  * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
  */
 @ConnectionDSL
-data class Adapter @DslInternal constructor(var kotlin: KotlinType? = null, var name: String? = null, var docs: String? = null, var unchecked: Boolean = false, @property:DslInternal val isExtra: Boolean): Configurable
+data class Adapter @DslInternal constructor(
+	var kotlin: KotlinType? = null,
+	var name: String? = null,
+	var docs: String? = null,
+	var unchecked: Boolean = false
+): Configurable

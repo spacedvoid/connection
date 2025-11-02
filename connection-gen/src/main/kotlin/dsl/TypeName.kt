@@ -10,7 +10,7 @@ package io.github.spacedvoid.connection.gen.dsl
  * Represents that this object represents a type(class or interface).
  */
 @ConnectionDSL
-interface Named: Configurable {
+interface TypeName: Configurable {
 	/**
 	 * The simple name of the type.
 	 */
@@ -23,7 +23,7 @@ interface Named: Configurable {
 }
 
 /**
- * The qualified name of the type, based on the [name][Named.name] and [package][Named.inPackage].
+ * The qualified name of the type, based on the [name][TypeName.name] and [package][TypeName.inPackage].
  */
-val Named.qualifiedName: String
+val TypeName.qualifiedName: String
 	get() = "${this.inPackage}.${this.name}"

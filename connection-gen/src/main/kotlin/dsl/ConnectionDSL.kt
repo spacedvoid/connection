@@ -35,15 +35,13 @@ operator fun <T: Configurable> T.invoke(configuration: T.() -> Unit) = this.conf
 /**
  * Class used for Kotlin representations of Connections.
  */
-class KotlinType(override var name: String, override var inPackage: String): Named {
+class KotlinType(override var name: String, override var inPackage: String): TypeName {
 	/**
 	 * The implementation of this Kotlin collection for adapters.
 	 *
-	 * The default package will be `io.github.spacedvoid.connection.impl.kotlin`.
-	 * Unless the [name] is customized, the implementation's name will be [name]`Impl`.
-	 * Once customized, it will always be the customized name.
+	 * By default, this will be `io.github.spacedvoid.connection.impl.kotlin.`[name]`Impl`.
 	 */
-	var impl: Named = ConfigurableNamed("io.github.spacedvoid.connection.impl.kotlin") { "Kotlin${this.name}Impl" }
+	var impl: ComputedTypeName = ComputedTypeName("io.github.spacedvoid.connection.impl.kotlin") { "Kotlin${this.name}Impl" }
 }
 
 /**
@@ -51,15 +49,19 @@ class KotlinType(override var name: String, override var inPackage: String): Nam
  *
  * The [name] will return the invocation of [defaultName] until a custom name is set.
  */
-private class ConfigurableNamed(override var inPackage: String, private val defaultName: () -> String): Named {
-	override var name: String = this.defaultName()
+class ComputedTypeName(override var inPackage: String, private val defaultName: () -> String): TypeName {
+	override var name: String = ""
 		get() = if(this.customName) field else this.defaultName()
 		set(value) {
 			this.customName = true
 			field = value
 		}
 
-	private var customName = false
+	/**
+	 * Returns whether the [name] is customized and will not change unless it is manually set to another value.
+	 */
+	var customName = false
+		private set
 }
 
 /**
@@ -136,7 +138,7 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 		 * Represents a Connection [kind] in a type family, such as `MutableList`, which is also a type(class or interface).
 		 */
 		@ConnectionDSL
-		inner class ConnectionTypeKind @DslInternal constructor(val kind: ConnectionKind): Configurable, Named {
+		inner class ConnectionTypeKind @DslInternal constructor(val kind: ConnectionKind): Configurable, TypeName {
 			/**
 			 * The simple name of this type.
 			 *
@@ -164,10 +166,9 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 			/**
 			 * The implementation of this type.
 			 *
-			 * Unless its [Named.name] is customized, it will always be [name]`Impl`.
-			 * Once customized, it will always be the customized name.
+			 * By default, this will be `io.github.spacedvoid.connection.impl.`[name]`Impl`.
 			 */
-			var impl: Named = ConfigurableNamed("io.github.spacedvoid.connection.impl") { this.name + "Impl" }
+			var impl: ComputedTypeName = ComputedTypeName("io.github.spacedvoid.connection.impl") { this.name + "Impl" }
 
 			/**
 			 * The Kotlin equivalent of this collection.
@@ -176,18 +177,19 @@ class ConnectionGeneration @DslInternal constructor(): Configurable {
 			 * Setting this to `null` will not generate any [default adapters][Adapters.AdapterCollection.default],
 			 * and any [extra][Adapters.AdapterCollection.extra] adapters without the [Adapter.kotlin] being specified will cause an [IllegalArgumentException].
 			 *
-			 * By default, its [Named.inPackage] will be `kotlin.collections`,
-			 * and its [Named.name] will be equivalent with the [family name][ConnectionType.name],
+			 * By default, its [TypeName.inPackage] will be `kotlin.collections`,
+			 * and its [TypeName.name] will be equivalent with the [family name][ConnectionType.name],
 			 * additionally prepending `Mutable` if this [kind] is a mutable kind.
-			 * The [Named.inPackage] of the [KotlinType.impl] will be `io.github.spacedvoid.connection.impl.kotlin`,
-			 * and its [Named.name] will be [familyName][ConnectionType.name]`Impl`.
+			 * The [TypeName.inPackage] of the [KotlinType.impl] will be `io.github.spacedvoid.connection.impl.kotlin`,
+			 * and its [TypeName.name] will be [familyName][ConnectionType.name]`Impl`.
 			 */
-			var kotlin: KotlinType? = KotlinType("${
+			var kotlin: KotlinType? = KotlinType(
 				when(this.kind) {
-					ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable"
-					else -> ""
-				}
-			}${this@ConnectionType.name}", "kotlin.collections")
+					ConnectionKind.REMOVE_ONLY, ConnectionKind.MUTABLE -> "Mutable${this@ConnectionType.name}"
+					else -> this@ConnectionType.name
+				},
+				"kotlin.collections"
+			)
 
 			/**
 			 * The adapters for this typekind.

@@ -19,13 +19,14 @@ class Conversions @DslInternal constructor(): Configurable {
 	/**
 	 * Conversions that mask remove-only Connections to prevent downcasting.
 	 *
-	 * The behavior of the generator when assigning another conversion(other than `null`) is not defined.
+	 * Assign `null` to not generate this conversion.
 	 */
 	var removeOnly: Conversion? = Conversion()
+
 	/**
 	 * Conversions that mask view Connections to prevent downcasting.
 	 *
-	 * The behavior of the generator when assigning another conversion(other than `null`) is not defined.
+	 * Assign `null` to not generate this conversion.
 	 */
 	var view: Conversion? = Conversion()
 }

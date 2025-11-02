@@ -14,6 +14,7 @@ import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import io.github.spacedvoid.connection.gen.dsl.Adapter
+import io.github.spacedvoid.connection.gen.dsl.Adapters
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration
 import io.github.spacedvoid.connection.gen.dsl.ConnectionGeneration.ConnectionType.ConnectionTypeKind
 import io.github.spacedvoid.connection.gen.dsl.ConnectionKind
@@ -34,21 +35,24 @@ object AdapterGenerator {
 	 */
 	private fun generatePerType(files: AdapterFiles, resolver: Resolver, type: ConnectionGeneration.ConnectionType) {
 		type.kinds.values.forEach { kind: ConnectionTypeKind ->
-			(kind.adapters.asConnection.default + kind.adapters.asConnection.extra).forEach {
-				if(it == null) return@forEach
-				val kotlin = it.kotlin ?: kind.kotlin ?: if(it.isExtra) throw IllegalArgumentException("`kotlin` not set for ColAsCon adapter in $it") else return@forEach
+			kind.adapters.asConnection.asSequence().forEach { (it, isExtra) ->
+				val kotlin = it.kotlin ?: kind.kotlin ?: if(isExtra) throw IllegalArgumentException("`kotlin` not set for ColAsCon adapter in $it") else return@forEach
 				files.colAsCon.attachSources(resolver, kind.qualifiedName)
 				files.colAsCon.generateColAsCon(it, kind, kotlin)
 			}
-			(kind.adapters.asKotlin.default + kind.adapters.asKotlin.extra).forEach {
-				if(it == null) return@forEach
-				val kotlin = it.kotlin ?: kind.kotlin ?: if(it.isExtra) throw IllegalArgumentException("`kotlin` not set for ConAsCol adapter in $it") else return@forEach
+			kind.adapters.asKotlin.asSequence().forEach { (it, isExtra) ->
+				val kotlin = it.kotlin ?: kind.kotlin ?: if(isExtra) throw IllegalArgumentException("`kotlin` not set for ConAsCol adapter in $it") else return@forEach
 				val apiClass = resolver.getClassDeclarationByName(kind.qualifiedName) ?: throw IllegalArgumentException("Class ${kind.qualifiedName} does not exist")
 				if(alreadyGenerated(apiClass, kotlin) && it === kind.adapters.asKotlin.default) return@forEach
 				apiClass.containingFile?.let { files.conAsCol.attach(it) }
 				files.conAsCol.generateConAsCol(it, kind, kotlin)
 			}
 		}
+	}
+
+	private fun Adapters.AdapterCollection.asSequence(): Sequence<Pair<Adapter, Boolean>> = sequence {
+		this@asSequence.default?.let { yield(it to false) }
+		yieldAll(this@asSequence.extra.asSequence().map { it to true })
 	}
 
 	private class AdapterFiles(generator: CodeGenerator): AutoCloseable {
@@ -130,8 +134,6 @@ object AdapterGenerator {
 		val sourceTypes = this.generatedAsKotlin.computeIfAbsent(kotlin.qualifiedName) { mutableSetOf() }
 		return apiClass.getAllSuperTypes().any { it.declaration in sourceTypes }.also { if(!it) sourceTypes += apiClass }
 	}
-
-	private operator fun <T> T.plus(list: List<T>): List<T> = mutableListOf(this).apply { addAll(list) }
 
 	/**
 	 * Shortcut for generating Kotlin collection to Connection adapters.
