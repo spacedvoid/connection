@@ -65,7 +65,8 @@ class Adapters @DslInternal constructor(): Configurable {
  *
  * @property [unchecked]
  * Controls whether the collection object needs unchecked casting.
- * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast to the [kotlin] type.
+ * Setting it to `true` additionally inserts `@Suppress("UNCHECKED_CAST")` and a cast of the Kotlin source to the [kotlin] type.
+ * Ignored for [asConnection][Adapters.asConnection] adapters.
  */
 @ConnectionDSL
 data class Adapter @DslInternal constructor(

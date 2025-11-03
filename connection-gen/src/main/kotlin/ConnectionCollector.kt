@@ -58,6 +58,18 @@ fun ConnectionGeneration.collect() {
 		}
 	}
 
+	collectionNamed("LinkedSet") {
+		kind(MUTABLE) {
+			name = "LinkedSet"
+			kotlin = null
+			adapters.asConnection {
+				create {
+					kotlin = KotlinType<java.util.LinkedHashSet<*>>()
+				}
+			}
+		}
+	}
+
 	collectionNamed("NavigableSet") {
 		allKinds {
 			kotlin = KotlinType<java.util.NavigableSet<*>>()
@@ -71,6 +83,18 @@ fun ConnectionGeneration.collect() {
 	mapNamed("SequencedMap") {
 		standardKinds {
 			kotlin = KotlinType<java.util.SequencedMap<*, *>>()
+		}
+	}
+
+	mapNamed("LinkedMap") {
+		kind(MUTABLE) {
+			name = "LinkedMap"
+			kotlin = null
+			adapters.asConnection {
+				create {
+					kotlin = KotlinType<java.util.LinkedHashMap<*, *>>()
+				}
+			}
 		}
 	}
 

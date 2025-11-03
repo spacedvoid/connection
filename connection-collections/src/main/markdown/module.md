@@ -10,20 +10,22 @@ Main package for Connection.
 
 Most collection interfaces work similar from the Java Collections Framework:
 
-| Java collection                 | Kotlin collection               | Corresponding Connection type                    |
-|---------------------------------|---------------------------------|--------------------------------------------------|
-| [java.util.Collection]          | [kotlin.collections.Collection] | [Collection][CollectionView]                     |
-| [java.util.SequencedCollection] | -                               | [SequencedCollection][SequencedCollectionView]   |
-| [java.util.List]                | [kotlin.collections.List]       | [List][ListView]                                 |
-| [java.util.Set]                 | [kotlin.collections.Set]        | [Set][SetView]                                   |
-| [java.util.SequencedSet]        | -                               | [SequencedSet][SequencedSetView]                 |
-| [java.util.NavigableSet]        | -                               | [NavigableSet][NavigableSetView]                 |
-| [java.util.Map]                 | [kotlin.collections.Map]        | [Map][MapView]                                   |
-| [java.util.SequencedMap]        | -                               | [SequencedMap][SequencedMapView]                 |
-| [java.util.NavigableMap]        | -                               | [NavigableMap][NavigableMapView]                 |
-| Stacks                          | [kotlin.collections.ArrayDeque] | [Stack]                                          |
-| [java.util.Queue]               | [kotlin.collections.ArrayDeque] | [Queue]<sup><a id="1" href="#f1">[[1]]</a></sup> |
-| [java.util.Deque]               | [kotlin.collections.ArrayDeque] | [Deque]                                          |
+| Java collection                 | Kotlin collection                | Corresponding Connection type                    |
+|---------------------------------|----------------------------------|--------------------------------------------------|
+| [java.util.Collection]          | [kotlin.collections.Collection]  | [Collection][CollectionView]                     |
+| [java.util.SequencedCollection] | -                                | [SequencedCollection][SequencedCollectionView]   |
+| [java.util.List]                | [kotlin.collections.List]        | [List][ListView]                                 |
+| [java.util.Set]                 | [kotlin.collections.Set]         | [Set][SetView]                                   |
+| [java.util.SequencedSet]        | -                                | [SequencedSet][SequencedSetView]                 |
+| [java.util.LinkedHashSet]       | [kotlin.collections.linkedSetOf] | [LinkedSet]                                      |
+| [java.util.NavigableSet]        | -                                | [NavigableSet][NavigableSetView]                 |
+| [java.util.Map]                 | [kotlin.collections.Map]         | [Map][MapView]                                   |
+| [java.util.SequencedMap]        | -                                | [SequencedMap][SequencedMapView]                 |
+| [java.util.LinkedHashMap]       | [kotlin.collections.linkedMapOf] | [LinkedMap]                                      |
+| [java.util.NavigableMap]        | -                                | [NavigableMap][NavigableMapView]                 |
+| Stacks                          | [kotlin.collections.ArrayDeque]  | [Stack]                                          |
+| [java.util.Queue]               | [kotlin.collections.ArrayDeque]  | [Queue]<sup><a id="1" href="#f1">[[1]]</a></sup> |
+| [java.util.Deque]               | [kotlin.collections.ArrayDeque]  | [Deque]                                          |
 
 <a id="f1" href="#1">[[1]]</a>: Not exact. [java.util.Queue] does not need to be LIFO, but here [Queue] is required to be such.
 
@@ -84,10 +86,7 @@ such as an [Array][kotlin.Array] or [Sequence][kotlin.sequences.Sequence].
 
 But, for example, merely having a [MutableSequencedSet] is not different with having a [MutableSet]
 because we do not know *how* the iteration order is defined.
-So always document the iteration order when you return a sequenced collection.
-Sequenced collections created by Connection will usually have their behavior equivalent with
-[LinkedHashSet][kotlin.collections.LinkedHashSet] or an insertion-ordered [LinkedHashMap][kotlin.collections.LinkedHashMap].
-Such cases will be documented at the API.
+So always document the iteration order when you return a sequenced collection, or use a [LinkedSet] instead.
 
 ## Equality comparison
 
