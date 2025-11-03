@@ -42,7 +42,7 @@ inline fun <T> buildList(filler: MutableList<T>.() -> Unit): List<T> {
  *
  * Behavior of the [MutableList] and the resulting list when using the [MutableList] outside the lambda is undefined.
  */
-inline fun <T> buildList(initialCapacity: Int = 10, filler: MutableList<T>.() -> Unit): List<T> {
+inline fun <T> buildList(initialCapacity: Int, filler: MutableList<T>.() -> Unit): List<T> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
@@ -71,7 +71,7 @@ inline fun <T> buildSet(filler: MutableSet<T>.() -> Unit): Set<T> {
  *
  * Behavior of the [MutableSet] and the resulting set when using the [MutableSet] outside the lambda is undefined.
  */
-inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> Unit): Set<T> {
+inline fun <T> buildSet(initialCapacity: Int, filler: MutableSet<T>.() -> Unit): Set<T> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
@@ -100,7 +100,7 @@ inline fun <T> buildSequencedSet(filler: LinkedSet<T>.() -> Unit): SequencedSet<
  *
  * Behavior of the [MutableSequencedSet] and the resulting set when using the [MutableSequencedSet] outside the lambda is undefined.
  */
-inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: LinkedSet<T>.() -> Unit): SequencedSet<T> {
+inline fun <T> buildSequencedSet(initialCapacity: Int, filler: LinkedSet<T>.() -> Unit): SequencedSet<T> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
@@ -129,7 +129,7 @@ inline fun <K, V> buildMap(filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
  *
  * Behavior of the [MutableMap] and the resulting map when using the [MutableMap] outside the lambda is undefined.
  */
-inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
+inline fun <K, V> buildMap(initialCapacity: Int, filler: MutableMap<K, V>.() -> Unit): Map<K, V> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
@@ -158,7 +158,7 @@ inline fun <K, V> buildSequencedMap(filler: LinkedMap<K, V>.() -> Unit): Sequenc
  *
  * Behavior of the [MutableSequencedMap] and the resulting map when using the [MutableSequencedMap] outside the lambda is undefined.
  */
-inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: LinkedMap<K, V>.() -> Unit): SequencedMap<K, V> {
+inline fun <K, V> buildSequencedMap(initialCapacity: Int, filler: LinkedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
