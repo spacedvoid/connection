@@ -86,17 +86,9 @@ fun <T> Iterable<T>.toMutableList(): MutableList<T> = mutableListOf<T>().apply {
 fun <T> Iterable<T>.toMutableSet(): MutableSet<T> = mutableSetOf<T>().apply { addAll(this@toMutableSet) }
 
 /**
- * Collects all elements to a new mutable sequenced set by their encounter order.
- *
- * The iteration order will be equivalent with adding all elements to a [LinkedHashSet].
+ * Collects all elements to a new linked set by their encounter order.
  */
-@Deprecated(
-	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
-	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet"),
-	DeprecationLevel.ERROR
-)
-@Suppress("DEPRECATION_ERROR")
-fun <T> Iterable<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
+fun <T> Iterable<T>.toLinkedSet(): LinkedSet<T> = linkedSetOf<T>().apply { addAll(this@toLinkedSet) }
 
 /**
  * Collects all elements to a new mutable navigable set by their encounter order, using the [natural order][naturalOrder].
@@ -114,17 +106,9 @@ fun <T> Iterable<T>.toMutableNavigableSet(comparator: Comparator<in T>): Mutable
 fun <K, V> MapView<out K, V>.toMutableMap(): MutableMap<K, V> = mutableMapOf<K, V>().apply { putAll(this@toMutableMap) }
 
 /**
- * Collects all entries to a new mutable sequenced map by their encounter order.
- *
- * The iteration order will be equivalent with adding all entries to an insertion-ordered [LinkedHashMap].
+ * Collects all entries to a new linked map by their encounter order.
  */
-@Deprecated(
-	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashMap instead.",
-	ReplaceWith("LinkedHashMap<K, V>().asMutableConnection().apply { putAll(this@toSequencedSet) }", "java.util.LinkedHashMap"),
-	DeprecationLevel.ERROR
-)
-@Suppress("DEPRECATION_ERROR")
-fun <K, V> MapView<out K, V>.toMutableSequencedMap(): MutableSequencedMap<K, V> = mutableSequencedMapOf<K, V>().apply { putAll(this@toMutableSequencedMap) }
+fun <K, V> MapView<out K, V>.toLinkedMap(): LinkedMap<K, V> = linkedMapOf<K, V>().apply { putAll(this@toLinkedMap) }
 
 /**
  * Collects all entries to a new mutable navigable map, using the [natural order][naturalOrder].

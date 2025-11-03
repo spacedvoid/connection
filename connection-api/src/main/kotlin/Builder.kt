@@ -8,12 +8,12 @@
 
 package io.github.spacedvoid.connection
 
+import io.github.spacedvoid.connection.impl.LinkedMapImpl
+import io.github.spacedvoid.connection.impl.LinkedSetImpl
 import io.github.spacedvoid.connection.impl.ListImpl
 import io.github.spacedvoid.connection.impl.MapImpl
 import io.github.spacedvoid.connection.impl.MutableListImpl
 import io.github.spacedvoid.connection.impl.MutableMapImpl
-import io.github.spacedvoid.connection.impl.MutableSequencedMapImpl
-import io.github.spacedvoid.connection.impl.MutableSequencedSetImpl
 import io.github.spacedvoid.connection.impl.MutableSetImpl
 import io.github.spacedvoid.connection.impl.SequencedMapImpl
 import io.github.spacedvoid.connection.impl.SequencedSetImpl
@@ -84,15 +84,13 @@ inline fun <T> buildSet(initialCapacity: Int = 12, filler: MutableSet<T>.() -> U
  * Builds an immutable sequenced set as according to the [filler].
  *
  * Behavior of the [MutableSequencedSet] and the resulting set when using the [MutableSequencedSet] outside the lambda is undefined.
- *
- * Behavior of the [MutableSequencedSet] and the resulting set will be equivalent with using a [LinkedHashSet].
  */
-inline fun <T> buildSequencedSet(filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
+inline fun <T> buildSequencedSet(filler: LinkedSet<T>.() -> Unit): SequencedSet<T> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
 
-	val result = MutableSequencedSetImpl<T>(LinkedHashSet()).apply(filler)
+	val result = LinkedSetImpl<T>(LinkedHashSet()).apply(filler)
 	return if(result.isEmpty()) sequencedSetOf() else SequencedSetImpl(result.kotlin)
 }
 
@@ -101,15 +99,13 @@ inline fun <T> buildSequencedSet(filler: MutableSequencedSet<T>.() -> Unit): Seq
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
  * Behavior of the [MutableSequencedSet] and the resulting set when using the [MutableSequencedSet] outside the lambda is undefined.
- *
- * Behavior of the [MutableSequencedSet] and the resulting set will be equivalent with using a [LinkedHashSet].
  */
-inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: MutableSequencedSet<T>.() -> Unit): SequencedSet<T> {
+inline fun <T> buildSequencedSet(initialCapacity: Int = 12, filler: LinkedSet<T>.() -> Unit): SequencedSet<T> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
 
-	val result = MutableSequencedSetImpl<T>(LinkedHashSet.newLinkedHashSet(initialCapacity)).apply(filler)
+	val result = LinkedSetImpl<T>(LinkedHashSet.newLinkedHashSet(initialCapacity)).apply(filler)
 	return if(result.isEmpty()) sequencedSetOf() else SequencedSetImpl(result.kotlin)
 }
 
@@ -146,15 +142,13 @@ inline fun <K, V> buildMap(initialCapacity: Int = 12, filler: MutableMap<K, V>.(
  * Builds an immutable sequenced map as according to the [filler].
  *
  * Behavior of the [MutableSequencedMap] and the resulting map when using the [MutableSequencedMap] outside the lambda is undefined.
- *
- * Behavior of the [MutableSequencedMap] and the resulting map will be equivalent with using an insertion-ordered [LinkedHashMap].
  */
-inline fun <K, V> buildSequencedMap(filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
+inline fun <K, V> buildSequencedMap(filler: LinkedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
 
-	val result = MutableSequencedMapImpl<K, V>(LinkedHashMap()).apply(filler)
+	val result = LinkedMapImpl<K, V>(LinkedHashMap()).apply(filler)
 	return if(result.isEmpty()) sequencedMapOf() else SequencedMapImpl(result.kotlin)
 }
 
@@ -163,14 +157,12 @@ inline fun <K, V> buildSequencedMap(filler: MutableSequencedMap<K, V>.() -> Unit
  * Throws [IllegalArgumentException] if the [initialCapacity] is negative.
  *
  * Behavior of the [MutableSequencedMap] and the resulting map when using the [MutableSequencedMap] outside the lambda is undefined.
- *
- * Behavior of the [MutableSequencedMap] and the resulting map will be equivalent with using an insertion-ordered [LinkedHashMap].
  */
-inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: MutableSequencedMap<K, V>.() -> Unit): SequencedMap<K, V> {
+inline fun <K, V> buildSequencedMap(initialCapacity: Int = 12, filler: LinkedMap<K, V>.() -> Unit): SequencedMap<K, V> {
 	contract {
 		callsInPlace(filler, InvocationKind.EXACTLY_ONCE)
 	}
 
-	val result = MutableSequencedMapImpl<K, V>(LinkedHashMap.newLinkedHashMap(initialCapacity)).apply(filler)
+	val result = LinkedMapImpl<K, V>(LinkedHashMap.newLinkedHashMap(initialCapacity)).apply(filler)
 	return if(result.isEmpty()) sequencedMapOf() else SequencedMapImpl(result.kotlin)
 }

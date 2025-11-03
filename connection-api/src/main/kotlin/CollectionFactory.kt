@@ -56,16 +56,9 @@ fun <T> sequencedSetOf(vararg elements: T): SequencedSet<T> =
 	LinkedHashSet(elements.kotlinAsList()).asConnection()
 
 /**
- * Returns a new mutable sequenced set with the given [elements].
- *
- * The result is equivalent with adding all elements to a [LinkedHashSet].
+ * Returns a new linked set with the given [elements].
  */
-@Deprecated(
-	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
-	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(elements) }", "java.util.LinkedHashSet"),
-	DeprecationLevel.ERROR
-)
-fun <T> mutableSequencedSetOf(vararg elements: T): MutableSequencedSet<T> =
+fun <T> linkedSetOf(vararg elements: T): LinkedSet<T> =
 	LinkedHashSet(elements.kotlinAsList()).asMutableConnection()
 
 /**
@@ -125,16 +118,9 @@ fun <K, V> sequencedMapOf(vararg entries: Pair<K, V>): SequencedMap<K, V> =
 	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asConnection()
 
 /**
- * Returns a new mutable sequenced map with the given [entries].
- *
- * The result is equivalent with adding all entries to an insertion-ordered [LinkedHashMap].
+ * Returns a new linked map with the given [entries].
  */
-@Deprecated(
-	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashMap instead.",
-	ReplaceWith("LinkedHashMap<K, V>().asMutableConnection().apply { putAll(entries) }", "java.util.LinkedHashMap"),
-	DeprecationLevel.ERROR
-)
-fun <K, V> mutableSequencedMapOf(vararg entries: Pair<K, V>): MutableSequencedMap<K, V> =
+fun <K, V> linkedMapOf(vararg entries: Pair<K, V>): LinkedMap<K, V> =
 	LinkedHashMap.newLinkedHashMap<K, V>(entries.size).apply { putAll(entries) }.asMutableConnection()
 
 /**

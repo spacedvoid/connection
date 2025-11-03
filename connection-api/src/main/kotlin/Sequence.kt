@@ -44,19 +44,11 @@ fun <T> Sequence<T>.toMutableSet(): MutableSet<T> = mutableSetOf<T>().apply { ad
 fun <T> Sequence<T>.toSequencedSet(): SequencedSet<T> = buildSequencedSet { addAll(this@toSequencedSet) }
 
 /**
- * Collects all elements from this sequence to a mutable sequenced set by their iteration order.
- *
- * This operation is equivalent with adding all elements to a [LinkedHashSet].
+ * Collects all elements from this sequence to a linked set by their iteration order.
  *
  * The behavior of this operation when this sequence is infinite is undefined.
  */
-@Deprecated(
-	"This method will be replaced with a better version in 0.2.0. Use a LinkedHashSet instead.",
-	ReplaceWith("LinkedHashSet<T>().asMutableConnection().apply { addAll(this@toSequencedSet) }", "java.util.LinkedHashSet"),
-	DeprecationLevel.ERROR
-)
-@Suppress("DEPRECATION_ERROR")
-fun <T> Sequence<T>.toMutableSequencedSet(): MutableSequencedSet<T> = mutableSequencedSetOf<T>().apply { addAll(this@toMutableSequencedSet) }
+fun <T> Sequence<T>.toLinkedSet(): LinkedSet<T> = linkedSetOf<T>().apply { addAll(this@toLinkedSet) }
 
 /**
  * Collects the entries to a map from applying the [transform] to each element by their encounter order.

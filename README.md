@@ -78,7 +78,7 @@ gradlew :dokkaGenerate
   - [x] Make non-modifiable collections be covariant(`out`) by default
 
 - `v0.2.0`:
-  - [ ] Linked collections, which are a subtype of `SequencedCollection` that supports `addFirst` and `addLast`
+  - [x] Linked collections, which are a subtype of `SequencedCollection` that supports `addFirst` and `addLast`
   - [ ] Add range information for navigable collections
 
 - Not scheduled
